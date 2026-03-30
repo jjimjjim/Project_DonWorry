@@ -1,4 +1,4 @@
-package coom.kedu.dto;
+package com.kedu.dto;
 
 import java.sql.Timestamp;
 
