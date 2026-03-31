@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class BoardsController {
 
 	@RequestMapping("/mainboard_list")
-	public String toBoard() {
+	public String toMainBoard() {
 		return "boards/mainboard/mainboard_list";
+	}
+	
+	@RequestMapping("/toWrite")
+	public String toWrite() {
+		return "boards/write";
 	}
 }
