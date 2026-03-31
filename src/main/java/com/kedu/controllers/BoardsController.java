@@ -11,4 +11,9 @@ public class BoardsController {
 	public String toBoard() {
 		return "boards/mainboard/mainboard_list";
 	}
+	
+	@RequestMapping("/jobpost")
+	public String jobpost() {
+		return "boards/jobpost";
+	}
 }
