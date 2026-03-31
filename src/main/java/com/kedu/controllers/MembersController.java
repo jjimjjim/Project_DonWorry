@@ -42,8 +42,8 @@ public class MembersController {
 	@ResponseBody
 	@RequestMapping("/idSearch")
 	public String idSearch(String name, String email) {
-		String id = dao.idSearch(name,email);
-		System.out.println(id);
+		System.out.println("도착");
+		String id = dao.idSearch(name,email);	
 		return id;
 	}
 
