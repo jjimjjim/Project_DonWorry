@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kedu.commons.EncryptionUtils;
 import com.kedu.dao.MembersDAO;
+import com.kedu.dto.MembersDTO;
 
 @Controller
 @RequestMapping("/members")
@@ -35,6 +36,7 @@ public class MembersController {
 		}
 		return "redirect:/";	
 	}
+
 	@RequestMapping("/toIdSearch")
 	public String toIdSearch() {
 		return "/members/idSearch";
@@ -45,6 +47,19 @@ public class MembersController {
 		System.out.println("도착");
 		String id = dao.idSearch(name,email);	
 		return id;
+	}
+	
+	@RequestMapping("/toSignUp")
+	public String toSignUp() {
+		return "/members/joinform";
+	}
+	
+	@RequestMapping("/signup")
+	public String signup(MembersDTO dto) {
+		String pw = eu.getSha512(dto.getPw());
+		dao.signup(dto);
+		
+		return "redirect:/";
 	}
 
 }
