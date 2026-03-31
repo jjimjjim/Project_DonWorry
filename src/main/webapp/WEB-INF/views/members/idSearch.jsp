@@ -316,6 +316,7 @@
 </body>
 <script>
 	$(".find-btn").on("click",function(){
+		alert("asd");
 		$.ajax({
 			url : "/members/idSearch",
 			data : {name : $(".name").val(),

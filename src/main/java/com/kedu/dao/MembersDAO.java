@@ -23,5 +23,9 @@ public class MembersDAO {
 		String sql = "select nickname from members where id = ?";
 		return jdbc.queryForObject(sql,String.class,id);
 	}
+	public String idSearch(String name,String email) {
+		String sql = "select id from members where name = ? and email =?";
+		return jdbc.queryForObject(sql,String.class,name,email);
+	}
 
 }
