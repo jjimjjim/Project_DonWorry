@@ -4,20 +4,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("mypage")
+@RequestMapping("/mypage")
 public class MypageController {
 	
-	@RequestMapping("toMypage")
+	@RequestMapping("/toMypage")
 	public String toMypage() {
 		return "mypage/mypage";
 	}
 	
-	@RequestMapping("toAccount")
+	@RequestMapping("/toAccount")
 	public String toAccount() {
 		return "mypage/account";
 	}
 	
-	@RequestMapping("toWithdraw")
+	@RequestMapping("/toWithdraw")
 	public String toWithdraw() {
 		return "mypage/withdraw";
 	}
