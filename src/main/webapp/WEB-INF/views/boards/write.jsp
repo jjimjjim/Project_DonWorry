@@ -225,6 +225,9 @@
     outline: none;
     border-color: #2563eb;
 }
+.writer{
+	width : 40%
+}
 </style>
 <body>
 <div class="container">
@@ -293,9 +296,11 @@
             </div>
 
             <!-- 작성자 -->
-            <div class="input-group">
+            <div class="input-group writer">
                 <input type="text" name="writer" readonly value=${nickName }>
+                 
             </div>
+            <input type="file" multiple>
 
             <!-- 에디터 영역 -->
             <div id="editor"></div>
