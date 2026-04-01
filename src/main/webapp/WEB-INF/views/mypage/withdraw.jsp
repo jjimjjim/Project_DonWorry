@@ -215,6 +215,7 @@ body {
     display: flex;
     min-height: 60px;
     border-bottom: 1px solid #e5e7eb;
+    
 }
 
 .ui-form-row:last-child {
@@ -259,6 +260,10 @@ body {
     color: #222;
     outline: none;
     background: #fff;
+}
+
+.ui-message {
+	padding-left: 5px;
 }
 
 .ui-input:focus {
