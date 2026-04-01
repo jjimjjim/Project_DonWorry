@@ -1,10 +1,12 @@
 package com.kedu.controllers;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +27,18 @@ public class BoardsController {
 	
 
 	@RequestMapping("/mainboard_list")
-	public String toMainBoard() {
+	public String toMainBoard(int page,Model model) {
+		
+		//List<BoardsDTO> mainList =  dao.mainList(page*10-9,page*10);
+		//int recordTotalCount = dao.recordTotalCount();
+		
+		model.addAttribute("currentPage",page);
+		model.addAttribute("recordCountPerPage",10);
+		model.addAttribute("naviCountPerPage",10);
+		//model.addAttribute("recordTotalCount",recordTotalCount);
+		model.addAttribute("recordTotalCount",233); // 임시
+		//model.addAttribute("mainList", mainList);
+		
 		return "boards/mainboard/mainboard_list";
 	}
 	

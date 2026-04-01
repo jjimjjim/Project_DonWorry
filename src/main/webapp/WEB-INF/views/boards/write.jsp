@@ -326,7 +326,7 @@
                     <i class="fa-solid fa-briefcase fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
                     구인구직
                 </a>
-                <a href="/boards/mainboard_list"> 
+                <a href="/boards/mainboard_list?page=1"> 
                     <i class="fa-regular fa-message fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i> 
                     커뮤니티
                 </a>               

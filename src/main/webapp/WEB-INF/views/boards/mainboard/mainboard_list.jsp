@@ -393,7 +393,7 @@
                     <i class="fa-solid fa-briefcase fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
                     구인구직
                 </a>
-                <a href="/boards//mainboard_list"> 
+                <a href="/boards/mainboard_list?page=1"> 
                     <i class="fa-regular fa-message fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i> 
                     커뮤니티
                 </a>               
@@ -487,7 +487,7 @@
         </article>
     </div> 
     <div class="page-nav">
-            <a href="#" class="page-num"><span class="material-symbols-outlined" style="font-size: 16px;">chevron_left</span></a>    
+       <!--       <a href="#" class="page-num"><span class="material-symbols-outlined" style="font-size: 16px;">chevron_left</span></a>    
             <a href="#" class="page-num active">1</a>
             <a href="#" class="page-num">2</a>
             <a href="#" class="page-num">3</a>
@@ -498,7 +498,7 @@
             <a href="#" class="page-num">8</a>
             <a href="#" class="page-num">9</a>
             <a href="#" class="page-num">10</a> 
-            <a href="#" class="page-num"><span class="material-symbols-outlined" style="font-size: 16px;">chevron_right</span></a>
+            <a href="#" class="page-num"><span class="material-symbols-outlined" style="font-size: 16px;">chevron_right</span></a> -->
         </div>
     <div class="container-footer">
         <p>© 2026 돈워리. All rights reserved.</p>
@@ -514,6 +514,62 @@
 $(".floating-write-btn").on("click",function(){
 	location.href  = "/boards/toWrite";
 })
+		let recordTotalCount = ${recordTotalCount}; // 총 개수
+		let recordCountPerPage = ${recordCountPerPage}; // 한페이지에 몇개 (10)
+		let naviCountPerPage  = ${naviCountPerPage }; // navi 몇개 (10)
+		let currentPage = ${currentPage}; // 현재 페이지
+		let pageTotalCount = Math.ceil(recordTotalCount/recordCountPerPage); 
+		
+		let startNavi = Math.floor((currentPage - 1) / naviCountPerPage) * naviCountPerPage +1;
+		let endNavi = startNavi + naviCountPerPage - 1;
+		
+		if(endNavi > pageTotalCount){
+			endNavi = pageTotalCount;
+		}
+		
+		let needPrev = true;
+		let needNext = true;
+		
+		if(startNavi == 1){
+			needPrev = false;
+		}
+		if(endNavi == pageTotalCount){
+			needNext = false;
+		}
+		if(needPrev){
+			
+			let span = $("<span>");
+			span.addClass("material-symbols-outlined");
+			span.css("font-size","16px");
+			span.html("chevron_left");
+			let a = $("<a>");
+			a.addClass("page-num");
+			a.attr("href","/boards/mainboard_list?page="+ (startNavi-1));
+			a.append(span);
+			$(".page-nav").append(a);
+		}
+		
+		for(let i = startNavi; i <= endNavi; i++){
+			let a = $("<a>")
+			a.attr("href" , "/boards/mainboard_list?page="+i);
+			a.addClass("page-num");
+			a.html(i);
+			$(".page-nav").append(a);
+		}
+		
+		if(needNext){
+			 
+			 let span = $("<span>");
+				span.addClass("material-symbols-outlined");
+				span.css("font-size","16px");
+				span.html("chevron_right");
+				let a = $("<a>");
+				a.addClass("page-num");
+				a.attr("href","/boards/mainboard_list?page="+(endNavi+1));
+				a.append(span);
+				$(".page-nav").append(a);
+		}
+		
 
 </script>
 </body>
