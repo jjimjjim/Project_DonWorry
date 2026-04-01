@@ -32,5 +32,9 @@ public class BoardsDAO {
 		String sql = "select count(*) from boards";
 		return jdbc.queryForObject(sql,Integer.class);
 	}
+	public BoardsDTO detail(int seq) {
+		String sql = "select * from boards where seq = ?";
+		return jdbc.queryForObject(sql,new BeanPropertyRowMapper<BoardsDTO>(BoardsDTO.class),seq);
+	}
 
 }

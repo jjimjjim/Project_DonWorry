@@ -84,4 +84,10 @@ public class BoardsController {
 		
 		return "redirect:/boards/mainboard_list";
 	}
+	@RequestMapping("/detail")
+	public String detail(int seq,Model model) {
+//		BoardsDTO dto = dao.detail(seq);
+//		model.addAttribute("dto",dto);
+		return "boards/detail";
+	}
 }
