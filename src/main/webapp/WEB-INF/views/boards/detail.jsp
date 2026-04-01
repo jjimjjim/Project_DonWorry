@@ -252,9 +252,169 @@
             margin: 0 5px;
         }
 
-        /* .detail-content {
-    white-space: pre-line;
-} */
+        .info-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* 신고 버튼 */
+        .report-btn {
+            font-size: 12px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .report-btn:hover {
+            color: #ef4444;
+            /* hover 시 빨강 */
+        }
+
+        /* 댓글 전체 */
+        .comment-section {
+            margin-top: 60px;
+        }
+
+        /* 작성 영역 */
+        .comment-write {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .comment-write textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: none;
+        }
+
+        .comment-write button {
+            align-self: flex-end;
+            padding: 8px 16px;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* 댓글 영역 */
+        .comment-section {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        /* 제목 */
+        .comment-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        /* 작성 */
+        .comment-write {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .comment-write textarea {
+            flex: 1;
+            height: 80px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: none;
+            font-size: 14px;
+        }
+
+        .comment-write button {
+            width: 80px;
+            border: none;
+            border-radius: 8px;
+            background-color: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* 리스트 */
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* 댓글 */
+        .comment-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        /* 헤더 */
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        /* 작성자 + 날짜 */
+        .comment-left {
+            display: flex;
+            gap: 10px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .comment-writer {
+            font-weight: 600;
+            color: #444;
+        }
+
+        /* 내용 */
+        .comment-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 수정/삭제 */
+        .comment-actions {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            color: #999;
+            cursor: pointer;
+        }
+
+        .comment-actions span:hover {
+            color: #2563eb;
+        }
+
+        /* 대댓글 영역 */
+        .reply-list {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        /* 대댓글 아이템 */
+        .reply-item {
+            position: relative;
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        /* 꺾인 화살표 */
+        .reply-item::before {
+            content: "↳";
+            position: absolute;
+            left: 0;
+            top: 2px;
+            font-size: 14px;
+            color: #9ca3af;
+        }
     </style>
 
 <body>
@@ -311,10 +471,13 @@
                 <div class="info-left">
                     <span class="writer">${dto.member_id }</span>
                     <span class="divider">|</span>
-                    <span class="date"><fmt:formatDate value="${i.write_date }" pattern="yyyy-MM-dd"/></span>
+                    <span class="date">
+                        <fmt:formatDate value="${dto.write_date}" pattern="yyyy-MM-dd" />
+                    </span>
                 </div>
-                <div>
+                <div class="info-right">
                     👁 ${dto.view_count }
+                    <span><i class="fa-solid fa-triangle-exclamation fa-lg" style="color: rgb(206, 12, 0);"></i></span>
                 </div>
             </div>
 
@@ -327,7 +490,92 @@
             <div class="detail-actions">
                 <button onclick="location.href='/boards/mainboard_list?page=1'">목록</button>
                 <button onclick="location.href='/boards/update?seq=${dto.seq}'">수정</button>
-                <button >삭제</button>
+                <button>삭제</button>
+            </div>
+
+        </div>
+        
+         <!-- 댓글 영역 -->
+        <div class="comment-section">
+
+            <h3 class="comment-title">댓글 3</h3>
+
+            <!-- 댓글 작성 -->
+            <div class="comment-write">
+                <textarea placeholder="댓글을 입력하세요"></textarea>
+                <button>등록</button>
+            </div>
+
+            <!-- 댓글 리스트 -->
+            <div class="comment-list">
+
+                <!-- 댓글 1 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-left">
+                            <span class="comment-writer">김개발</span>
+                            <span class="divider">|</span>
+                            <span class="comment-date">2026-04-01</span>
+                        </div>
+                        <div class="comment-actions">
+                            <span>수정</span>
+                            <span>삭제</span>
+                            <span><i class="fa-solid fa-triangle-exclamation fa-lg report"
+                                    style="color: rgb(206, 12, 0);"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="comment-content">
+                        저도 처음엔 저축부터 시작했습니다 👍
+                    </div>
+                </div>
+
+                <!-- 댓글 2 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-left">
+                            <span class="comment-writer">직장인A</span>
+                            <span class="divider">|</span>
+                            <span class="comment-date">2026-04-01</span>
+                        </div>
+                        <div class="comment-actions">
+                            <span>수정</span>
+                            <span>삭제</span>
+                            <span><span><i class="fa-solid fa-triangle-exclamation fa-lg report"
+                                        style="color: rgb(206, 12, 0);"></i></span></span>
+                        </div>
+                    </div>
+
+                    <div class="comment-content">
+                        투자도 조금씩 같이 해보는 거 추천드립니다!
+                    </div>
+
+                    <!-- 🔥 대댓글 리스트 -->
+                    <div class="reply-list">
+
+                        <!-- 대댓글 1 -->
+                        <div class="reply-item">
+                            <div class="comment-header">
+                                <div class="comment-left">
+                                    <span class="comment-writer">사회초년생</span>
+                                    <span class="divider">|</span>
+                                    <span class="comment-date">2026-04-01</span>
+                                </div>
+                                <div class="comment-actions">
+                                    <span>삭제</span>
+                                    <span><span><i class="fa-solid fa-triangle-exclamation fa-lg report"
+                                                style="color: rgb(206, 12, 0);"></i></span></span>
+                                </div>
+                            </div>
+
+                            <div class="comment-content">
+                                맞아요 저도 ETF부터 시작했어요!
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
         </div>
