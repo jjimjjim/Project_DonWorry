@@ -15,21 +15,20 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 .modal {
-    display: none; /* JS에서 block으로 바뀔 때 적용됨 */
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background: rgba(15, 23, 42, 0.4); /* 배경을 조금 더 어둡게 하면 모달이 잘 보여! */
-    
-    /* [핵심] 중앙 정렬 코드 */
-    display: none; /* 기본은 none */
-    align-items: center;   /* 세로 중앙 */
-    justify-content: center; /* 가로 중앙 */
+	display: none; /* JS에서 block으로 바뀔 때 적용됨 */
+	position: fixed;
+	inset: 0;
+	z-index: 9999;
+	background: rgba(15, 23, 42, 0.4); /* 배경을 조금 더 어둡게 하면 모달이 잘 보여! */
+	/* [핵심] 중앙 정렬 코드 */
+	display: none; /* 기본은 none */
+	align-items: center; /* 세로 중앙 */
+	justify-content: center; /* 가로 중앙 */
 }
 
 /* JS에서 모달을 띄울 때 display: block 대신 flex를 써야 정렬이 먹혀! */
-.modal.show { 
-    display: flex !important; 
+.modal.show {
+	display: flex !important;
 }
 
 /* 기본 초기화 및 폰트 설정 */
@@ -598,23 +597,43 @@ body {
 		width: 100%;
 	}
 }
-/* 라디오 버튼과 텍스트 수직 정렬 & 크기 조절 */
+/* 그리드 안에서 한 줄을 다 쓰게 만드는 설정 */
+.full-width {
+	grid-column: 1/-1;
+	width: 100%;
+}
+
 .tax-option-group {
 	display: flex;
-	align-items: center; /* 아이콘과 텍스트 높이 맞추기 */
-	gap: 15px;
-	margin-top: 10px;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: 12px; /* 간격을 16px에서 12px로 살짝 줄여서 공간 확보 */
+	margin-top: 8px;
+	background: #f8fafc;
+	padding: 10px 14px;
+	border-radius: 12px;
+}
+
+#custom_tax_value {
+	border: 1px solid #dbe3ec;
+	border-radius: 6px;
+	text-align: right;
+	outline: none;
+}
+
+#custom_tax_value:focus {
+	border-color: #2563eb;
 }
 
 .tax-option-item {
 	display: flex;
-	align-items: center; /* 내부 라디오와 글자 정렬 */
-	cursor: pointer;
-	font-size: 14px;
+	align-items: center;
+	white-space: nowrap; /* 글자 줄바꿈 방지 */
+	font-size: 13.5px;
 	font-weight: 500;
+	cursor: pointer;
 }
 
-/* 라디오 버튼 크기 줄이기 (기본 브라우저 스타일이 너무 큼) */
 .tax-option-item input[type="radio"] {
 	width: 16px;
 	height: 16px;
@@ -662,7 +681,8 @@ body {
 					</a> <a href="/jobposts/jobpost"> <i
 						class="fa-solid fa-briefcase fa-lg"
 						style="color: rgb(203, 203, 203); margin-right: 5px;"></i> 구인구직
-					</a> <a href="/boards/mainboard_list"> <i class="fa-regular fa-message fa-lg"
+					</a> <a href="/boards/mainboard_list"> <i
+						class="fa-regular fa-message fa-lg"
 						style="color: rgb(203, 203, 203); margin-right: 5px;"></i> 커뮤니티
 					</a>
 				</div>
@@ -860,7 +880,7 @@ body {
 				<h2>새 근무지 등록</h2>
 				<button type="button" id="closeWorkplaceModal" class="close-btn">×</button>
 			</div>
-			<form id="workplaceForm" action="/workplace/insert" method="post">
+			<form id="workplaceForm" action="/workplaces/insert" method="post">
 				<div class="modal-body">
 					<div class="form-row">
 						<label for="name">근무지 이름</label> <input type="text" id="name"
@@ -883,31 +903,54 @@ body {
 
 					<div class="form-grid two-col">
 						<div class="form-row">
-							<label>세금 적용 여부</label>
 							<div class="tax-option-group">
-								<label class="tax-option-item"> <input type="radio"
-									name="tax_applied" value="N" checked> 미적용
-								</label> <label class="tax-option-item"> <input type="radio"
-									name="tax_applied" value="Y" id="taxYes"> 적용
-								</label>
+								<div class="form-row">
+									<div class="form-grid">
+										<div class="form-row full-width">
+											<label>세금 적용 여부</label>
+											<div class="tax-option-group">
+												<label class="tax-option-item"> <input type="radio"
+													name="tax_type" value="0" checked> 미적용
+												</label> <label class="tax-option-item"> <input type="radio"
+													name="tax_type" value="3.3"> 3.3% (프리랜서)
+												</label> <label class="tax-option-item"> <input type="radio"
+													name="tax_type" value="4"> 4대보험
+												</label> <label class="tax-option-item"> <input type="radio"
+													name="tax_type" value="1"> 고용보험만
+												</label> <label class="tax-option-item"> <input type="radio"
+													name="tax_type" value="custom" id="taxCustom"> 직접
+													입력
+												</label>
+												<div class="custom-tax-input"
+													style="display: flex; align-items: center; gap: 4px;">
+													<input type="number" id="custom_tax_value"
+														name="custom_tax_value" placeholder="0.0" step="0.1"
+														min="0" max="100"
+														style="width: 60px; height: 30px; padding: 4px; font-size: 13px;"
+														disabled> <span
+														style="font-size: 13px; color: #374151;">%</span>
+												</div>
+											</div>
+											<div class="form-row" style="margin-top: 15px;">
+												<label for="payday">급여일</label>
+												<div style="display: flex; align-items: center; gap: 8px;">
+													<select id="payday" name="payday" required
+														style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+														<option value="">선택</option>
+														<c:forEach var="i" begin="1" end="31">
+															<option value="${i}">${i}일</option>
+														</c:forEach>
+													</select> <span style="font-size: 14px; color: #666;">매월 정해진
+														날짜에 급여가 계산됩니다.</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 
-						<div id="taxDetailArea"
-							style="display: none; margin-top: 10px; padding: 10px; background: #f8fafc; border-radius: 12px;">
-							<label
-								style="font-size: 13px; font-weight: 700; color: #374151; display: block; margin-bottom: 10px;">세부
-								세금 종류</label>
-							<div style="display: flex; gap: 10px; font-size: 13px;">
-								<label style="font-weight: normal;"> <input type="radio"
-									name="tax_type" value="3.3"> 3.3% (프리랜서)
-								</label> <label style="font-weight: normal;"> <input
-									type="radio" name="tax_type" value="4"> 4대보험
-								</label> <label style="font-weight: normal;"> <input
-									type="radio" name="tax_type" value="1"> 고용보험만
-								</label>
-							</div>
-						</div>
+
 					</div>
 
 					<div class="section-title">기본 근무 시간 (선택)</div>
@@ -1155,6 +1198,25 @@ body {
 		                // 숨기면서 체크되어 있던 세부 옵션들을 초기화하고 싶다면 아래 코드 추가
 		                const subRadios = taxDetailArea.querySelectorAll('input[type="radio"]');
 		                subRadios.forEach(sub => sub.checked = false);
+		            }
+		        });
+		    });
+		});
+		
+		document.addEventListener('DOMContentLoaded', function() {
+		    const taxTypeRadios = document.querySelectorAll('input[name="tax_type"]');
+		    const customTaxInput = document.getElementById("custom_tax_value");
+
+		    taxTypeRadios.forEach(radio => {
+		        radio.addEventListener('change', function() {
+		            if (this.id === 'taxCustom') {
+		                // '직접 입력' 선택 시 활성화
+		                customTaxInput.disabled = false;
+		                customTaxInput.focus();
+		            } else {
+		                // 다른 옵션 선택 시 비활성화 및 값 초기화
+		                customTaxInput.disabled = true;
+		                customTaxInput.value = "";
 		            }
 		        });
 		    });
