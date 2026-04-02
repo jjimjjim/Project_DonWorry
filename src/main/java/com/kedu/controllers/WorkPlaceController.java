@@ -14,7 +14,7 @@ import com.kedu.dto.WorkPlaceDTO;
 public class WorkPlaceController {
 	
 	@Autowired
-	WorkPlaceDAO dao = new WorkPlaceDAO();
+	WorkPlaceDAO dao;
 	
 	@RequestMapping("/insert")
 	public String insert(WorkPlaceDTO dto, HttpSession session) {

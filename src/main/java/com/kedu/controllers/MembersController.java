@@ -63,10 +63,10 @@ public class MembersController {
 	}
 	
 	@RequestMapping("/signup")
-	public String signup(MembersDTO dto) {
-		System.out.println("도착");
-		String pw = eu.getSha512(dto.getPw());
-		dao.signup(dto, pw);
+	public String signup(MembersDTO dto, String rrn_front, String rrn_back) {
+		dto.setRrn(rrn_front + "-" + rrn_back);
+		dto.setPw(eu.getSha512(dto.getPw()));
+		dao.signup(dto);
 		
 		return "redirect:/";
 	}
