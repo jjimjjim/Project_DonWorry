@@ -8,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.kedu.commons.EncryptionUtils;
+import com.kedu.dao.MypageDAO;
 
 import com.kedu.dao.MembersDAO;
 import com.kedu.dto.MembersDTO;
@@ -17,7 +22,14 @@ import com.kedu.dto.MembersDTO;
 public class MypageController {
 	
 	@Autowired
-	private MembersDAO dao;
+	private MembersDAO mdao;
+	@Autowired
+	private MypageDAO dao;
+	
+	@Autowired
+	private Gson gson;
+	
+	private EncryptionUtils eu = new EncryptionUtils();
 	
 	@RequestMapping("/toMypage")
 	public String toMypage() {
@@ -28,7 +40,7 @@ public class MypageController {
 	public String toProfile(HttpSession session, Model model) {
 		System.out.println("select profile");
 		String id =(String)session.getAttribute("loginId");	
-		List<MembersDTO> list = dao.selectAll(id);		
+		List<MembersDTO> list = mdao.selectAll(id);		
 		System.out.println("list size:"+list.size());
 		model.addAttribute("list",list);
 		
@@ -48,6 +60,24 @@ public class MypageController {
 	@RequestMapping("/toWithdraw")
 	public String toWithdraw() {
 		return "mypage/withdraw";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/passwordCheck")
+	public boolean passwordCheck(String memberPw, HttpSession session) {
+		String pw = eu.getSha512(memberPw);
+		String id = (String)session.getAttribute("loginId");
+		return dao.passwordCheck(id, pw);	
+	}
+	
+	@ResponseBody
+	@RequestMapping("/withdraw")
+	public boolean withdraw(String memberPw, HttpSession session) {
+		String pw = eu.getSha512(memberPw);
+		String id = (String)session.getAttribute("loginId");
+		int result = dao.withdraw(id, pw);
+		return result > 0;
+		
 	}
 	
 }
