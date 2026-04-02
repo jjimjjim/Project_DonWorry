@@ -453,28 +453,11 @@ body {
 
             <div class="nav-menu">
                 <a href="/" class="active">
-                    <i class="fa-solid fa-house fa-lg" style="color: rgb(36, 99, 235);"></i>
-                    홈
-                </a>
-                <a href="/salary/calendar">
-                    <i class="fa-regular fa-calendar fa-lg" style="color:rgb(203, 203, 203); margin-right:5px;"></i>
-                    급여 캘린더
-                </a>
-                <a href="/jobpost/jobpost">
-                    <i class="fa-solid fa-briefcase fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
-                    구인구직
-                </a>
-                <a href="boards/mainboard/mainboard_list">
-                    <i class="fa-regular fa-message fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
-                    커뮤니티
-                </a>
+                   <i class="fa-solid fa-wrench fa-lg" style="color: rgb(36, 99, 235); margin-right:6px;"></i>
+                    관리자 대시보드
+                </a>              
             </div>
         </div>
-
-        <a class="my-page" href="/mypage/mypage">
-            <i class="fa-solid fa-user-gear fa-lg" style="color: rgb(197, 197, 197);"></i>
-            마이페이지
-        </a>
     </nav>
 
     <main class="admin-page">

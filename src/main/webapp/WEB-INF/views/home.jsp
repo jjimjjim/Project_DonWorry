@@ -418,12 +418,10 @@
 <c:when test="${nickName==null}">
     <div class="top-auth">
         <span style="font-size: 13px; color: #666; cursor: pointer;">
-            <a href="members/toLogin" style="text-decoration: none; color:black">
+            <a href="members/toLogin" style="text-decoration: none; color:black; margin-right:10px;">
                 <i class="fa-regular fa-user fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>로그인
             </a>
         </span>
-        <!-- 일단 관리자 빼고 다 숨겨둠 -->
-            <a href="/admin/admin_main" style="text-decoration:none;"><div class="now-admin" >관리자</div></a>
     </div>
 </c:when>
 <c:otherwise>
@@ -436,7 +434,7 @@
             </a>
         </span>
 		<c:if test="${type=='관리자'}">
-            <div class="now-admin">관리자</div>
+            <a href="/admin/admin_main" style="text-decoration:none;"><div class="now-admin">관리자</div></a>
 		</c:if>
 		<c:if test="${type=='사업자'}">
             <div class="now-business">사업자</div>
