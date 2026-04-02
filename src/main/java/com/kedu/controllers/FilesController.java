@@ -20,6 +20,12 @@ public class FilesController {
 	@PostMapping("/upload")
 	@ResponseBody
 	public Map<String, String> upload(@RequestParam("image") MultipartFile file) throws Exception {
+		System.out.println("=== 업로드 컨트롤러 시작 ==="); // 👈 이게 콘솔에 찍히는지 확인
+	    
+	    if (file == null || file.isEmpty()) {
+	        System.out.println("파일이 비어있습니다!"); // 👈 혹시 파일이 안 넘어오는지 확인
+	        return null;
+	    }
 		
 	    String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
@@ -31,10 +37,11 @@ public class FilesController {
 	    }
 	    
 	    File dest = new File(path + fileName);
+	    
 	    file.transferTo(dest);
 
 	    Map<String, String> map = new HashMap<>();
-	    map.put("url", "http://10.10.55.87:8080/upload/" + fileName); // ⭐ 이 URL이 핵심
+	    map.put("url", "http://10.10.55.87/upload/" + fileName); // ⭐ 이 URL이 핵심
 
 	    return map;
 	}

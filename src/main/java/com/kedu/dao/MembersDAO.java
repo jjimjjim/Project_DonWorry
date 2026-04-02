@@ -47,7 +47,7 @@ public class MembersDAO {
 				
 	}
 
-	public void signup(MembersDTO dto, String pw) {
+	public void signup(MembersDTO dto) {
 	    // 1. 괄호 안에 데이터를 넣을 컬럼 이름을 정확히 적어줘.
 	    String sql = "INSERT INTO members (id, pw, name, nickname, phone, email, rrn, join_date) "
 	               + "VALUES (?, ?, ?, ?, ?, ?, ?, sysdate)";
@@ -55,7 +55,7 @@ public class MembersDAO {
 	    // 2. 위에서 적은 컬럼 순서대로 데이터를 매칭해줘. (총 8개)
 	    jdbc.update(sql, 
 	        dto.getId(), 
-	        pw, 
+	        dto.getPw(),
 	        dto.getName(), 
 	        dto.getNickname(),
 	        dto.getPhone(), 
