@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
+ <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+  <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -408,13 +409,15 @@
                     <i class="fa-regular fa-user"></i>
                 </div>
                 <div style="flex:1;">
-                <div class="card-title">알바생 닉네임</div>
-                <div class="card-email">user@naver.com</div>
+                <div class="card-title">${nickName}</div>
+                <div class="card-email">${list[0].email}</div>
             </div>
             </div>          
                 <div class="info-item">
                     <span class="info-label">가입일</span>
-                    <span class="info-val">2026.03.03</span>
+                    <span class="info-val">
+                    	<fmt:formatDate value="${list[0].join_date}" pattern="yyyy-MM-dd" />
+                    </span>
                 </div> 
                 <a href="/mypage/toProfile"><button class="profile-edit-btn">프로필 수정</button></a>       
             </div>          

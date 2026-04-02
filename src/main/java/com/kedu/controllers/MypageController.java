@@ -32,7 +32,11 @@ public class MypageController {
 	private EncryptionUtils eu = new EncryptionUtils();
 	
 	@RequestMapping("/toMypage")
-	public String toMypage() {
+	public String toMypage(HttpSession session, Model model) {
+		String id =(String)session.getAttribute("loginId");	
+		List<MembersDTO> list = mdao.selectAll(id);
+		model.addAttribute("list",list);
+		
 		return "mypage/mypage";
 	}
 	
