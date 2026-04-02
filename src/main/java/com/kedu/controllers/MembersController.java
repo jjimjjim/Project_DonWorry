@@ -1,5 +1,6 @@
 package com.kedu.controllers;
 
+import java.util.List;
 import java.util.Random;
 
 import javax.mail.internet.MimeMessage;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -64,7 +66,7 @@ public class MembersController {
 	public String signup(MembersDTO dto) {
 		System.out.println("도착");
 		String pw = eu.getSha512(dto.getPw());
-		dao.signup(dto);
+		dao.signup(dto, pw);
 		
 		return "redirect:/";
 	}
@@ -149,6 +151,13 @@ public class MembersController {
 	        return "fail";
 	    }
 	}
+	
+	
+//	public String updateProfile(HttpSession session) {
+//		String id = (String) session.getAttribute("targetId");
+//		return 
+//	}
+	
 	@RequestMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();

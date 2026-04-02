@@ -18,16 +18,21 @@
         }
         body {
             font-family: 'Pretendard', sans-serif;
-            background-color: #ffffff;
-            color: #333;
-            line-height: 1.6;
+        background-color: #ffffff;
+        line-height: 1.6;
+        min-height: 105vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
         }
 
         /* 레이아웃 컨테이너 */
         .container {
             max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
+        width: 100%; 
+        margin: 0 auto;
+        padding: 0 20px;
+        flex: 1; /* 컨텐츠가 적을 때 푸터를 아래로 밀어주는 최소한의 장치 */
         }
         /* 로그인 및 관리자 */
         .top-auth {
@@ -37,6 +42,71 @@
             gap: 15px;                 /* 요소 간 간격 */
             padding: 8px 0;           /* 위아래 여백 */
         }
+        .logout-btn { 
+         	width:60px;
+            height:30px;
+		    background-color: #ffffff; 
+		    color: #868e96;
+		    border: 1px solid #dee2e6; 
+		    border-radius: 6px; 
+		    font-size: 13px;
+		    transition: all 0.2s ease; /* 부드러운 변화를 위해 추가 */
+		}
+		.logout-btn:hover { 
+         	width:60px;
+            height:30px;
+		   	background-color: #f8f9fa;
+		    color: #495057;
+		    border-color: #ced4da;
+		    border: 1px solid #dee2e6; 
+		    border-radius: 6px; 
+		    font-size: 13px;
+		    transition: all 0.2s ease; /* 부드러운 변화를 위해 추가 */
+		}
+		
+        /*관리자 버튼*/
+        .now-admin {
+            width:60px;
+            height:30px;
+            background-color: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center; /*세로 중앙 정렬*/
+            justify-content: center; /* 가로 중앙 정렬 */
+            border-radius: 6px;
+            border: none;           
+            font-size: 13px;
+            cursor: pointer;
+        }
+        /*기업 버튼*/
+        .now-business {
+            width:60px;
+            height:30px;
+            background-color: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center; /*세로 중앙 정렬*/
+            justify-content: center; /* 가로 중앙 정렬 */
+            border-radius: 6px;
+            border: none;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        /*개인 버튼*/
+        .now-personal {
+            width:60px;
+            height:30px;
+            background-color: #2563eb;
+            color: white;
+            display: flex;
+            align-items: center; /*세로 중앙 정렬*/
+            justify-content: center; /* 가로 중앙 정렬 */
+            border-radius: 6px;
+            border: none;
+            font-size: 13px;
+            cursor: pointer;
+        }
+		
         /* [3] 네비게이션바 */
         .navbar {
             display: flex;
@@ -75,49 +145,6 @@
 
         }
         .nav-menu a.active { color: #2563eb; }
-/*사용사 식별 표시*/
-        /*관리자 버튼*/
-        .now-admin {
-            width:60px;
-            height:30px;
-            background-color: #2563eb;
-            color: white;
-            display: flex;
-            align-items: center; /*세로 중앙 정렬*/
-            justify-content: center; /* 가로 중앙 정렬 */
-            border-radius: 6px;
-            border: none;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        /*기업 버튼*/
-        .now-business {
-            width:60px;
-            height:30px;
-            background-color: #2563eb;
-            color: white;
-            display: flex;
-            align-items: center; /*세로 중앙 정렬*/
-            justify-content: center; /* 가로 중앙 정렬 */
-            border-radius: 6px;
-            border: none;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        /*개인 버튼*/
-        .now-personal {
-            width:60px;
-            height:30px;
-            background-color: #2563eb;
-            color: white;
-            display: flex;
-            align-items: center; /*세로 중앙 정렬*/
-            justify-content: center; /* 가로 중앙 정렬 */
-            border-radius: 6px;
-            border: none;
-            font-size: 13px;
-            cursor: pointer;
-        }
 
         /* [4] 히어로 섹션 */
         .hero {
@@ -383,9 +410,12 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="container">
+<c:choose>
+<c:when test="${nickName==null}">
     <div class="top-auth">
         <span style="font-size: 13px; color: #666; cursor: pointer;">
             <a href="members/toLogin" style="text-decoration: none; color:black">
@@ -393,10 +423,28 @@
             </a>
         </span>
         <!-- 일단 관리자 빼고 다 숨겨둠 -->
-            <a href="/admin/admin_main"><div class="now-admin" >관리자</div></a>
+            <a href="/admin/admin_main" style="decoration:none;"><div class="now-admin" >관리자</div></a>
             <div class="now-business" style="display: none;">기업</div>
             <div class="now-personal" style="display: none;">개인</div>
     </div>
+</c:when>
+<c:otherwise>
+    <div class="top-auth">
+        <span style="font-size: 13px; color: #666; cursor: pointer;">
+        	<i class="fa-regular fa-user fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
+            	${nickName}님 환영합니다.
+            <a href="members/logout" style="text-decoration: none; color:black">
+            <button class="logout-btn" style="margin-left:10px;">로그아웃</button>              
+            </a>
+        </span>
+        <!-- 일단 관리자 빼고 다 숨겨둠 -->
+            <div class="now-admin" style="display: none;">관리자</div>
+            <div class="now-business" style="display: none;">기업</div>
+            <div class="now-personal">개인</div>
+    </div>
+</c:otherwise>
+</c:choose>
+    
     <nav class="navbar">
         <div style="display: flex; align-items: center; gap: 40px;">
             <a href="/" class="logo"> 돈워리</a>
@@ -438,7 +486,9 @@
         <i class="fa-solid fa-pen-to-square fa-lg" style="color: rgb(74, 82, 99);"></i>
         이번 달 근무 요약
     </h2>
-    <div class="summary-grid">
+
+<c:if test="${nickName==null }">
+<div class="summary-grid">
         <div class="card">
             <a href="#" style="text-decoration: none; ">
             <div class="card-title">🏪 편의점 알바</div>
@@ -461,7 +511,16 @@
             </a>
         </div>
     </div>
-
+</c:if>    
+ <c:if test="${nickName!=null}">   
+    <div class="summary-grid">
+        <div class="card add-card">
+            <a href="#" style="text-decoration: none; ">   
+            <span>+ 알바 추가하기</span>
+            </a>
+        </div>
+    </div>
+</c:if>
     <h2 class="section-header">
         <i class="fa-solid fa-briefcase fa-lg" style="color: rgb(103, 77, 67); "></i>
          구인구직</h2>
@@ -529,7 +588,7 @@
         </div> 
         <div class="hot-board-item">
             <a href="#" class="hot-item-info" >
-                <div class="item-title-row">
+                <div class="hot-item-title-row">
                     <span class="contents-title">올리브영 강남점</span>
                     <span class="status-tag status-working">재직</span>
                 </div>
@@ -551,7 +610,7 @@
         </div>
         <div class="hot-board-item">
             <a href="#" class="hot-item-info" >
-                <div class="item-title-row">
+                <div class="hot-item-title-row">
                     <span class="contents-title">올리브영 강남점</span>
                     <span class="status-tag status-working">재직</span>
                 </div>
@@ -572,10 +631,11 @@
             </a>
         </div> 
     </div>
-    <div class="container-footer">
+</div>
+<div class="container-footer">
         <p>© 2026 돈워리. All rights reserved.</p>
         <p style="margin-top: 10px; font-size: 11px;">개인정보처리방침 | 이용약관 | 고객센터</p>
-    </div>
 </div>
+
 </body>
 </html>

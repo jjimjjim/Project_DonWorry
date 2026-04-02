@@ -399,8 +399,8 @@
                     <i class="fa-regular fa-user"></i>
                 </div>
                 <div style="flex:1;">
-                <div class="card-title">알바생 닉네임</div>
-                <div class="card-email">user@naver.com</div>
+                <div class="card-title">${nickName}</div>
+                <div class="card-email">${loginId}</div>
             </div>
             </div>          
                 <div class="info-item">
@@ -419,39 +419,41 @@
         
         <div class="form-group">
             <label class="form-label">아이디</label>
-            <input type="text" class="form-input" value="user123" readonly style="background-color: #f9fafb; color: #999; cursor: not-allowed;">
+            <input type="text" class="form-input" readonly 
+             name="id" value="${list[0].id}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;">
         </div>
 
         <div class="form-group">
             <label class="form-label">닉네임</label>
-            <input type="text" class="form-input update-input" placeholder="닉네임을 입력하세요" readonly value="알바생 닉네임" style="background-color: #f9fafb; color: #999; cursor: not-allowed;" >
+            <input type="text" class="form-input update-input" placeholder="닉네임을 입력하세요" readonly 
+            name="nickname" value="${list[0].nickname}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;" >
         </div>
 
 		<div class="form-group">
-            <label class="form-label" for="">이름</label>
-            <input type="text" class="form-input" value="사용자" readonly 
-			style="background-color: #f9fafb; color: #999; cursor: not-allowed;">
+            <label class="form-label">이름</label>
+            <input type="text" class="form-input" readonly 
+			name="name" value="${list[0].name}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;">
         </div>
 
 		<div class="form-group">
             <label class="form-label">생년월일</label>
-            <input type="text" class="form-input" value="2011-11-11" readonly 
-			style="background-color: #f9fafb; color: #999; cursor: not-allowed;">
+            <input type="text" class="form-input" readonly 
+			name="rrn" value="${list[0].rrn}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;">
         </div>
 
 		<div class="form-group">
             <label class="form-label">전화번호</label>
-            <input type="text" class="form-input update-input" placeholder="전화번호를 입력하세요" readonly value="01011112222" 
-			style="background-color: #f9fafb; color: #999; cursor: not-allowed;" >
+            <input type="text" class="form-input update-input" placeholder="전화번호를 입력하세요" readonly 
+            name="phone" value="${list[0].phone}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;" >
         </div>
 
         <div class="form-group">
             <label class="form-label">이메일 주소</label>
             <input type="email" class="form-input update-input" placeholder="이메일을 입력하세요" readonly 
-			value="user@naver.com" style="background-color: #f9fafb; color: #999; cursor: not-allowed;" >
+			name="email" value="${list[0].email}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;" >
         </div>
     </div>
-
+    
     <div class="submit-btn-box">
 		<a href="/mypage/toMypage"><button type="button" class="back-btn">뒤로가기</button><a>
 		<button type="button" class="update-btn">수정</button>
