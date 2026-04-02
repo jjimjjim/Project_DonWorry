@@ -431,13 +431,13 @@
 
 		<div class="form-group">
             <label class="form-label">이름</label>
-            <input type="text" class="form-input" value="사용자" readonly 
+            <input type="text" class="form-input" readonly 
 			name="name" value="${list[0].name}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;">
         </div>
 
 		<div class="form-group">
             <label class="form-label">생년월일</label>
-            <input type="text" class="form-input" value="2011-11-11" readonly 
+            <input type="text" class="form-input" readonly 
 			name="rrn" value="${list[0].rrn}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;">
         </div>
 
