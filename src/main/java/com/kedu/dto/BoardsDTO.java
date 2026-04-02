@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class BoardsDTO {
 	
 	private int seq;
-	private String member_id;
+	private String member_nickname;
 	private String category;
 	private String title;
 	private String content;
@@ -17,11 +17,11 @@ public class BoardsDTO {
 	
 	public BoardsDTO() {}
 	
-	public BoardsDTO(int seq, String member_id, String category, String title, String content, int view_count,
+	public BoardsDTO(int seq, String member_nickname, String category, String title, String content, int view_count,
 			Timestamp write_date) {
 		super();
 		this.seq = seq;
-		this.member_id = member_id;
+		this.member_nickname = member_nickname;
 		this.category = category;
 		this.title = title;
 		this.content = content;
@@ -34,11 +34,11 @@ public class BoardsDTO {
 	public void setSeq(int seq) {
 		this.seq = seq;
 	}
-	public String getMember_id() {
-		return member_id;
+	public String getMember_nickname() {
+		return member_nickname;
 	}
-	public void setMember_id(String member_id) {
-		this.member_id = member_id;
+	public void setMember_nickname(String member_nickname) {
+		this.member_nickname = member_nickname;
 	}
 	public String getCategory() {
 		return category;

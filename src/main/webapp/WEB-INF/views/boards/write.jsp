@@ -365,7 +365,7 @@
 
             <!-- 작성자 -->
             <div class="input-group writer">
-                <input type="text" name="memeber_id" readonly value=${nickName }>
+                <input type="text" name="member_nickname" readonly value="${nickName }">
                  
             </div>
             <div class="input-group">

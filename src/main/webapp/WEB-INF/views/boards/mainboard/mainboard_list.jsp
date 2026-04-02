@@ -370,7 +370,7 @@
 <div class="community-container">
     <div class="top-auth">
         <span style="font-size: 13px; color: #666; cursor: pointer;">
-            <a href="members/login"style="text-decoration: none; color:black">
+            <a href="/members/toLogin"style="text-decoration: none; color:black">
                 <i class="fa-regular fa-user fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>로그인
             </a>
         </span>
@@ -427,7 +427,7 @@
 
 <section class="post-list">
     <div class="post-container">
-        <!-- 더미 글들 -->
+        <!-- 더미 글들 
         <article class="post-card">
             <div class="user-info">
                 <div class="profile-img blue">알바</div>
@@ -466,14 +466,14 @@
                     <i class="fa-regular fa-message" style="color: rgb(203, 203, 203);"></i> 15
                 </span>
             </div>
-        </article>
+        </article>-->
 		
 		<c:forEach var = "i" items = "${mainList }">
         <article class="post-card" onclick="location.href='/boards/detail?seq=${i.seq}'">
             <div class="user-info">
                 <div class="profile-img green">편의</div>
                 <div class="meta">
-                    <span class="nickname">${i.nickname }</span>
+                    <span class="nickname">${i.member_nickname }</span>
                     <span class="tag free">
                     	<c:choose>
     						<c:when test="${i.category == 'main'}">메인게시판</c:when>

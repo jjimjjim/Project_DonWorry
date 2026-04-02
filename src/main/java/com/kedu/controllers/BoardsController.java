@@ -29,15 +29,15 @@ public class BoardsController {
 	@RequestMapping("/mainboard_list")
 	public String toMainBoard(int page,Model model) {
 		
-		//List<BoardsDTO> mainList =  dao.mainList(page*10-9,page*10);
-		//int recordTotalCount = dao.recordTotalCount();
+		List<BoardsDTO> mainList =  dao.mainList(page*10-9,page*10);
+		int recordTotalCount = dao.recordTotalCount();
 		
 		model.addAttribute("currentPage",page);
 		model.addAttribute("recordCountPerPage",10);
 		model.addAttribute("naviCountPerPage",10);
-		//model.addAttribute("recordTotalCount",recordTotalCount);
-		model.addAttribute("recordTotalCount",233); // 임시
-		//model.addAttribute("mainList", mainList);
+		model.addAttribute("recordTotalCount",recordTotalCount);
+		//model.addAttribute("recordTotalCount",233); // 임시
+		model.addAttribute("mainList", mainList);
 		
 		return "boards/mainboard/mainboard_list";
 	}
@@ -57,6 +57,7 @@ public class BoardsController {
 		
 		
 		int nextVal = dao.seqNextval();
+		System.out.println(nextVal);
 		dao.insert(nextVal,dto);
 		
 		
@@ -82,12 +83,12 @@ public class BoardsController {
 		}
 		
 		
-		return "redirect:/boards/mainboard_list";
+		return "redirect:/boards/mainboard_list?page=1";
 	}
 	@RequestMapping("/detail")
 	public String detail(int seq,Model model) {
-//		BoardsDTO dto = dao.detail(seq);
-//		model.addAttribute("dto",dto);
+		BoardsDTO dto = dao.detail(seq);
+		model.addAttribute("dto",dto);
 		return "boards/detail";
 	}
 }
