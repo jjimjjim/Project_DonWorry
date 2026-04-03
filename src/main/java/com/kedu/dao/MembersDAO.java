@@ -18,9 +18,7 @@ public class MembersDAO {
 	public boolean login(String id,String pw) {
 		String sql = "select count(*) from members where id =? and pw = ?";
 		int result = jdbc.queryForObject(sql,Integer.class,id,pw);
-		System.out.println(result);
 		if(result > 0) {
-			System.out.println("gd");
 			return true;
 		}else {
 			return false;
@@ -28,6 +26,11 @@ public class MembersDAO {
 	}
 	public String getNickname(String id) {
 		String sql = "select nickname from members where id = ?";
+		return jdbc.queryForObject(sql,String.class,id);
+	}
+	/*회원 식별용 type 세션처리*/
+	public String getType(String id) {
+		String sql = "select type from members where id = ?";
 		return jdbc.queryForObject(sql,String.class,id);
 	}
 	public String idSearch(String name,String email) {
@@ -43,20 +46,37 @@ public class MembersDAO {
 	}
 
 	public void signup(MembersDTO dto) {
-	    // 1. 괄호 안에 데이터를 넣을 컬럼 이름을 정확히 적어줘.
-	    String sql = "INSERT INTO members (id, pw, name, nickname, phone, email, rrn, join_date) "
-	               + "VALUES (?, ?, ?, ?, ?, ?, ?, sysdate)";
-
-	    // 2. 위에서 적은 컬럼 순서대로 데이터를 매칭해줘. (총 8개)
-	    jdbc.update(sql, 
-	        dto.getId(), 
-	        dto.getPw(),
-	        dto.getName(), 
-	        dto.getNickname(),
-	        dto.getPhone(), 
-	        dto.getEmail(), 
-	        dto.getRrn()
-	    );
+		if(dto.getType().equals("개인")) {
+			String sql = "INSERT INTO members (id, pw, name, nickname, phone, email, type, rrn, join_date) "
+		               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, sysdate)";
+		               
+		    jdbc.update(sql, 
+		        dto.getId(), 
+		        dto.getPw(),
+		        dto.getName(), 
+		        dto.getNickname(),
+		        dto.getPhone(), 
+		        dto.getEmail(), 
+		        dto.getType(),
+		        dto.getRrn()
+		    );
+		}else {
+			String sql = "INSERT INTO members (id, pw, name, nickname, phone, email, type, rrn, business_number, join_date) "
+		               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, sysdate)";
+		               
+		    jdbc.update(sql, 
+		        dto.getId(), 
+		        dto.getPw(),
+		        dto.getName(), 
+		        dto.getNickname(),
+		        dto.getPhone(), 
+		        dto.getEmail(), 
+		        dto.getType(),
+		        0,
+		        dto.getBusiness_number()
+		    );
+		}
+	    
 	}
 	
 	public int checkMemberForPw(String id, String email) {
@@ -82,8 +102,10 @@ public class MembersDAO {
 		return jdbc.query(sql, new BeanPropertyRowMapper<MembersDTO>(MembersDTO.class),id);
 	}
 	
-	/*member 정보 update*/
-	public void updateMember() {
-		
+	/*member 정보 업데이트*/
+	public int updateMember(String id,MembersDTO dto){
+		String sql = "update members set nickname=?, phone=?, email=? where id=?";
+		return jdbc.update(sql,dto.getNickname(),dto.getPhone(),dto.getEmail(),id);
 	}
+	
 }

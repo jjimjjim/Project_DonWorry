@@ -19,9 +19,6 @@ public class WorkPlaceDAO {
 	            + ") VALUES (workplace_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 	            + "TO_DATE(?, 'HH24:MI'), TO_DATE(?, 'HH24:MI'), sysdate)";
 
-	    // 2. 시간 데이터 처리 (HH:mm -> Date 객체 또는 적절한 포맷 필요시 처리)
-	    // 만약 DB가 DATE 타입이라면 TO_DATE를 SQL에 쓰거나 자바에서 변환해야 함
-	    
 	    return jdbc.update(sql,
 	            dto.getId(),
 	            dto.getName(),

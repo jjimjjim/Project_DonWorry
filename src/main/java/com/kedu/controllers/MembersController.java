@@ -42,6 +42,7 @@ public class MembersController {
 		if(result) {	
 			session.setAttribute("loginId",id);
 			session.setAttribute("nickName", dao.getNickname(id));	
+			session.setAttribute("type", dao.getType(id));	
 		}
 		return "redirect:/";
 	}
@@ -79,7 +80,6 @@ public class MembersController {
 	@RequestMapping(value = "/sendAuthCode", method = RequestMethod.POST)
 	@ResponseBody
 	public String sendAuthCode(String id, String email, HttpSession session) {
-	    System.out.println("아이디: " + id + " / 이메일: " + email);
 
 	    int result = dao.checkMemberForPw(id, email); 
 
@@ -103,8 +103,6 @@ public class MembersController {
 
 	        session.setAttribute("authCode", authCode); 
 	        session.setAttribute("targetId", id);       
-	        
-	        System.out.println("메일 발송 성공! 인증번호: " + authCode);
 	        return "success";
 
 	    } catch (Exception e) {
@@ -118,8 +116,6 @@ public class MembersController {
 	public String verifyAuthCode(String inputCode, HttpSession session) {
 	    String authCode = (String) session.getAttribute("authCode");
 	    
-	    System.out.println("세션 번호: " + authCode + " / 입력 번호: " + inputCode);
-
 	    if (authCode != null && authCode.equals(inputCode)) {
 	        return "success";
 	    } else {

@@ -1,11 +1,17 @@
 package com.kedu.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.kedu.dao.MembersDAO;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+	
+	@Autowired
+	private MembersDAO dao;
 	
 	@RequestMapping("/admin_main")
 	public String toAdmin() {
@@ -14,6 +20,9 @@ public class AdminController {
 	
 	@RequestMapping("/admin_members")
 	public String toMembers() {
+		
+//		dao.getMembersList();
+		
 		return "admin/admin_members";
 	}
 	
