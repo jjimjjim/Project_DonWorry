@@ -521,12 +521,6 @@
         </div>
 
 		<div class="form-group">
-            <label class="form-label">생년월일</label>
-            <input type="text" class="form-input" readonly 
-			name="rrn" value="${list[0].rrn}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;">
-        </div>
-
-		<div class="form-group">
             <label class="form-label">전화번호</label>
             <input type="text" class="form-input update-input" placeholder="전화번호를 입력하세요" readonly 
             name="phone" value="${list[0].phone}" style="background-color: #f9fafb; color: #999; cursor: not-allowed;" >
