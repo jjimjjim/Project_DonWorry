@@ -365,7 +365,8 @@
 
             <!-- 작성자 -->
             <div class="input-group writer">
-                <input type="text" name="member_nickname" readonly value="${nickName }">
+                <input type="text" readonly value="${nickName }">
+                <input type = "hidden" value = "${loginId }" name = "member_id">
                  
             </div>
             <div class="input-group">
@@ -387,7 +388,7 @@
 
             <!-- 버튼 영역 -->
             <div class="btn-group">
-                <button type="button" class="cancel-btn" onclick="location.href='/boards/mainboard_list'">취소</button>
+                <button type="button" class="cancel-btn" onclick="location.href='/boards/mainboard_list?page=1'">취소</button>
                 <button type="submit" class="submit-btn">등록</button>
             </div>
 
