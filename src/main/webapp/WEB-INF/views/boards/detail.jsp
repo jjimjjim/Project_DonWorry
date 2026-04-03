@@ -566,8 +566,10 @@
             <!-- 버튼 -->
             <div class="detail-actions">
                 <button onclick="location.href='/boards/mainboard_list?page=1'">목록</button>
-                <button onclick="location.href='/boards/update?seq=${dto.seq}'">수정</button>
+                <c:if test="${loginId == board_writer }">
+                <button onclick="location.href='/boards/toUpdate?seq=${dto.seq}'">수정</button>
                 <button>삭제</button>
+                </c:if>
             </div>
 
         </div>
