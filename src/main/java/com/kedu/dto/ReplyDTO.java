@@ -8,7 +8,7 @@ public class ReplyDTO {
 	
 	private int seq;
 	private int parent_seq;
-	private String member_nickname;
+	private String member_id;
 	private String content;
 	private Timestamp write_date;
 	private Integer re_reply_seq;
@@ -28,12 +28,12 @@ public class ReplyDTO {
 	
 	public ReplyDTO() {}
 	
-	public ReplyDTO(int seq, int parent_seq, String member_nickname, String content, Timestamp write_date,
+	public ReplyDTO(int seq, int parent_seq, String member_id, String content, Timestamp write_date,
 			Integer re_reply_seq) {
 		super();
 		this.seq = seq;
 		this.parent_seq = parent_seq;
-		this.member_nickname = member_nickname;
+		this.member_id = member_id;
 		this.content = content;
 		this.write_date = write_date;
 		this.re_reply_seq = re_reply_seq;
@@ -50,11 +50,11 @@ public class ReplyDTO {
 	public void setParent_seq(int parent_seq) {
 		this.parent_seq = parent_seq;
 	}
-	public String getMember_nickname() {
-		return member_nickname;
+	public String getMember_id() {
+		return member_id;
 	}
-	public void setMember_nickname(String member_nickname) {
-		this.member_nickname = member_nickname;
+	public void setMember_id(String member_id) {
+		this.member_id = member_id;
 	}
 	public String getContent() {
 		return content;

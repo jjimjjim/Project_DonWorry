@@ -423,6 +423,48 @@
             color: white;
             cursor: pointer;
         }
+        
+        .detail-files {
+            margin-top: 15px;
+            /* 🔥 작성정보랑 간격 */
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+        }
+
+        /* 리스트 */
+        .file-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* 파일 */
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-item i {
+            color: #2563eb;
+        }
+
+        .file-item a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .file-item a:hover {
+            text-decoration: underline;
+        }
+
+        .no-file {
+            font-size: 13px;
+            color: #999;
+        }
 
     </style>
 
@@ -483,7 +525,7 @@
             <!-- 작성 정보 -->
             <div class="detail-info">
                 <div class="info-left">
-                    <span class="writer">${dto.member_nickname }</span>
+                    <span class="writer">${dto.member_id }</span>
                     <span class="divider">|</span>
                     <span class="date">
                         <fmt:formatDate value="${dto.write_date}" pattern="yyyy-MM-dd" />
@@ -494,6 +536,27 @@
                     <span class= "report-btn">신고</span>
                 </div>
             </div>
+            
+            <!-- 🔥 여기 추가 -->
+            <div class="detail-files">
+                <c:if test="${not empty filesList}">
+                    <ul class="file-list">
+                        <c:forEach var="file" items="${filesList}">
+                            <li class="file-item">
+                                <i class="fa-regular fa-file-lines"></i>
+                                <a href="/boards/download?sysName=${file.sysName}&oriName=${file.oriName}">
+                                    ${file.oriName}
+                                </a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </c:if>
+
+                <c:if test="${empty filesList}">
+                    <div class="no-file">첨부파일이 없습니다.</div>
+                </c:if>
+            </div>
+            
 
             <!-- 본문 -->
             <div class="detail-content">
@@ -565,7 +628,7 @@
         		 html += `<div class="comment-item" data-seq=`+comment.seq+`>
         		        <div class="comment-header">
         	            <div class="comment-left">
-        	                <span class="comment-writer">`+ comment.member_nickname +`</span>
+        	                <span class="comment-writer">`+ comment.member_id +`</span>
         	                <span class="divider">|</span>
         	                <span class="comment-date">`+ comment.write_date_str +`</span>
         	            </div>
@@ -596,7 +659,7 @@
             	        		<div class="reply-item"> 
                                 <div class="comment-header">
                                     <div class="comment-left">
-                                        <span class="comment-writer">`+reply.member_nickname+`</span>
+                                        <span class="comment-writer">`+reply.member_id+`</span>
                                         <span class="divider">|</span>
                                         <span class="comment-date">`+reply.write_date_str+`</span>
                                     </div>
@@ -628,10 +691,10 @@
         	 $.ajax({
         		 url : "/reply/insert",
         		 data :{parent_seq : "${dto.seq}",
-        			 	member_nickname : "${nickName}",
+        			 	member_id : "${loginId}",
         			 	content : $(".content").val(),
         			 	re_reply_seq: null},
-        		 dataType:"json",
+        		 
         		 type: "post"
         	 }).done(function(){
         		 getReplyList();
@@ -646,7 +709,7 @@
         		 url : "/reply/insert",
         		 type: "post",
         		 data :{parent_seq : "${dto.seq}",
-     			 		member_nickname : "${nickName}",
+        			 	member_id : "${loginId}",
     			 		content : content,
     			 		re_reply_seq: parentCommentSeq}     		 
         	 }).done(function(){

@@ -472,7 +472,7 @@
             <div class="user-info">
                 <div class="profile-img green">편의</div>
                 <div class="meta">
-                    <span class="nickname">${i.member_nickname }</span>
+                    <span class="nickname">${i.member_id }</span>
                     <span class="tag free">
                     	<c:choose>
     						<c:when test="${i.category == 'main'}">메인게시판</c:when>

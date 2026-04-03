@@ -1,8 +1,13 @@
 package com.kedu.controllers;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +35,8 @@ public class BoardsController {
 	public String toMainBoard(int page,Model model) {
 		
 		List<BoardsDTO> mainList =  dao.mainList(page*10-9,page*10);
+		
+		
 		int recordTotalCount = dao.recordTotalCount();
 		
 		model.addAttribute("currentPage",page);
@@ -53,8 +60,6 @@ public class BoardsController {
 	}
 	@RequestMapping("/write")
 	public String write(BoardsDTO dto,MultipartFile[] files) {
-		System.out.println(dto.getContent() + " : " + dto.getCategory() );
-		
 		
 		int nextVal = dao.seqNextval();
 		System.out.println(nextVal);
@@ -88,7 +93,28 @@ public class BoardsController {
 	@RequestMapping("/detail")
 	public String detail(int seq,Model model) {
 		BoardsDTO dto = dao.detail(seq);
+		
 		model.addAttribute("dto",dto);
+		
+		List<FilesDTO> filesList = fdao.selectByParent_seq(seq);
+		model.addAttribute("filesList",filesList);
 		return "boards/detail";
+	}
+	@RequestMapping("/download")
+	public void download(HttpServletResponse response,String sysName, String oriName) throws Exception{
+		File target = new File("c:/files/" + sysName);
+		
+		oriName =  new String(oriName.getBytes("utf8"),"ISO-8859-1"); // 한글 깨짐 방지
+		response.setHeader("content-disposition","attachment;filename="+oriName);
+		
+		
+		try(DataInputStream dis = new DataInputStream(new FileInputStream(target));
+				DataOutputStream dos = new DataOutputStream(response.getOutputStream());){
+
+			byte[] fileContents = dis.readAllBytes(); 
+			
+			dos.write(fileContents);
+			dos.flush();
+		}
 	}
 }
