@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kedu.dao.WorkPlaceDAO;
 import com.kedu.dao.WorkPlaceListDAO;
-import com.kedu.dto.WorkPlaceDTO;
 import com.kedu.dto.WorkPlaceListDTO;
 
 @Controller
