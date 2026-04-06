@@ -37,11 +37,32 @@ public class WorkPlaceDAO {
 	    );
 	}
 	
-    public List<WorkPlaceDTO> selectByMemberId(String memberId) {
-        String sql = "select * from workplace where id = ?";
-        return jdbc.query(sql, new BeanPropertyRowMapper<WorkPlaceDTO>(WorkPlaceDTO.class), memberId);
-        
-    }
+	public List<WorkPlaceDTO> selectByMemberId(String memberId) {
+	    String sql = "select "
+	            + "seq, id, name, pay_per_hour, pay_type, pay_cycle, payday, "
+	            + "tax_applied, insurance_applied, employment_insurance, "
+	            + "to_char(work_start_time, 'HH24:MI') as work_start_time, "
+	            + "to_char(work_end_time, 'HH24:MI') as work_end_time, "
+	            + "to_char(workplace_date, 'YYYY-MM-DD HH24:MI:SS') as workplace_date "
+	            + "from workplace where id = ?";
+
+	    return jdbc.query(sql, new BeanPropertyRowMapper<>(WorkPlaceDTO.class), memberId);
+	}
 	
+	public WorkPlaceDTO selectBySeq(int seq) {
+		String sql = "select * from workplace where seq = ?";
+		return jdbc.queryForObject(sql, new BeanPropertyRowMapper<WorkPlaceDTO>(WorkPlaceDTO.class), seq);
+	}
+	
+	public int update(WorkPlaceDTO dto, String memberId) {
+		String sql = "update workplace set id = ?, name = ?, pay_per_hour = ?,"
+				+ "pay_type = ?, pay_cycle = ?, payday = ?, tax_applied = ?,"
+				+ "insurance_applied = ?, employment_insurance = ?, work_start_time = ?"
+				+ "wor_end_time = ?, workplace_date = ?";
+		return jdbc.update(sql, memberId, dto.getName(), dto.getPay_per_hour(), dto.getPay_type(),
+					dto.getPay_cycle(), dto.getPayday(), dto.getTax_applied(), 
+					dto.getInsurance_applied(), dto.getEmployment_insurance(),
+					dto.getWork_start_time(), dto.getWork_end_time(), dto.getWorkplace_date());
+	}
 	
 }

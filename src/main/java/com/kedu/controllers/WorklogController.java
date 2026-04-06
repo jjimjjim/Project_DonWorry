@@ -35,10 +35,22 @@ public class WorklogController {
 	    return dao.selectBySeq(seq);
 	}
 	
+	@ResponseBody
+	@RequestMapping("/delete")
+	public int delete(int seq) {
+		return dao.deleteBySeq(seq);
+	}
+	
 	@ExceptionHandler(Exception.class)
 	public String exceptionHandler(Exception e) {	
 		e.printStackTrace();
 		return "error";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/update")
+	public int update(WorklogDTO dto) {
+		return dao.update(dto);
 	}
 
 }

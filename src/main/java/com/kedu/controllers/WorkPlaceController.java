@@ -64,24 +64,31 @@ public class WorkPlaceController {
 		return "redirect:/salary/calendar";
 	}
 	
+	
 	@ResponseBody
 	@RequestMapping("/list")
 	public String getList(HttpSession session) {
 	    String memberId = (String) session.getAttribute("loginId");
 	    List<WorkPlaceDTO> list = dao.selectByMemberId(memberId);
-	    
-	    List<Map<String, Object>> result = new ArrayList<>();
-
-	    for (WorkPlaceDTO dto : list) {
-	        Map<String, Object> map = new HashMap<>();
-	        map.put("seq", dto.getSeq());
-	        map.put("name", dto.getName());
-	        result.add(map);
-	    }
 
 	    Gson gson = new Gson();
-	    return gson.toJson(result);
+	    return gson.toJson(list);
 	}
+	
+	@ResponseBody
+	@RequestMapping("/detail")
+	public WorkPlaceDTO getDetail(int seq) {
+	    return dao.selectBySeq(seq);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/update")
+	public int updateDetail(WorkPlaceDTO dto, HttpSession session) {
+	    String memberId = (String)session.getAttribute("loginId");
+		return dao.update(dto, memberId);
+	}
+	
+	
 	
 	
 
