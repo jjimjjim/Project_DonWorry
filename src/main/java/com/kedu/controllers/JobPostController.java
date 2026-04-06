@@ -1,6 +1,7 @@
 package com.kedu.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -40,6 +41,14 @@ public class JobPostController {
 	    model.addAttribute("list", list);
 	    return "jobpost/jobpost";
 	}
+	
+	@RequestMapping("/selectByLocation")
+	public String selectByLocation(String selectByLocation, Model model) {
+		List<JobPostDTO> list;
+		list = dao.selectByLocation(selectByLocation);
+		model.addAttribute("list", list);
+		return "jobpost/jobpost";
+	}
 
 
 	@RequestMapping("/jobwrite")
@@ -67,6 +76,18 @@ public class JobPostController {
         // 대분류 ID를 받아서 하위 카테고리 리스트 반환
         return catdao.getSubCategories(parentId);
     }
+	
+	@RequestMapping("/getUpperCategory")
+	@ResponseBody
+	public List<CateGoryDTO> getUpperCategory() {
+	    return catdao.getUpperCategories(); // parent_id IS NULL 인 것들
+	}
+
+	@RequestMapping("/getSubCategory")
+	@ResponseBody
+	public List<CateGoryDTO> getSubCategory(@RequestParam("parentId") int parentId) {
+	    return catdao.getSubCategories(parentId); // parent_id = ? 인 것들
+	}
 	
 	
 }

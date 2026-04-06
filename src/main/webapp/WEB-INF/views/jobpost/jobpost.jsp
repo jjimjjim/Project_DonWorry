@@ -475,6 +475,63 @@ body {
 	background-color: #0056b3;
 	transform: translateY(-3px);
 }
+
+/* 직종/지역 리스트 글자가 안 보일 때를 대비한 강제 스타일 */
+.loc-list li {
+	color: #333 !important; /* 글자색을 진한 회색으로 강제 */
+	min-height: 40px; /* 최소 높이 확보 */
+	display: block; /* 영역 확보 */
+	width: 100%;
+}
+
+.loc-list li:hover {
+	background-color: #f0f7ff !important;
+	color: #2563eb !important;
+}
+
+/* [직종 레이어 리스트 강제 출력 스타일] */
+#categoryLayer .loc-list {
+	background-color: #ffffff !important;
+	min-height: 320px !important;
+	display: block !important;
+}
+
+#mainCatList li, #subCatList li {
+	color: #333333 !important; /* 글자색을 진한 회색으로 강제 */
+	padding: 12px 20px !important;
+	font-size: 14px !important;
+	display: block !important; /* 영역 확보 */
+	background-color: #ffffff !important;
+	cursor: pointer !important;
+	border-bottom: 1px solid #f1f3f5 !important;
+	text-align: left !important;
+	visibility: visible !important; /* 숨김 방지 */
+	opacity: 1 !important; /* 투명도 방지 */
+}
+
+/* 마우스 올렸을 때 효과 */
+#mainCatList li:hover, #subCatList li:hover {
+	background-color: #f0f7ff !important;
+	color: #2563eb !important;
+}
+
+/* 선택(클릭)되었을 때 스타일 */
+#mainCatList li.active, #subCatList li.active {
+	background-color: #eef2ff !important;
+	color: #2563eb !important;
+	font-weight: 600 !important;
+}
+
+/* 리스트 헤더(대분류/소분류 글자) 스타일 */
+.list-header {
+	background-color: #f8f9fa !important;
+	color: #868e96 !important;
+	font-weight: 600 !important;
+	padding: 10px 20px !important;
+	position: sticky !important;
+	top: 0;
+	z-index: 10;
+}
 </style>
 </head>
 <body>
@@ -554,7 +611,7 @@ body {
 							class="fa-solid fa-chevron-down"
 							style="font-size: 12px; color: #ccc;"></i>
 					</button>
-					<button class="filter-btn">
+					<button class="filter-btn" id="btnCategory">
 						<i class="fa-solid fa-briefcase"></i> 직종별 <i
 							class="fa-solid fa-chevron-down"
 							style="font-size: 12px; color: #ccc;"></i>
@@ -575,24 +632,6 @@ body {
 					<div class="layer-content">
 						<ul class="loc-list" id="sidoList">
 							<li class="list-header">시·도</li>
-							<li>서울</li>
-							<li>경기</li>
-							<li>인천</li>
-							<li>강원</li>
-							<li>대전</li>
-							<li>세종</li>
-							<li>충남</li>
-							<li>충북</li>
-							<li>부산</li>
-							<li>울산</li>
-							<li>경남</li>
-							<li>경북</li>
-							<li>대구</li>
-							<li>광주</li>
-							<li>전남</li>
-							<li>전북</li>
-							<li>제주</li>
-							<li>전국</li>
 						</ul>
 						<ul class="loc-list" id="gugunList">
 							<li class="list-header">시·구·군</li>
@@ -604,10 +643,34 @@ body {
 					<div
 						style="display: flex; justify-content: center; gap: 10px; padding: 15px; background: #fcfcfc; border-top: 1px solid #eee;">
 						<button class="filter-btn" style="padding: 8px 25px;">초기화</button>
-						<button class="filter-btn"
-							style="padding: 8px 25px; background: #495057; color: white;">검색</button>
+						<button id="btnLayerSearch" class="filter-btn"
+							style="padding: 8px 25px; background-color: #2563eb; color: white;">검색</button>
 					</div>
 				</div>
+
+				<div id="categoryLayer"
+					style="display: none; position: absolute; top: 100%; left: 0; width: 100%; background: #fff; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); z-index: 101; margin-top: -15px; overflow: hidden;">
+					<div class="layer-header">
+						<h4 style="font-size: 15px; font-weight: 600;">직종 선택</h4>
+						<button type="button" class="categoryLayerClose"
+							style="font-size: 20px; color: #999; cursor: pointer; border: none; background: none;">&times;</button>
+					</div>
+					<div class="layer-content">
+						<ul class="loc-list" id="mainCatList">
+							<li class="list-header">대분류</li>
+						</ul>
+						<ul class="loc-list" id="subCatList" style="flex: 2;">
+							<li class="list-header">소분류</li>
+						</ul>
+					</div>
+					<div
+						style="display: flex; justify-content: center; gap: 10px; padding: 15px; background: #fcfcfc; border-top: 1px solid #eee;">
+						<button id="btnCatSearch" class="filter-btn"
+							style="padding: 8px 25px; background-color: #2563eb; color: white;">선택
+							완료</button>
+					</div>
+				</div>
+
 			</div>
 
 			<div class="job-list">
@@ -675,102 +738,159 @@ body {
 
 	<script>
 	$(function() {
-		const areaData = {
-			    '서울': { '강남구': ['삼성동', '역삼동'], '강동구': ['천호동', '성내동'], '마포구': ['망원동', '연남동'], '송파구': ['잠실동', '가락동'], '영등포구': ['여의도동', '당산동'] },
-			    '경기': { '수원시': ['팔달구', '영통구'], '성남시': ['분당구', '수정구'], '부천시': ['옥길동', '범박동'], '고양시': ['일산동구', '덕양구'], '용인시': ['수지구', '기흥구'] },
-			    '인천': { '남동구': ['구월동', '간석동'], '연수구': ['송도동', '동춘동'], '부평구': ['부평동', '산곡동'], '미추홀구': ['주안동', '숭의동'] },
-			    '강원': { '춘천시': ['퇴계동', '석사동'], '원주시': ['단계동', '무실동'], '강릉시': ['교동', '포남동'] },
-			    '대전': { '서구': ['둔산동', '갈마동'], '유성구': ['봉명동', '상대동'], '중구': ['은행동', '대흥동'] },
-			    '세종': { '세종시': ['도담동', '아름동', '종촌동', '나성동', '고운동'] },
-			    '충남': { '천안시': ['두정동', '불당동'], '아산시': ['배방읍', '탕정면'], '서산시': ['읍내동', '동문동'] },
-			    '충북': { '청주시': ['가경동', '복대동'], '충주시': ['연수동', '교현동'], '제천시': ['중앙로', '의림동'] },
-			    '부산': { '해운대구': ['우동', '중동'], '부산진구': ['서면', '부암동'], '사하구': ['하단동', '괴정동'], '수영구': ['광안동', '민락동'] },
-			    '울산': { '남구': ['삼산동', '무거동'], '중구': ['성남동', '복산동'], '북구': ['화봉동', '천곡동'] },
-			    '경남': { '창원시': ['상남동', '중앙동'], '김해시': ['내동', '외동'], '진주시': ['평거동', '가좌동'] },
-			    '경북': { '포항시': ['죽도동', '두호동'], '구미시': ['원평동', '인동동'], '경주시': ['황남동', '성건동'] },
-			    '대구': { '중구': ['동성로', '삼덕동'], '수성구': ['범어동', '만촌동'], '달서구': ['상인동', '월성동'] },
-			    '광주': { '북구': ['용봉동', '운암동'], '상무지구': ['치평동', '금호동'], '광산구': ['수완동', '첨단동'] },
-			    '전남': { '여수시': ['학동', '문수동'], '순천시': ['조례동', '연향동'], '목포시': ['상동', '용당동'] },
-			    '전북': { '전주시': ['효자동', '송천동'], '군산시': ['나운동', '수송동'], '익산시': ['영등동', '모현동'] },
-			    '제주': { '제주시': ['노형동', '연동'], '서귀포시': ['서귀동', '중문동'] },
-			    '전국': { '전체': ['전국 공고 보기'] }
-			};
+	    /* [1] 위치(지역) 선택 관련 로직 */
+	    loadSido();
 
-        // 레이어 토글 기능 추가
-        $('#btnLocation').on('click', function(e) {
-            e.stopPropagation();
-            $('#locationLayer').stop().slideToggle(200);
-            $(this).toggleClass('active');
-        });
-
-        $('#layerClose').on('click', function() {
-            $('#locationLayer').slideUp(200);
-            $('#btnLocation').removeClass('active');
-        });
-
-        // 외부 클릭 시 닫기
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('.search-filter-wrap').length) {
-                $('#locationLayer').slideUp(200);
-                $('#btnLocation').removeClass('active');
-            }
-        });
-
-		// [1단계] 시·도 클릭
-		$(document).on('click', '#sidoList li:not(.list-header)', function() {
-			const sido = $(this).text().trim();
-			$(this).addClass('active').siblings().removeClass('active');
-
-			let gugunHtml = '<li class="list-header">시·구·군</li>';
-			const gugunMap = areaData[sido];
-
-			if (gugunMap) {
-				Object.keys(gugunMap).forEach(gugun => {
-					gugunHtml += "<li>" + gugun + "</li>";
-				});
-			}
-			$('#gugunList').html(gugunHtml);
-			$('#dongList').html('<li class="list-header">동·읍·면</li>');
-		});
-
-		// [2단계] 시·구·군 클릭
-		$(document).on('click', '#gugunList li:not(.list-header)', function() {
-			const sido = $('#sidoList li.active').text().trim();
-			const gugun = $(this).text().trim();
-			$(this).addClass('active').siblings().removeClass('active');
-
-			let dongHtml = '<li class="list-header">동·읍·면</li>';
-			const dongList = areaData[sido][gugun];
-
-			if (dongList) {
-				dongList.forEach(dong => {
-					dongHtml += "<li>" + dong + "</li>";
-				});
-			}
-			$('#dongList').html(dongHtml);
-		});
-
-		// [3단계] 동 클릭
-		$(document).on('click', '#dongList li:not(.list-header)', function() {
-			$(this).addClass('active').siblings().removeClass('active');
-		});
-	});
-	
-	$(function() {
-	    // 검색 버튼 클릭 이벤트
-	    $('.search-btn').on('click', function() {
-	        let keyword = $('.search-wrapper input').val().trim();
-	        if(keyword === "") {
-	        	location.href = "/jobposts/jobpost";
-	        }
-	        // 주소창에 검색어를 담아서 이동
-	        location.href = "/jobposts/jobpost?searchKeyword=" + encodeURIComponent(keyword);
+	    // 위치별 버튼 클릭 시 레이어 토글
+	    $('#btnLocation').on('click', function(e) {
+	        e.stopPropagation();
+	        $('#categoryLayer').hide(); // 직종 레이어는 닫기
+	        $(this).toggleClass('active');
+	        $('#locationLayer').stop().slideToggle(200);
 	    });
 
-	    // 엔터키 입력 시에도 검색되게 추가
+	    // 지역 레이어 닫기 버튼
+	    $('#layerClose').on('click', function() {
+	        $('#btnLocation').removeClass('active');
+	        $('#locationLayer').slideUp(200);
+	    });
+
+	    function loadSido() {
+	        $.ajax({
+	            url: "/location/getSido",
+	            type: "get",
+	            success: function(data) {
+	                let html = '<li class="list-header">시·도</li>';
+	                data.forEach(sido => {
+	                    html += "<li>" + sido + "</li>";
+	                });
+	                $('#sidoList').html(html);
+	            }
+	        });
+	    }
+
+	    // 시/도 클릭 -> 구/군 로드
+	    $(document).on('click', '#sidoList li:not(.list-header)', function() {
+	        const sido = $(this).text().trim();
+	        $(this).addClass('active').siblings().removeClass('active');
+	        $.ajax({
+	            url: "/location/getGugun",
+	            data: { sido: sido },
+	            success: function(data) {
+	                let html = '<li class="list-header">시·구·군</li>';
+	                data.forEach(gugun => { if(gugun) html += "<li>" + gugun + "</li>"; });
+	                $('#gugunList').html(html);
+	                $('#dongList').html('<li class="list-header">동·읍·면</li>');
+	            }
+	        });
+	    });
+
+	    // 구/군 클릭 -> 동/읍/면 로드
+	    $(document).on('click', '#gugunList li:not(.list-header)', function() {
+	        const sido = $('#sidoList li.active').text().trim();
+	        const gugun = $(this).text().trim();
+	        $(this).addClass('active').siblings().removeClass('active');
+	        $.ajax({
+	            url: "/location/getDong",
+	            data: { sido: sido, gugun: gugun },
+	            success: function(data) {
+	                let html = '<li class="list-header">동·읍·면</li>';
+	                data.forEach(dong => { html += "<li>" + dong + "</li>"; });
+	                $('#dongList').html(html);
+	            }
+	        });
+	    });
+
+	    $(document).on('click', '#dongList li:not(.list-header)', function() {
+	        $(this).addClass('active').siblings().removeClass('active');
+	    });
+
+	    // 지역 검색 실행
+	    $('#btnLayerSearch').on('click', function() {
+	        let sido = $('#sidoList li.active').text().trim();
+	        let gugun = $('#gugunList li.active').text().trim();
+	        let dong = $('#dongList li.active').text().trim();
+	        if (!sido) { alert("지역을 선택해주세요."); return; }
+	        let selectByLocation = sido + (gugun ? " " + gugun : "") + (dong ? " " + dong : "");
+	        location.href = "/jobposts/selectByLocation?selectByLocation=" + encodeURIComponent(selectByLocation);
+	    });
+
+
+	    /* [2] 직종 선택 관련 로직 */
+	    
+	    // 직종별 버튼 클릭 시 레이어 토글
+	    $('#btnCategory').on('click', function(e) {
+	        e.stopPropagation();
+	        $('#locationLayer').hide(); // 지역 레이어는 닫기
+	        $('#categoryLayer').stop().slideToggle(200);
+	        loadMainCategory(); // 열 때마다 새로고침
+	    });
+
+	    // 직종 레이어 닫기
+	    $('.categoryLayerClose').on('click', function() {
+	        $('#categoryLayer').slideUp(200);
+	    });
+
+	    function loadMainCategory() {
+	        $.ajax({
+	            url: "/jobposts/getUpperCategory",
+	            success: function(data) {
+	                let html = '<li class="list-header">대분류</li>';
+	                data.forEach(cat => {
+	                    // \${ } 형태로 수정!
+	                    html += `<li data-id="\${cat.cat_id}">\${cat.cat_name}</li>`;
+	                });
+	                $('#mainCatList').html(html);
+	            }
+	        });
+	    }
+
+	    // 대분류 클릭 -> 소분류 로드
+	    $(document).on('click', '#mainCatList li:not(.list-header)', function() {
+    const pId = $(this).attr('data-id');
+    $(this).addClass('active').siblings().removeClass('active');
+
+    $.ajax({
+        url: "/jobposts/getSubCategory",
+        data: { parentId: pId },
+        success: function(data) {
+            let html = '<li class="list-header">소분류</li>';
+            data.forEach(cat => {
+                // 여기도 \${ } 형태로 수정!
+                html += `<li data-id="\${cat.cat_id}">\${cat.cat_name}</li>`;
+            });
+            $('#subCatList').html(html);
+        }
+    });
+});
+
+	    $(document).on('click', '#subCatList li:not(.list-header)', function() {
+	        $(this).addClass('active').siblings().removeClass('active');
+	    });
+
+	    // 직종 검색 실행
+	    $('#btnCatSearch').on('click', function() {
+	        const catName = $('#subCatList li.active').text().trim();
+	        if(!catName) { alert("직종을 선택해주세요."); return; }
+	        location.href = "/jobposts/jobpost?searchKeyword=" + encodeURIComponent(catName);
+	    });
+
+
+	    /* [3] 상단 검색창 공통 로직 */
+	    $('.search-btn').on('click', function() {
+	        let keyword = $('.search-wrapper input').val().trim();
+	        location.href = (keyword === "") ? "/jobposts/jobpost" : "/jobposts/jobpost?searchKeyword=" + encodeURIComponent(keyword);
+	    });
+
 	    $('.search-wrapper input').on('keypress', function(e) {
-	        if(e.keyCode === 13) {
-	            $('.search-btn').click();
+	        if(e.keyCode === 13) $('.search-btn').click();
+	    });
+
+	    // 레이어 외부 클릭 시 닫기
+	    $(document).on('click', function(e) {
+	        if (!$(e.target).closest('.search-filter-wrap').length) {
+	            $('#locationLayer, #categoryLayer').slideUp(200);
+	            $('#btnLocation').removeClass('active');
 	        }
 	    });
 	});
