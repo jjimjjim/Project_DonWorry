@@ -1,16 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>   
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>돈워리 - 게시물수정</title>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>돈워리- 문의작성</title>
 <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script src="https://uicdn.toast.com/editor/latest/i18n/ko-kr.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
 <style>
@@ -124,8 +124,7 @@
         width: 100vw;                  /* 화면 끝까지 너비 확장 */
         margin-left: calc(-50vw + 50%); /* 컨테이너를 벗어나 화면 꽉 채우기 */
     }
-    
-     /* 글쓰기 전체 */
+    /* 글쓰기 전체 */
 .write-wrapper {
     display: flex;
     justify-content: center;
@@ -291,44 +290,45 @@
 
 <div class="community-container">
     <c:choose>
-	<c:when test="${nickName==null}">
-	    <div class="top-auth">
-	        <span style="font-size: 13px; color: #666; cursor: pointer;">
-	            <a href="/members/toLogin" style="text-decoration: none; color:black">
-	                <i class="fa-regular fa-user fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>로그인
-	            </a>
-	        </span>
-	        <!-- 일단 관리자 빼고 다 숨겨둠 -->
-	            <a href="/admin/admin_main" style="text-decoration:none;"><div class="now-admin" >관리자</div></a>
-	    </div>
-	</c:when>
-	<c:otherwise>
-	    <div class="top-auth">  
-	        <span style="font-size: 13px; color: #666; cursor: pointer;">
-	        	<i class="fa-regular fa-user fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
-	            	${nickName}님 환영합니다.
-	            <a href="/members/logout" style="text-decoration: none; color:black">
-	            <button class="logout-btn" style="margin-left:10px;">로그아웃</button>              
-	            </a>
-	        </span>
-			<c:if test="${type=='관리자'}">
-	            <div class="now-admin">관리자</div>
-			</c:if>
-			<c:if test="${type=='사업자'}">
-	            <div class="now-business">사업자</div>
-	        </c:if>
-			<c:if test="${type=='개인'}">        
-	            <div class="now-personal">개인</div>
-			</c:if>
-	    </div>
-	</c:otherwise>
-</c:choose>
+        <c:when test="${nickName==null}">
+            <div class="top-auth">
+                <span style="font-size: 13px; color: #666; cursor: pointer;">
+                    <a href="/members/toLogin" style="text-decoration: none; color:black">
+                        <i class="fa-regular fa-user fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>로그인
+                    </a>
+                </span>
+                <!-- 일단 관리자 빼고 다 숨겨둠 -->
+                    <a href="/admin/admin_main" style="text-decoration:none;"><div class="now-admin" >관리자</div></a>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="top-auth">  
+                <span style="font-size: 13px; color: #666; cursor: pointer;">
+                    <i class="fa-regular fa-user fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
+                        ${nickName}님 환영합니다.
+                    <a href="/members/logout" style="text-decoration: none; color:black">
+                    <button class="logout-btn" style="margin-left:10px;">로그아웃</button>              
+                    </a>
+                </span>
+                <c:if test="${type=='관리자'}">
+                    <div class="now-admin">관리자</div>
+                </c:if>
+                <c:if test="${type=='사업자'}">
+                    <div class="now-business">사업자</div>
+                </c:if>
+                <c:if test="${type=='개인'}">        
+                    <div class="now-personal">개인</div>
+                </c:if>
+            </div>
+        </c:otherwise>
+    </c:choose>
+
     <nav class="navbar">
         <div style="display: flex; align-items: center; gap: 40px;">
             <a href="/" class="logo"> 돈워리</a>
             <div class="nav-menu">
                 <a href="/" >
-                    <i class="fa-solid fa-house fa-lg" style="color: rgb(203, 203, 203);"></i>
+                    <i class="fa-solid fa-house fa-lg" style="color: rgb(36, 99, 235);"></i>
                     홈
                 </a>
                 <a href="salary/calendar">
@@ -339,13 +339,13 @@
                     <i class="fa-solid fa-briefcase fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
                     구인구직
                 </a>
-                <a href="/boards/mainboard_list?page=1" class="active">
-                    <i class="fa-regular fa-message fa-lg" style="color: rgb(36, 99, 235); margin-right:5px;"></i>
-                    커뮤니티</a>
-                  <a href="/qna/qna"> 
-                    <i class="fa-solid fa-question fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
+                <a href="/boards/mainboard_list?page=1">
+                    <i class="fa-regular fa-message fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
+                    커뮤니티</a>   
+                <a href="/qna/qna" class="active"> 
+                    <i class="fa-solid fa-question fa-lg" style="color: rgb(36, 99, 235); margin-right:5px;"></i>
                     고객지원
-                </a>                
+                </a>             
             </div>          
         </div>   
         <c:if test="${nickName==null }">   
@@ -361,44 +361,25 @@
 	        </a>  
         </c:if>         
     </nav>
-
-    </div>
     
     <div class="write-wrapper">
     <div class="write-box">
 
-        <div class="write-title">게시글 작성</div>
+        <div class="write-title">1:1 문의하기</div>
 
-        <form action="/boards/update" method="post" id = "frm" enctype="multipart/form-data">
-        <input type="hidden" value ="${dto.seq }" name ="seq">
+        <form action="/qna/write" method="post" id = "frm" enctype="multipart/form-data">
+        
         	
-    		<!-- 카테고리 -->
-			<div class="input-group">
-						<c:choose>
-    						<c:when test="${dto.category == 'main'}">
-    						<input type="text" name ="category" value ="메인게시판" readonly>
-    						</c:when>
-    						<c:when test="${dto.category == 'free'}">
-    						<input type="text" name ="category" value ="자유게시판" readonly>
-    						</c:when>
-   	 						<c:when test="${dto.category == 'qna'}">
-   	 						<input type="text" name ="category" value ="질문게시판" readonly>
-   	 						</c:when>
-    						<c:when test="${dto.category == 'review'}">
-    						<input type="text" name ="category" value ="리뷰게시판" readonly>
-    						</c:when>
-						</c:choose>
-    			
-			</div>
+    		
 
             <!-- 제목 -->
             <div class="input-group">
-                <input type="text" name="title" placeholder="제목을 입력하세요" id="title" value = "${dto.title }">
+                <input type="text" name="title" placeholder="제목을 입력하세요" id="title">
             </div>
 
             <!-- 작성자 -->
             <div class="input-group writer">
-                <input type="text" readonly value="${nickName }">
+                <input type="text" readonly value="${loginId }">
                 <input type = "hidden" value = "${loginId }" name = "member_id">
                  
             </div>
@@ -409,43 +390,32 @@
                                     <i class="fa-solid fa-paperclip"></i>
                                     파일첨부
                                 </label>
-                                <span class="file-upload-text" id="fileNameText">
-                                <c:choose>
-                                	<c:when test="${empty filesList or fn:length(filesList) == 0}">
-        								선택된 파일 없음
-    								</c:when>
-                                	<c:when test="${fn:length(filesList) == 1}">
-        								${filesList[0].oriName}
-    								</c:when>
-                                	<c:otherwise>
-        								${filesList[0].oriName} 외 ${fn:length(filesList) - 1}개
-    								</c:otherwise>
-                                </c:choose>
-                                </span>
+                                <span class="file-upload-text" id="fileNameText">선택된 파일 없음</span>
                             </div>
                         </div>
 
             <!-- 에디터 영역 -->
-            <div id="editor">${dto.content }</div>
+            <div id="editor"></div>
 
             <!-- hidden (에디터 값 담기) -->
             <input type="hidden" name="content" id="content">
 
             <!-- 버튼 영역 -->
             <div class="btn-group">
-                <button type="button" class="cancel-btn" onclick="location.href='/boards/detail?seq=${dto.seq}'">취소</button>
-                <button type="submit" class="submit-btn">수정완료</button>
+                <button type="button" class="cancel-btn" onclick="location.href='/customer/qna'">취소</button>
+                <button type="submit" class="submit-btn">등록</button>
             </div>
 
         </form>
 
     </div>
 </div>
-
-	<div class="container-footer">
-        <p>© 2026 돈워리. All rights reserved.</p>
-        <p style="margin-top: 10px; font-size: 11px; letter-spacing: 0.5px;">개인정보처리방침 | 이용약관 | 고객센터</p>
-    </div>
+    
+</div>
+<div class="container-footer">
+    <p>© 2026 돈워리. All rights reserved.</p>
+    <p style="margin-top: 10px; font-size: 11px; letter-spacing: 0.5px;">개인정보처리방침 | 이용약관 | 고객센터</p>
+</div>
 <script>
 const editor = new toastui.Editor({
 	el: document.querySelector('#editor'),
@@ -473,6 +443,17 @@ const editor = new toastui.Editor({
 	        }
 	    }
 });
+$("#boardFiles").on("change", function () {
+    const files = this.files;
+
+    if (!files || files.length === 0) {
+        $("#fileNameText").text("선택된 파일 없음");
+    } else if (files.length === 1) {
+        $("#fileNameText").text(files[0].name);
+    } else {
+        $("#fileNameText").text(files[0].name + " 외 " + (files.length - 1) + "개");
+    }
+});
 $("#frm").on("submit",function(){
 	$("#content").val(editor.getHTML());
 	
@@ -485,17 +466,6 @@ $("#frm").on("submit",function(){
 		return false;
 	}
 })
-$("#boardFiles").on("change", function () {
-            const files = this.files;
-
-            if (!files || files.length === 0) {
-                $("#fileNameText").text("선택된 파일 없음");
-            } else if (files.length === 1) {
-                $("#fileNameText").text(files[0].name);
-            } else {
-                $("#fileNameText").text(files[0].name + " 외 " + (files.length - 1) + "개");
-            }
-        });
 </script>
 </body>
 </html>
