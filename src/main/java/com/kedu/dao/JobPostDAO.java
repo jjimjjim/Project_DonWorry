@@ -66,6 +66,34 @@ public class JobPostDAO {
 	    }, searchTag, searchTag, searchTag);
 	}
 	
+	public List<JobPostDTO> selectByLocation(String keyword){
+		String sql = "SELECT * FROM job_post WHERE "
+	               + "REPLACE(NVL(sido,'') || NVL(gugun,'') || NVL(dong,''), ' ', '') "
+	               + "LIKE ? "
+	               + "ORDER BY write_date DESC";
+	    
+	    // 검색어에서도 모든 공백 제거 후 앞뒤에 % 붙이기
+	    String cleanKeyword = keyword.replace(" ", "").trim();
+	    String searchTag = "%" + cleanKeyword + "%";
+	    
+	    return jdbc.query(sql, (rs, rowNum) -> {
+	        JobPostDTO dto = new JobPostDTO();
+	        dto.setSeq(rs.getInt("seq"));
+	        dto.setCompany_name(rs.getString("company_name"));
+	        dto.setTitle(rs.getString("title"));
+	        dto.setPay(rs.getString("pay"));
+	        dto.setWork_days(rs.getString("work_days"));
+	        dto.setWork_starttime(rs.getString("work_starttime"));
+	        dto.setWork_endtime(rs.getString("work_endtime"));
+	        dto.setSido(rs.getString("sido"));
+	        dto.setGugun(rs.getString("gugun"));
+	        dto.setDong(rs.getString("dong"));
+	        dto.setContent(rs.getString("content"));
+	        dto.setMain_category_name(rs.getString("main_category"));
+	        return dto;
+	    }, searchTag);
+	}
+	
 	public int insert(JobPostDTO dto) {
 	    // 1. 컬럼 리스트 (총 18개)
 	    String sql = "INSERT INTO job_post ("
