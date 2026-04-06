@@ -15,10 +15,17 @@ public class WorkPlaceListDTO {
     private int workDays;
     private int totalHours;
     
+    private int payPerHour;
+    private String payType;
+    private double taxApplied;
+    private String insuranceApplied;
+    private String employmentInsurance;
+    
     public WorkPlaceListDTO() {}
 
 	public WorkPlaceListDTO(int seq, String name, LocalDate workDate, Integer logSeq, int totalPay, int workDays,
-			int totalHours) {
+			int totalHours, int payPerHour, String payType, double taxApplied, String insuranceApplied,
+			String employmentInsurance) {
 		super();
 		this.seq = seq;
 		this.name = name;
@@ -27,6 +34,11 @@ public class WorkPlaceListDTO {
 		this.totalPay = totalPay;
 		this.workDays = workDays;
 		this.totalHours = totalHours;
+		this.payPerHour = payPerHour;
+		this.payType = payType;
+		this.taxApplied = taxApplied;
+		this.insuranceApplied = insuranceApplied;
+		this.employmentInsurance = employmentInsurance;
 	}
 
 	public int getSeq() {
@@ -85,5 +97,46 @@ public class WorkPlaceListDTO {
 		this.totalHours = totalHours;
 	}
 
+	public int getPayPerHour() {
+		return payPerHour;
+	}
+
+	public void setPayPerHour(int payPerHour) {
+		this.payPerHour = payPerHour;
+	}
+
+	public String getPayType() {
+		return payType;
+	}
+
+	public void setPayType(String payType) {
+		this.payType = payType;
+	}
+
+	public double getTaxApplied() {
+		return taxApplied;
+	}
+
+	public void setTaxApplied(double taxApplied) {
+		this.taxApplied = taxApplied;
+	}
+
+	public String getInsuranceApplied() {
+		return insuranceApplied;
+	}
+
+	public void setInsuranceApplied(String insuranceApplied) {
+		this.insuranceApplied = insuranceApplied;
+	}
+
+	public String getEmploymentInsurance() {
+		return employmentInsurance;
+	}
+
+	public void setEmploymentInsurance(String employmentInsurance) {
+		this.employmentInsurance = employmentInsurance;
+	}
+
+    
 	
 }

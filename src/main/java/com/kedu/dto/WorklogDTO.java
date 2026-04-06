@@ -5,16 +5,21 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 public class WorklogDTO {
 	
 	private int seq; // 근무 기록 번호
 	private int parent_seq; // 근무지 번호
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	private LocalDate work_date; // 근무 날짜
+	@JsonFormat(pattern="yyyy-MM-dd")
+	private LocalDate work_date;
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime start_time; // 시작 시간
 	@DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm")
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm")
 	private LocalDateTime end_time; // 종료 시간
 	private int breaktime; // 휴게 시간
 	private int night_pay; // 야간수당

@@ -761,6 +761,8 @@ body {
 					</a> <a href="/boards/mainboard_list"> <i
 						class="fa-regular fa-message fa-lg"
 						style="color: rgb(203, 203, 203); margin-right: 5px;"></i> 커뮤니티
+					</a> <a href=""> <i class="fa-solid fa-question fa-lg"
+						style="color: rgb(203, 203, 203); margin-right: 5px;"></i> 고객지원
 					</a>
 				</div>
 			</div>
@@ -777,7 +779,7 @@ body {
 			<div class="calendar-left">
 
 				<c:forEach var="i" items="${placeList}">
-					<div class="card">
+					<div class="card" data-seq="${i.seq}">
 						<div class="card-title">${i.name}</div>
 
 						<div class="info-item">
@@ -949,14 +951,15 @@ body {
 
 					<div class="form-grid two-col">
 						<div class="form-row">
-							<label for="pay_per_hour">시급</label> <input type="number"
+							<label for="pay_per_hour">급여</label> <input type="number"
 								id="pay_per_hour" name="pay_per_hour" value="10320" required>
 						</div>
 						<div class="form-row">
-							<label for="pay_cycle">월급 주기</label> <select id="pay_cycle"
+							<label for="pay_cycle">급여 형태</label> <select id="pay_cycle"
 								name="pay_cycle">
-								<option value="매월">매월</option>
+								<option value="시급">시급</option>
 								<option value="주급">주급</option>
+								<option value="월급">월급</option>
 							</select>
 						</div>
 					</div>
@@ -989,14 +992,23 @@ body {
 											</div>
 										</div>
 										<div class="form-row full-width" style="margin-top: 5px;">
-											<label>보험 적용 여부</label>
+											<label>4대보험 적용 여부</label>
 											<div class="tax-option-group">
 												<label class="tax-option-item"> <input type="radio"
 													name="insurance_applied" value="N" checked> 미적용
 												</label> <label class="tax-option-item"> <input type="radio"
-													name="insurance_applied" value="4"> 4대보험 적용
+													name="insurance_applied" value="Y"> 적용
+												</label>
+											</div>
+										</div>
+
+										<div class="form-row full-width" style="margin-top: 5px;">
+											<label>고용보험 적용 여부</label>
+											<div class="tax-option-group">
+												<label class="tax-option-item"> <input type="radio"
+													name="employment_applied" value="N" checked> 미적용
 												</label> <label class="tax-option-item"> <input type="radio"
-													name="insurance_applied" value="1"> 고용보험만 가입
+													name="employment_applied" value="Y"> 적용
 												</label>
 											</div>
 										</div>
@@ -1142,6 +1154,7 @@ body {
 				<div class="modal-footer" id="detailViewButtons">
 					<button type="button" class="btn btn-cancel" id="detailCloseBtn">확인</button>
 					<button type="button" class="btn btn-save" id="detailEditBtn">수정</button>
+					<button type="button" class="btn btn-delete" id="detailDeleteBtn">삭제</button>
 				</div>
 
 				<div class="modal-footer" id="detailEditButtons"
@@ -1154,10 +1167,154 @@ body {
 		</div>
 	</div>
 
+	<!-- 워크 스페이스 상세보기/수정 모달 -->
+	<!-- 근무지 상세보기 / 수정 모달 -->
+	<div id="workplaceDetailModal" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 id="workplaceDetailTitle">근무지 상세보기</h2>
+				<button type="button" id="closeWorkplaceDetailModal"
+					class="close-btn">×</button>
+			</div>
+
+			<form id="workplaceDetailForm">
+				<input type="hidden" id="detail_workplace_seq" name="seq" value="0">
+
+				<div class="modal-body">
+					<div class="form-row">
+						<label for="detail_workplace_name">근무지 이름</label> <input
+							type="text" id="detail_workplace_name" name="name"
+							placeholder="예: 강남 편의점">
+					</div>
+
+					<div class="form-grid two-col">
+						<div class="form-row">
+							<label for="detail_workplace_pay_per_hour">급여</label> <input
+								type="number" id="detail_workplace_pay_per_hour"
+								name="pay_per_hour" min="0">
+						</div>
+
+						<div class="form-row">
+							<label for="detail_workplace_pay_type">급여 형태</label> <select
+								id="detail_workplace_pay_type" name="pay_type">
+								<option value="시급">시급</option>
+								<option value="일급">일급</option>
+								<option value="월급">월급</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="section-title">세금 / 보험</div>
+
+					<div class="form-row full-width">
+						<label>세금 적용 여부</label>
+						<div class="tax-option-group">
+							<label class="tax-option-item"> <input type="radio"
+								name="detail_workplace_tax_radio" value="0"> 미적용
+							</label> <label class="tax-option-item"> <input type="radio"
+								name="detail_workplace_tax_radio" value="3.3"> 3.3%
+								(프리랜서 등)
+							</label> <label class="tax-option-item"> <input type="radio"
+								name="detail_workplace_tax_radio" value="custom"
+								id="detail_workplace_tax_custom_radio"> 직접 입력
+							</label>
+
+							<div class="custom-tax-input"
+								style="display: flex; align-items: center; gap: 4px;">
+								<input type="number" id="detail_workplace_custom_tax_value"
+									placeholder="0.0" step="0.1" min="0" max="100"
+									style="width: 60px; height: 30px; padding: 4px; font-size: 13px;"
+									disabled> <span
+									style="font-size: 13px; color: #374151;">%</span>
+							</div>
+						</div>
+						<input type="hidden" id="detail_workplace_tax_applied"
+							name="tax_applied" value="0">
+					</div>
+
+					<div class="form-row full-width" style="margin-top: 5px;">
+						<label>4대보험 적용 여부</label>
+						<div class="tax-option-group">
+							<label class="tax-option-item"> <input type="radio"
+								name="detail_workplace_insurance_radio" value="N"> 미적용
+							</label> <label class="tax-option-item"> <input type="radio"
+								name="detail_workplace_insurance_radio" value="Y"> 적용
+							</label>
+						</div>
+						<input type="hidden" id="detail_workplace_insurance_applied"
+							name="insurance_applied" value="N">
+					</div>
+
+					<div class="form-row full-width" style="margin-top: 5px;">
+						<label>고용보험 적용 여부</label>
+						<div class="tax-option-group">
+							<label class="tax-option-item"> <input type="radio"
+								name="detail_workplace_employment_radio" value="N"> 미적용
+							</label> <label class="tax-option-item"> <input type="radio"
+								name="detail_workplace_employment_radio" value="Y"> 적용
+							</label>
+						</div>
+						<input type="hidden" id="detail_workplace_employment_insurance"
+							name="employment_insurance" value="N">
+					</div>
+
+					<div class="form-row" style="margin-top: 5px;">
+						<label for="detail_workplace_payday">급여일</label>
+						<div style="display: flex; align-items: center; gap: 8px;">
+							<select id="detail_workplace_payday" name="payday"
+								style="width: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+								<option value="">선택</option>
+								<c:forEach var="i" begin="1" end="31">
+									<option value="${i}">${i}일</option>
+								</c:forEach>
+							</select> <span style="font-size: 14px; color: #666;">매월 정해진 날짜에
+								급여가 계산됩니다.</span>
+						</div>
+					</div>
+
+					<div class="section-title">기본 근무 시간 (선택)</div>
+					<div class="form-grid two-col">
+						<div class="form-row">
+							<label for="detail_workplace_start_time">기본 시작시간</label> <input
+								type="time" id="detail_workplace_start_time"
+								name="work_start_time">
+						</div>
+						<div class="form-row">
+							<label for="detail_workplace_end_time">기본 종료시간</label> <input
+								type="time" id="detail_workplace_end_time" name="work_end_time">
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer" id="workplaceDetailViewButtons">
+					<button type="button" class="btn btn-cancel"
+						id="workplaceDetailCloseBtn">확인</button>
+					<button type="button" class="btn btn-save"
+						id="workplaceDetailEditBtn">수정</button>
+				</div>
+
+				<div class="modal-footer" id="workplaceDetailEditButtons"
+					style="display: none;">
+					<button type="button" class="btn btn-cancel"
+						id="workplaceDetailCancelEditBtn">수정 취소</button>
+					<button type="button" class="btn btn-save"
+						id="workplaceDetailSaveBtn">저장</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
 	<script>
 document.addEventListener("DOMContentLoaded", function () {
+    // =========================
+    // 공통 요소
+    // =========================
     const calendarEl = document.getElementById("calendar");
 
+    // =========================
+    // 근무 등록 모달
+    // =========================
     const workModal = document.getElementById("workModal");
     const closeModal = document.getElementById("closeModal");
     const cancelBtn = document.getElementById("cancelBtn");
@@ -1179,16 +1336,29 @@ document.addEventListener("DOMContentLoaded", function () {
     const breakResultEl = document.getElementById("breakResult");
     const realWorkResultEl = document.getElementById("realWorkResult");
 
+    // =========================
+    // 근무지 등록 모달
+    // =========================
     const workplaceModal = document.getElementById("workplaceModal");
     const addWorkBtn = document.getElementById("addWorkBtn");
     const closeWP = document.getElementById("closeWorkplaceModal");
     const cancelWP = document.getElementById("cancelWorkplaceBtn");
-    
-    
+
+    const workplaceForm = document.getElementById("workplaceForm");
+    const customTaxInput = document.getElementById("custom_tax_value");
+    const taxCustomRadio = document.getElementById("taxCustom");
+    const taxTypeRadios = document.querySelectorAll('input[name="tax_applied"]');
+    const insuranceRadios = document.querySelectorAll('input[name="insurance_applied"]');
+    const employmentRadios = document.querySelectorAll('input[name="employment_applied"]');
+
+    // =========================
+    // 근무 상세보기 / 수정 모달
+    // =========================
     const detailModal = document.getElementById("detailModal");
     const closeDetailModal = document.getElementById("closeDetailModal");
     const detailCloseBtn = document.getElementById("detailCloseBtn");
     const detailEditBtn = document.getElementById("detailEditBtn");
+    const detailDeleteBtn = document.getElementById("detailDeleteBtn");
     const detailEditCancelBtn = document.getElementById("detailEditCancelBtn");
     const detailForm = document.getElementById("detailForm");
 
@@ -1211,29 +1381,195 @@ document.addEventListener("DOMContentLoaded", function () {
     const detailViewButtons = document.getElementById("detailViewButtons");
     const detailEditButtons = document.getElementById("detailEditButtons");
 
-    let originalDetailData = null;
+    // =========================
+    // 근무지 상세보기 / 수정 모달
+    // =========================
+    const workplaceDetailModal = document.getElementById("workplaceDetailModal");
+    const workplaceDetailForm = document.getElementById("workplaceDetailForm");
+    const workplaceDetailTitleEl = document.getElementById("workplaceDetailTitle");
 
-    
-    //////////
+    const detailWorkplaceSeqEl = document.getElementById("detail_workplace_seq");
+    const detailWorkplaceNameEl = document.getElementById("detail_workplace_name");
+    const detailWorkplacePayPerHourEl = document.getElementById("detail_workplace_pay_per_hour");
+    const detailWorkplacePayTypeEl = document.getElementById("detail_workplace_pay_type");
+    const detailWorkplaceTaxAppliedEl = document.getElementById("detail_workplace_tax_applied");
+    const detailWorkplaceInsuranceAppliedEl = document.getElementById("detail_workplace_insurance_applied");
+    const detailWorkplaceEmploymentInsuranceEl = document.getElementById("detail_workplace_employment_insurance");
+    const detailWorkplaceCustomTaxValueEl = document.getElementById("detail_workplace_custom_tax_value");
+    const detailWorkplaceTaxCustomRadioEl = document.getElementById("detail_workplace_tax_custom_radio");
+    const detailWorkplacePaydayEl = document.getElementById("detail_workplace_payday");
+    const detailWorkplaceStartTimeEl = document.getElementById("detail_workplace_start_time");
+    const detailWorkplaceEndTimeEl = document.getElementById("detail_workplace_end_time");
+
+    const closeWorkplaceDetailModalBtn = document.getElementById("closeWorkplaceDetailModal");
+    const workplaceDetailCloseBtn = document.getElementById("workplaceDetailCloseBtn");
+    const workplaceDetailEditBtn = document.getElementById("workplaceDetailEditBtn");
+    const workplaceDetailCancelEditBtn = document.getElementById("workplaceDetailCancelEditBtn");
+    const workplaceDetailSaveBtn = document.getElementById("workplaceDetailSaveBtn");
+
+    const workplaceDetailViewButtons = document.getElementById("workplaceDetailViewButtons");
+    const workplaceDetailEditButtons = document.getElementById("workplaceDetailEditButtons");
+
+    let originalDetailData = null;
+    let originalWorkplaceData = null;
+
+    // =========================
+    // 공통 유틸
+    // =========================
+    function normalizeTimeValue(timeStr) {
+        if (!timeStr) return "";
+        return String(timeStr).trim().substring(0, 5);
+    }
 
     function toMinutes(datetimeLocalValue) {
         if (!datetimeLocalValue) return null;
 
-        const date = new Date(datetimeLocalValue);
+        const parts = String(datetimeLocalValue).split("T");
+        if (parts.length !== 2) return null;
+
+        const dateParts = parts[0].split("-");
+        const timeParts = parts[1].split(":");
+
+        if (dateParts.length !== 3 || timeParts.length < 2) return null;
+
+        const year = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1;
+        const day = parseInt(dateParts[2], 10);
+        const hour = parseInt(timeParts[0], 10);
+        const minute = parseInt(timeParts[1], 10);
+
+        if (
+            isNaN(year) || isNaN(month) || isNaN(day) ||
+            isNaN(hour) || isNaN(minute)
+        ) {
+            return null;
+        }
+
+        const date = new Date(year, month, day, hour, minute);
         if (isNaN(date.getTime())) return null;
 
         return Math.floor(date.getTime() / 60000);
     }
 
     function formatMinutes(totalMinutes) {
-        if (!totalMinutes || totalMinutes < 0) return "0시간 0분";
+        if (totalMinutes === null || totalMinutes === undefined || totalMinutes < 0) {
+            return "0시간 0분";
+        }
 
         const hour = Math.floor(totalMinutes / 60);
         const minute = totalMinutes % 60;
-        return `${hour}시간 ${minute}분`;
+        return hour + "시간 " + minute + "분";
     }
 
-    function calculateTimes() {
+    function toDateInputValue(value) {
+        if (!value) return "";
+
+        if (typeof value === "string") {
+            return value.substring(0, 10);
+        }
+
+        if (Array.isArray(value)) {
+            const year = value[0];
+            const month = String(value[1]).padStart(2, "0");
+            const day = String(value[2]).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        if (typeof value === "object") {
+            const year = value.year;
+            const month = String(value.monthValue || value.month || 1).padStart(2, "0");
+            const day = String(value.dayOfMonth || value.day || 1).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        return "";
+    }
+
+    function toDatetimeLocalValue(value) {
+        if (!value) return "";
+
+        if (typeof value === "string") {
+            return value.replace(" ", "T").substring(0, 16);
+        }
+
+        if (Array.isArray(value)) {
+            const year = value[0];
+            const month = String(value[1]).padStart(2, "0");
+            const day = String(value[2]).padStart(2, "0");
+            const hour = String(value[3] || 0).padStart(2, "0");
+            const minute = String(value[4] || 0).padStart(2, "0");
+            return `${year}-${month}-${day}T${hour}:${minute}`;
+        }
+
+        if (typeof value === "object") {
+            const year = value.year;
+            const month = String(value.monthValue || value.month || 1).padStart(2, "0");
+            const day = String(value.dayOfMonth || value.day || 1).padStart(2, "0");
+            const hour = String(value.hour || 0).padStart(2, "0");
+            const minute = String(value.minute || 0).padStart(2, "0");
+            return `${year}-${month}-${day}T${hour}:${minute}`;
+        }
+
+        return "";
+    }
+
+    function calculateBasePay(timeData, payPerHour, payType) {
+        if (payType === "시급") {
+            return Math.floor((timeData.realWork / 60) * payPerHour);
+        }
+        if (payType === "일급") {
+            return payPerHour;
+        }
+        if (payType === "월급") {
+            return 0;
+        }
+        return 0;
+    }
+
+    function calculateTax(amount, taxRate) {
+        if (!taxRate || taxRate === 0) return 0;
+        return Math.floor(amount * (taxRate / 100));
+    }
+
+    function calculateInsurance(amount, insuranceApplied, employmentInsurance) {
+        let insurance = 0;
+
+        if (insuranceApplied === "Y") {
+            insurance += Math.floor(amount * 0.09);
+        }
+
+        if (employmentInsurance === "Y") {
+            insurance += Math.floor(amount * 0.009);
+        }
+
+        return insurance;
+    }
+
+    // =========================
+    // 근무지 등록 모달 보조
+    // =========================
+    function toggleEmploymentInsurance() {
+        const selectedInsurance = document.querySelector('input[name="insurance_applied"]:checked');
+        if (!selectedInsurance) return;
+
+        const canUseEmployment = selectedInsurance.value === "N";
+
+        employmentRadios.forEach(function (radio) {
+            radio.disabled = !canUseEmployment;
+        });
+
+        if (!canUseEmployment) {
+            const defaultEmploymentRadio = document.querySelector('input[name="employment_applied"][value="N"]');
+            if (defaultEmploymentRadio) {
+                defaultEmploymentRadio.checked = true;
+            }
+        }
+    }
+
+    // =========================
+    // 근무 등록
+    // =========================
+    function getWorkTimeData() {
         const workStart = toMinutes(startTimeEl.value);
         const workEnd = toMinutes(endTimeEl.value);
         const breakMinutes = parseInt(breaktimeEl.value || "0", 10);
@@ -1251,11 +1587,55 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         realWork = totalWork - totalBreak;
-        if (realWork < 0) realWork = 0;
+        if (realWork < 0) {
+            realWork = 0;
+        }
 
-        workResultEl.innerText = formatMinutes(totalWork);
-        breakResultEl.innerText = formatMinutes(totalBreak);
-        realWorkResultEl.innerText = formatMinutes(realWork);
+        return {
+            totalWork: totalWork,
+            totalBreak: totalBreak,
+            realWork: realWork
+        };
+    }
+
+    function calculateTotalPay() {
+        const selectedOption = parentSeqEl.options[parentSeqEl.selectedIndex];
+
+        if (!selectedOption || !selectedOption.value) {
+            totalPayEl.value = 0;
+            return;
+        }
+
+        const payPerHour = parseInt(selectedOption.dataset.payPerHour || "0", 10);
+        const payType = selectedOption.dataset.payType || "시급";
+        const taxRate = parseFloat(selectedOption.dataset.taxApplied || "0");
+        const insuranceApplied = selectedOption.dataset.insuranceApplied || "N";
+        const employmentInsurance = selectedOption.dataset.employmentInsurance || "N";
+
+        const timeData = getWorkTimeData();
+
+        const nightPay = parseInt(nightPayEl.value || "0", 10);
+        const overtimePay = parseInt(overtimePayEl.value || "0", 10);
+        const holidayPay = parseInt(holidayPayEl.value || "0", 10);
+
+        const basePay = calculateBasePay(timeData, payPerHour, payType);
+        const grossPay = basePay + nightPay + overtimePay + holidayPay;
+
+        const tax = calculateTax(grossPay, taxRate);
+        const insurance = calculateInsurance(grossPay, insuranceApplied, employmentInsurance);
+
+        const finalPay = grossPay - tax - insurance;
+        totalPayEl.value = finalPay > 0 ? finalPay : 0;
+    }
+
+    function calculateTimes() {
+        const timeData = getWorkTimeData();
+
+        workResultEl.innerText = formatMinutes(timeData.totalWork);
+        breakResultEl.innerText = formatMinutes(timeData.totalBreak);
+        realWorkResultEl.innerText = formatMinutes(timeData.realWork);
+
+        calculateTotalPay();
     }
 
     function renderWorkplaceList(list, selectedSeq) {
@@ -1266,12 +1646,44 @@ document.addEventListener("DOMContentLoaded", function () {
             option.value = w.seq;
             option.textContent = w.name;
 
+            option.dataset.payPerHour = w.pay_per_hour || 0;
+            option.dataset.payType = w.pay_type || "시급";
+            option.dataset.taxApplied = w.tax_applied || 0;
+            option.dataset.insuranceApplied = w.insurance_applied || "N";
+            option.dataset.employmentInsurance = w.employment_insurance || "N";
+            option.dataset.workStartTime = w.work_start_time || "";
+            option.dataset.workEndTime = w.work_end_time || "";
+
             if (selectedSeq && String(selectedSeq) === String(w.seq)) {
                 option.selected = true;
             }
 
             parentSeqEl.appendChild(option);
         });
+    }
+
+    function applySelectedWorkplaceTime() {
+        const selectedOption = parentSeqEl.options[parentSeqEl.selectedIndex];
+
+        if (!selectedOption || !selectedOption.value) {
+            startTimeEl.value = "";
+            endTimeEl.value = "";
+            calculateTimes();
+            return;
+        }
+
+        const savedStartTime = normalizeTimeValue(selectedOption.dataset.workStartTime || "");
+        const savedEndTime = normalizeTimeValue(selectedOption.dataset.workEndTime || "");
+
+        if (workDateEl.value && savedStartTime) {
+            startTimeEl.value = workDateEl.value + "T" + savedStartTime;
+        }
+
+        if (workDateEl.value && savedEndTime) {
+            endTimeEl.value = workDateEl.value + "T" + savedEndTime;
+        }
+
+        calculateTimes();
     }
 
     function loadWorkplaceList(selectedSeq) {
@@ -1281,6 +1693,7 @@ document.addEventListener("DOMContentLoaded", function () {
             dataType: "json",
             success: function (list) {
                 renderWorkplaceList(list, selectedSeq);
+                applySelectedWorkplaceTime();
             },
             error: function () {
                 alert("근무지 목록을 불러오지 못했습니다.");
@@ -1323,12 +1736,197 @@ document.addEventListener("DOMContentLoaded", function () {
 
         loadWorkplaceList();
         calculateTimes();
-        
         workModal.style.display = "flex";
     }
 
+    // =========================
+    // 근무 상세보기 / 수정
+    // =========================
+    function getDetailWorkTimeData() {
+        const workStart = toMinutes(detailStartTimeEl.value);
+        const workEnd = toMinutes(detailEndTimeEl.value);
+        const breakMinutes = parseInt(detailBreaktimeEl.value || "0", 10);
+
+        let totalWork = 0;
+        let totalBreak = 0;
+        let realWork = 0;
+
+        if (workStart !== null && workEnd !== null && workEnd > workStart) {
+            totalWork = workEnd - workStart;
+        }
+
+        if (!isNaN(breakMinutes) && breakMinutes > 0) {
+            totalBreak = breakMinutes;
+        }
+
+        realWork = totalWork - totalBreak;
+        if (realWork < 0) {
+            realWork = 0;
+        }
+
+        return {
+            totalWork: totalWork,
+            totalBreak: totalBreak,
+            realWork: realWork
+        };
+    }
+
+    function calculateDetailTimes() {
+        const startMinutes = toMinutes(detailStartTimeEl.value);
+        const endMinutes = toMinutes(detailEndTimeEl.value);
+        const breakMinutes = Number(detailBreaktimeEl.value || 0);
+
+        if (startMinutes == null || endMinutes == null || endMinutes < startMinutes) {
+            detailWorkResultEl.innerText = "0시간 0분";
+            detailBreakResultEl.innerText = formatMinutes(breakMinutes);
+            detailRealWorkResultEl.innerText = "0시간 0분";
+            return;
+        }
+
+        const totalWork = endMinutes - startMinutes;
+        const realWork = Math.max(0, totalWork - breakMinutes);
+
+        detailWorkResultEl.innerText = formatMinutes(totalWork);
+        detailBreakResultEl.innerText = formatMinutes(breakMinutes);
+        detailRealWorkResultEl.innerText = formatMinutes(realWork);
+    }
+
+    function calculateDetailTotalPay() {
+        const selectedOption = detailParentSeqEl.options[detailParentSeqEl.selectedIndex];
+
+        if (!selectedOption || !selectedOption.value) {
+            detailTotalPayEl.value = 0;
+            return;
+        }
+
+        const payPerHour = parseInt(selectedOption.dataset.payPerHour || "0", 10);
+        const payType = selectedOption.dataset.payType || "시급";
+        const taxRate = parseFloat(selectedOption.dataset.taxApplied || "0");
+        const insuranceApplied = selectedOption.dataset.insuranceApplied || "N";
+        const employmentInsurance = selectedOption.dataset.employmentInsurance || "N";
+
+        const timeData = getDetailWorkTimeData();
+
+        const nightPay = parseInt(detailNightPayEl.value || "0", 10);
+        const overtimePay = parseInt(detailOvertimePayEl.value || "0", 10);
+        const holidayPay = parseInt(detailHolidayPayEl.value || "0", 10);
+
+        const basePay = calculateBasePay(timeData, payPerHour, payType);
+        const grossPay = basePay + nightPay + overtimePay + holidayPay;
+
+        const tax = calculateTax(grossPay, taxRate);
+        const insurance = calculateInsurance(grossPay, insuranceApplied, employmentInsurance);
+
+        const finalPay = grossPay - tax - insurance;
+        detailTotalPayEl.value = finalPay > 0 ? finalPay : 0;
+    }
+
+    function renderDetailWorkplaceList(list, selectedSeq) {
+        detailParentSeqEl.innerHTML = '<option value="">근무지 선택</option>';
+
+        list.forEach(function (w) {
+            const option = document.createElement("option");
+            option.value = w.seq;
+            option.textContent = w.name;
+
+            option.dataset.payPerHour = w.pay_per_hour || 0;
+            option.dataset.payType = w.pay_type || "시급";
+            option.dataset.taxApplied = w.tax_applied || "0";
+            option.dataset.insuranceApplied = w.insurance_applied || "N";
+            option.dataset.employmentInsurance = w.employment_insurance || "N";
+            option.dataset.workStartTime = w.work_start_time || "";
+            option.dataset.workEndTime = w.work_end_time || "";
+
+            if (String(selectedSeq) === String(w.seq)) {
+                option.selected = true;
+            }
+
+            detailParentSeqEl.appendChild(option);
+        });
+    }
+
+    function loadDetailWorkplaceList(selectedSeq, callback) {
+        $.ajax({
+            url: "/workplaces/list",
+            type: "get",
+            dataType: "json",
+            success: function(list) {
+                renderDetailWorkplaceList(list, selectedSeq);
+                if (typeof callback === "function") {
+                    callback();
+                }
+            },
+            error: function() {
+                alert("근무지 목록을 불러오지 못했습니다.");
+            }
+        });
+    }
+
+    function applyDetailSelectedWorkplaceTime() {
+        const selectedOption = detailParentSeqEl.options[detailParentSeqEl.selectedIndex];
+
+        if (!selectedOption || !selectedOption.value) {
+            detailStartTimeEl.value = "";
+            detailEndTimeEl.value = "";
+            calculateDetailTimes();
+            calculateDetailTotalPay();
+            return;
+        }
+
+        const savedStartTime = normalizeTimeValue(selectedOption.dataset.workStartTime || "");
+        const savedEndTime = normalizeTimeValue(selectedOption.dataset.workEndTime || "");
+
+        if (detailWorkDateEl.value && savedStartTime) {
+            detailStartTimeEl.value = detailWorkDateEl.value + "T" + savedStartTime;
+        }
+
+        if (detailWorkDateEl.value && savedEndTime) {
+            detailEndTimeEl.value = detailWorkDateEl.value + "T" + savedEndTime;
+        }
+
+        calculateDetailTimes();
+        calculateDetailTotalPay();
+    }
+
+    function setDetailReadonlyMode(isReadonly) {
+        detailParentSeqEl.disabled = isReadonly;
+        detailWorkDateEl.readOnly = isReadonly;
+        detailStartTimeEl.readOnly = isReadonly;
+        detailEndTimeEl.readOnly = isReadonly;
+        detailBreaktimeEl.readOnly = isReadonly;
+        detailNightPayEl.readOnly = isReadonly;
+        detailOvertimePayEl.readOnly = isReadonly;
+        detailHolidayPayEl.readOnly = isReadonly;
+        detailTotalPayEl.readOnly = true;
+        detailMemoEl.readOnly = isReadonly;
+
+        detailViewButtons.style.display = isReadonly ? "flex" : "none";
+        detailEditButtons.style.display = isReadonly ? "none" : "flex";
+    }
+
+    function fillDetailForm(dto) {
+        detailSeqEl.value = dto.seq || 0;
+        detailWorkDateEl.value = toDateInputValue(dto.workDate || dto.work_date);
+        detailStartTimeEl.value = toDatetimeLocalValue(dto.startTime || dto.start_time);
+        detailEndTimeEl.value = toDatetimeLocalValue(dto.endTime || dto.end_time);
+
+        detailBreaktimeEl.value = dto.breaktime || dto.break_time || 0;
+        detailNightPayEl.value = dto.nightPay || dto.night_pay || 0;
+        detailOvertimePayEl.value = dto.overtimePay || dto.overtime_pay || 0;
+        detailHolidayPayEl.value = dto.holidayPay || dto.holiday_pay || 0;
+        detailTotalPayEl.value = dto.totalPay || dto.total_pay || 0;
+        detailMemoEl.value = dto.memo || "";
+
+        const parentSeq = dto.parentSeq || dto.parent_seq || 0;
+
+        loadDetailWorkplaceList(parentSeq, function () {
+            calculateDetailTimes();
+            calculateDetailTotalPay();
+        });
+    }
+
     function openDetailModal(event) {
-        const seq = event.id || event.extendedProps.seq;
+        const seq = event.id || (event.extendedProps && event.extendedProps.seq);
 
         if (!seq) {
             alert("근무기록 번호를 찾을 수 없습니다.");
@@ -1358,6 +1956,142 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    function closeDetailModalFunc() {
+        detailModal.style.display = "none";
+        setDetailReadonlyMode(true);
+    }
+
+    // =========================
+    // 근무지 상세보기 / 수정
+    // =========================
+    function setDetailWorkplaceReadonlyMode(isReadonly) {
+        workplaceDetailTitleEl.innerText = isReadonly ? "근무지 상세보기" : "근무지 수정";
+
+        detailWorkplaceNameEl.readOnly = isReadonly;
+        detailWorkplacePayPerHourEl.readOnly = isReadonly;
+        detailWorkplacePayTypeEl.disabled = isReadonly;
+        detailWorkplacePaydayEl.disabled = isReadonly;
+        detailWorkplaceStartTimeEl.readOnly = isReadonly;
+        detailWorkplaceEndTimeEl.readOnly = isReadonly;
+
+        document.querySelectorAll('input[name="detail_workplace_tax_radio"]').forEach(function(radio) {
+            radio.disabled = isReadonly;
+        });
+
+        detailWorkplaceCustomTaxValueEl.disabled = isReadonly || !detailWorkplaceTaxCustomRadioEl.checked;
+
+        document.querySelectorAll('input[name="detail_workplace_insurance_radio"]').forEach(function(radio) {
+            radio.disabled = isReadonly;
+        });
+
+        document.querySelectorAll('input[name="detail_workplace_employment_radio"]').forEach(function(radio) {
+            radio.disabled = isReadonly;
+        });
+
+        workplaceDetailViewButtons.style.display = isReadonly ? "flex" : "none";
+        workplaceDetailEditButtons.style.display = isReadonly ? "none" : "flex";
+    }
+
+    function syncDetailWorkplaceHiddenValues() {
+        const selectedTaxRadio = document.querySelector('input[name="detail_workplace_tax_radio"]:checked');
+        let taxValue = "0";
+
+        if (selectedTaxRadio) {
+            if (selectedTaxRadio.value === "custom") {
+                taxValue = detailWorkplaceCustomTaxValueEl.value || "0";
+            } else {
+                taxValue = selectedTaxRadio.value;
+            }
+        }
+
+        const selectedInsuranceRadio = document.querySelector('input[name="detail_workplace_insurance_radio"]:checked');
+        const selectedEmploymentRadio = document.querySelector('input[name="detail_workplace_employment_radio"]:checked');
+
+        detailWorkplaceTaxAppliedEl.value = taxValue;
+        detailWorkplaceInsuranceAppliedEl.value = selectedInsuranceRadio ? selectedInsuranceRadio.value : "N";
+        detailWorkplaceEmploymentInsuranceEl.value = selectedEmploymentRadio ? selectedEmploymentRadio.value : "N";
+    }
+
+    function fillWorkplaceDetailForm(dto) {
+        detailWorkplaceSeqEl.value = dto.seq || 0;
+        detailWorkplaceNameEl.value = dto.name || "";
+        detailWorkplacePayPerHourEl.value = dto.pay_per_hour || dto.payPerHour || 0;
+        detailWorkplacePayTypeEl.value = dto.pay_type || dto.payType || "시급";
+        detailWorkplacePaydayEl.value = dto.payday || "";
+        detailWorkplaceStartTimeEl.value = dto.work_start_time || dto.workStartTime || "";
+        detailWorkplaceEndTimeEl.value = dto.work_end_time || dto.workEndTime || "";
+
+        const taxValue = (dto.tax_applied !== undefined && dto.tax_applied !== null)
+            ? String(dto.tax_applied)
+            : (dto.taxApplied !== undefined && dto.taxApplied !== null)
+                ? String(dto.taxApplied)
+                : "0";
+
+        document.querySelectorAll('input[name="detail_workplace_tax_radio"]').forEach(function(radio) {
+            radio.checked = false;
+        });
+
+        if (taxValue === "0" || taxValue === "3.3") {
+            const matchedTaxRadio = document.querySelector('input[name="detail_workplace_tax_radio"][value="' + taxValue + '"]');
+            if (matchedTaxRadio) {
+                matchedTaxRadio.checked = true;
+            }
+            detailWorkplaceCustomTaxValueEl.value = "";
+        } else {
+            detailWorkplaceTaxCustomRadioEl.checked = true;
+            detailWorkplaceCustomTaxValueEl.value = taxValue;
+        }
+
+        const insuranceValue = dto.insurance_applied || dto.insuranceApplied || "N";
+        document.querySelectorAll('input[name="detail_workplace_insurance_radio"]').forEach(function(radio) {
+            radio.checked = (radio.value === insuranceValue);
+        });
+
+        const employmentValue = dto.employment_insurance || dto.employmentInsurance || "N";
+        document.querySelectorAll('input[name="detail_workplace_employment_radio"]').forEach(function(radio) {
+            radio.checked = (radio.value === employmentValue);
+        });
+
+        syncDetailWorkplaceHiddenValues();
+    }
+
+    function openWorkplaceDetailModal(seq) {
+        if (!seq) {
+            alert("근무지 번호를 찾을 수 없습니다.");
+            return;
+        }
+
+        $.ajax({
+            url: "/workplaces/detail",
+            type: "get",
+            data: { seq: seq },
+            dataType: "json",
+            success: function(dto) {
+                if (!dto || !dto.seq) {
+                    alert("해당 근무지 정보가 없습니다.");
+                    return;
+                }
+
+                originalWorkplaceData = dto;
+                fillWorkplaceDetailForm(dto);
+                setDetailWorkplaceReadonlyMode(true);
+                workplaceDetailModal.style.display = "flex";
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+                alert("근무지 상세 정보를 불러오지 못했습니다.");
+            }
+        });
+    }
+
+    function closeWorkplaceDetailModalFunc() {
+        workplaceDetailModal.style.display = "none";
+        setDetailWorkplaceReadonlyMode(true);
+    }
+
+    // =========================
+    // 캘린더
+    // =========================
     const calendar = new FullCalendar.Calendar(calendarEl, {
         locale: "ko",
         initialView: "dayGridMonth",
@@ -1372,8 +2106,8 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         events: [
             <c:forEach var="i" items="${detailList}" varStatus="status">
-            {	
-            	id:"${i.logSeq}",
+            {
+                id: "${i.logSeq}",
                 title: "${i.name}",
                 start: "${i.workDate}",
                 extendedProps: {
@@ -1386,107 +2120,77 @@ document.addEventListener("DOMContentLoaded", function () {
             openInsertModal(info.dateStr);
         },
         eventClick: function (info) {
-        	console.log("클릭 이벤트 객체:", info.event);
             openDetailModal(info.event);
         }
     });
 
     calendar.render();
-    
-    
-    function setDetailReadonlyMode(isReadonly) {
-        detailParentSeqEl.disabled = isReadonly;
-        detailWorkDateEl.readOnly = isReadonly;
-        detailStartTimeEl.readOnly = isReadonly;
-        detailEndTimeEl.readOnly = isReadonly;
-        detailBreaktimeEl.readOnly = isReadonly;
-        detailNightPayEl.readOnly = isReadonly;
-        detailOvertimePayEl.readOnly = isReadonly;
-        detailHolidayPayEl.readOnly = isReadonly;
-        detailTotalPayEl.readOnly = isReadonly;
-        detailMemoEl.readOnly = isReadonly;
 
-        detailViewButtons.style.display = isReadonly ? "flex" : "none";
-        detailEditButtons.style.display = isReadonly ? "none" : "flex";
-    }
+    // =========================
+    // 초기 이벤트 바인딩
+    // =========================
 
-    function renderDetailWorkplaceList(list, selectedSeq) {
-        detailParentSeqEl.innerHTML = '<option value="">근무지 선택</option>';
+    // 근무지 카드 클릭 -> 근무지 상세
+    document.querySelectorAll(".card[data-seq]").forEach(function(card) {
+        card.addEventListener("click", function() {
+            openWorkplaceDetailModal(this.dataset.seq);
+        });
+    });
 
-        list.forEach(function(w) {
-            const option = document.createElement("option");
-            option.value = w.seq;
-            option.textContent = w.name;
+    // 근무 등록 모달
+    closeModal.addEventListener("click", closeWorkModal);
+    cancelBtn.addEventListener("click", closeWorkModal);
 
-            if (String(selectedSeq) === String(w.seq)) {
-                option.selected = true;
-            }
-
-            detailParentSeqEl.appendChild(option);
+    if (addWorkBtn) {
+        addWorkBtn.addEventListener("click", function () {
+            workplaceModal.style.display = "flex";
         });
     }
 
-    function loadDetailWorkplaceList(selectedSeq) {
-        $.ajax({
-            url: "/workplaces/list",
-            type: "get",
-            dataType: "json",
-            success: function(list) {
-                renderDetailWorkplaceList(list, selectedSeq);
-            },
-            error: function() {
-                alert("근무지 목록을 불러오지 못했습니다.");
+    function closeWorkplaceModal() {
+        workplaceModal.style.display = "none";
+    }
+
+    closeWP.addEventListener("click", closeWorkplaceModal);
+    cancelWP.addEventListener("click", closeWorkplaceModal);
+
+    // 등록 모달 세금
+    taxTypeRadios.forEach(function (radio) {
+        radio.addEventListener("change", function () {
+            if (this.id === "taxCustom") {
+                customTaxInput.disabled = false;
+                customTaxInput.focus();
+                this.value = customTaxInput.value;
+            } else {
+                customTaxInput.disabled = true;
+                customTaxInput.value = "";
             }
         });
-    }
+    });
 
-    function calculateDetailTimes() {
-        const workStart = toMinutes(detailStartTimeEl.value);
-        const workEnd = toMinutes(detailEndTimeEl.value);
-        const breakMinutes = parseInt(detailBreaktimeEl.value || "0", 10);
-
-        let totalWork = 0;
-        let totalBreak = 0;
-        let realWork = 0;
-
-        if (workStart !== null && workEnd !== null && workEnd > workStart) {
-            totalWork = workEnd - workStart;
+    customTaxInput.addEventListener("input", function () {
+        if (taxCustomRadio.checked) {
+            taxCustomRadio.value = this.value;
         }
+    });
 
-        if (!isNaN(breakMinutes) && breakMinutes > 0) {
-            totalBreak = breakMinutes;
-        }
+    insuranceRadios.forEach(function (radio) {
+        radio.addEventListener("change", toggleEmploymentInsurance);
+    });
+    toggleEmploymentInsurance();
 
-        realWork = totalWork - totalBreak;
-        if (realWork < 0) realWork = 0;
+    // 근무 등록 계산
+    parentSeqEl.addEventListener("change", applySelectedWorkplaceTime);
+    workDateEl.addEventListener("change", applySelectedWorkplaceTime);
 
-        detailWorkResultEl.innerText = formatMinutes(totalWork);
-        detailBreakResultEl.innerText = formatMinutes(totalBreak);
-        detailRealWorkResultEl.innerText = formatMinutes(realWork);
-    }
+    startTimeEl.addEventListener("change", calculateTimes);
+    endTimeEl.addEventListener("change", calculateTimes);
+    breaktimeEl.addEventListener("input", calculateTimes);
+    nightPayEl.addEventListener("input", calculateTotalPay);
+    overtimePayEl.addEventListener("input", calculateTotalPay);
+    holidayPayEl.addEventListener("input", calculateTotalPay);
 
-    function fillDetailForm(dto) {
-        detailSeqEl.value = dto.seq;
-        detailWorkDateEl.value = dto.work_date ? String(dto.work_date).substring(0, 10) : "";
-        detailStartTimeEl.value = dto.start_time ? String(dto.start_time).substring(0, 16) : "";
-        detailEndTimeEl.value = dto.end_time ? String(dto.end_time).substring(0, 16) : "";
-        detailBreaktimeEl.value = dto.breaktime || 0;
-        detailNightPayEl.value = dto.night_pay || 0;
-        detailOvertimePayEl.value = dto.overtime_pay || 0;
-        detailHolidayPayEl.value = dto.holiday_pay || 0;
-        detailTotalPayEl.value = dto.total_pay || 0;
-        detailMemoEl.value = dto.memo || "";
-
-        loadDetailWorkplaceList(dto.parent_seq);
-        calculateDetailTimes();
-    }
-
-    function closeDetailModalFunc() {
-        detailModal.style.display = "none";
-        setDetailReadonlyMode(true);
-    }
-
-    
+    // 근무 상세 모달
     closeDetailModal.addEventListener("click", closeDetailModalFunc);
     detailCloseBtn.addEventListener("click", closeDetailModalFunc);
 
@@ -1501,45 +2205,144 @@ document.addEventListener("DOMContentLoaded", function () {
         setDetailReadonlyMode(true);
     });
 
-    detailStartTimeEl.addEventListener("change", calculateDetailTimes);
-    detailEndTimeEl.addEventListener("change", calculateDetailTimes);
-    detailBreaktimeEl.addEventListener("input", calculateDetailTimes);
+    detailDeleteBtn.addEventListener("click", function() {
+        const seq = detailSeqEl.value;
 
-    window.addEventListener("click", function(e) {
-        if (e.target === detailModal) {
-            closeDetailModalFunc();
-        }
+        $.ajax({
+            url: "/worklog/delete",
+            type: "get",
+            data: { seq: seq },
+            success: function(resp) {
+                if (Number(resp) > 0) {
+                    alert("근무 내역을 삭제했습니다.");
+
+                    const event = calendar.getEventById(String(seq));
+                    if (event) {
+                        event.remove();
+                    }
+
+                    closeDetailModalFunc();
+                } else {
+                    alert("삭제할 근무 내역이 없습니다.");
+                }
+            },
+            error: function() {
+                alert("근무 내역을 삭제하지 못했습니다.");
+            }
+        });
     });
 
-    closeModal.addEventListener("click", closeWorkModal);
-    cancelBtn.addEventListener("click", closeWorkModal);
+    detailParentSeqEl.addEventListener("change", applyDetailSelectedWorkplaceTime);
+    detailWorkDateEl.addEventListener("change", applyDetailSelectedWorkplaceTime);
 
-    function closeWorkplaceModal() {
-        workplaceModal.style.display = "none";
+    detailStartTimeEl.addEventListener("change", function() {
+        calculateDetailTimes();
+        calculateDetailTotalPay();
+    });
+
+    detailEndTimeEl.addEventListener("change", function() {
+        calculateDetailTimes();
+        calculateDetailTotalPay();
+    });
+
+    detailBreaktimeEl.addEventListener("input", function() {
+        calculateDetailTimes();
+        calculateDetailTotalPay();
+    });
+
+    detailNightPayEl.addEventListener("input", calculateDetailTotalPay);
+    detailOvertimePayEl.addEventListener("input", calculateDetailTotalPay);
+    detailHolidayPayEl.addEventListener("input", calculateDetailTotalPay);
+
+    // 근무지 상세 모달
+    if (closeWorkplaceDetailModalBtn) {
+        closeWorkplaceDetailModalBtn.addEventListener("click", closeWorkplaceDetailModalFunc);
     }
 
-    if (addWorkBtn) {
-        addWorkBtn.addEventListener("click", function () {
-            workplaceModal.style.display = "flex";
+    if (workplaceDetailCloseBtn) {
+        workplaceDetailCloseBtn.addEventListener("click", closeWorkplaceDetailModalFunc);
+    }
+
+    if (workplaceDetailEditBtn) {
+        workplaceDetailEditBtn.addEventListener("click", function() {
+            setDetailWorkplaceReadonlyMode(false);
         });
     }
 
-    closeWP.addEventListener("click", closeWorkplaceModal);
-    cancelWP.addEventListener("click", closeWorkplaceModal);
+    if (workplaceDetailCancelEditBtn) {
+        workplaceDetailCancelEditBtn.addEventListener("click", function() {
+            if (originalWorkplaceData) {
+                fillWorkplaceDetailForm(originalWorkplaceData);
+            }
+            setDetailWorkplaceReadonlyMode(true);
+        });
+    }
 
-    window.addEventListener("click", function (e) {
-        if (e.target === workModal) {
-            closeWorkModal();
-        }
-        if (e.target === workplaceModal) {
-            closeWorkplaceModal();
+    document.querySelectorAll('input[name="detail_workplace_tax_radio"]').forEach(function(radio) {
+        radio.addEventListener("change", function() {
+            if (this.value === "custom") {
+                detailWorkplaceCustomTaxValueEl.disabled = false;
+                detailWorkplaceCustomTaxValueEl.focus();
+            } else {
+                detailWorkplaceCustomTaxValueEl.disabled = true;
+                detailWorkplaceCustomTaxValueEl.value = "";
+            }
+            syncDetailWorkplaceHiddenValues();
+        });
+    });
+
+    detailWorkplaceCustomTaxValueEl.addEventListener("input", function() {
+        if (detailWorkplaceTaxCustomRadioEl.checked) {
+            syncDetailWorkplaceHiddenValues();
         }
     });
 
-    startTimeEl.addEventListener("change", calculateTimes);
-    endTimeEl.addEventListener("change", calculateTimes);
-    breaktimeEl.addEventListener("input", calculateTimes);
+    document.querySelectorAll('input[name="detail_workplace_insurance_radio"]').forEach(function(radio) {
+        radio.addEventListener("change", syncDetailWorkplaceHiddenValues);
+    });
 
+    document.querySelectorAll('input[name="detail_workplace_employment_radio"]').forEach(function(radio) {
+        radio.addEventListener("change", syncDetailWorkplaceHiddenValues);
+    });
+
+    if (workplaceDetailSaveBtn) {
+        workplaceDetailSaveBtn.addEventListener("click", function() {
+            syncDetailWorkplaceHiddenValues();
+
+            const formData = {
+                seq: detailWorkplaceSeqEl.value,
+                name: detailWorkplaceNameEl.value,
+                pay_per_hour: detailWorkplacePayPerHourEl.value,
+                pay_type: detailWorkplacePayTypeEl.value,
+                payday: detailWorkplacePaydayEl.value,
+                tax_applied: detailWorkplaceTaxAppliedEl.value,
+                insurance_applied: detailWorkplaceInsuranceAppliedEl.value,
+                employment_insurance: detailWorkplaceEmploymentInsuranceEl.value,
+                work_start_time: detailWorkplaceStartTimeEl.value,
+                work_end_time: detailWorkplaceEndTimeEl.value
+            };
+
+            $.ajax({
+                url: "/workplaces/update",
+                type: "post",
+                data: formData,
+                success: function(resp) {
+                    if (Number(resp) > 0 || resp === "success") {
+                        alert("근무지 정보가 수정되었습니다.");
+                        location.reload();
+                    } else {
+                        alert("근무지 수정에 실패했습니다.");
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                    alert("근무지 수정에 실패했습니다.");
+                }
+            });
+        });
+    }
+
+    // 폼 검증
     worklogForm.addEventListener("submit", function (e) {
         const workStart = toMinutes(startTimeEl.value);
         const workEnd = toMinutes(endTimeEl.value);
@@ -1580,35 +2383,57 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             return;
         }
+
+        calculateTotalPay();
     });
 
-    const taxTypeRadios = document.querySelectorAll('input[name="tax_applied"]');
-    const customTaxInput = document.getElementById("custom_tax_value");
-    const taxCustomRadio = document.getElementById("taxCustom");
+    detailForm.addEventListener("submit", function(e) {
+        const workStart = toMinutes(detailStartTimeEl.value);
+        const workEnd = toMinutes(detailEndTimeEl.value);
+        const breakMinutes = parseInt(detailBreaktimeEl.value || "0", 10);
 
-    taxTypeRadios.forEach(function (radio) {
-        radio.addEventListener("change", function () {
-            if (this.id === "taxCustom") {
-                customTaxInput.disabled = false;
-                customTaxInput.focus();
-                this.value = customTaxInput.value;
-            } else {
-                customTaxInput.disabled = true;
-                customTaxInput.value = "";
-            }
-        });
-    });
-
-    customTaxInput.addEventListener("input", function () {
-        if (taxCustomRadio.checked) {
-            taxCustomRadio.value = this.value;
+        if (!detailParentSeqEl.value) {
+            alert("근무지를 선택해주세요.");
+            e.preventDefault();
+            return;
         }
+
+        if (!detailWorkDateEl.value) {
+            alert("근무 날짜를 선택해주세요.");
+            e.preventDefault();
+            return;
+        }
+
+        if (!detailStartTimeEl.value || !detailEndTimeEl.value) {
+            alert("근무 시작시간과 종료시간을 입력해주세요.");
+            e.preventDefault();
+            return;
+        }
+
+        if (workStart === null || workEnd === null || workEnd <= workStart) {
+            alert("근무 종료시간은 시작시간보다 늦어야 합니다.");
+            e.preventDefault();
+            return;
+        }
+
+        if (isNaN(breakMinutes) || breakMinutes < 0) {
+            alert("휴게시간은 0 이상으로 입력해주세요.");
+            e.preventDefault();
+            return;
+        }
+
+        if (breakMinutes >= (workEnd - workStart)) {
+            alert("휴게시간이 총 근무시간보다 길 수 없습니다.");
+            e.preventDefault();
+            return;
+        }
+
+        calculateDetailTotalPay();
     });
 });
 </script>
 
-
-	<!-- 근무기록 등록 -->
+	<!-- 근무기록 등록 확인 -->
 	<c:choose>
 		<c:when test="${param.insertSuccess == 'true'}">
 			<script>
