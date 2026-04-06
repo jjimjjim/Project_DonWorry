@@ -12,19 +12,24 @@ import com.kedu.dto.ReportDTO;
 @Controller
 @RequestMapping("/report")
 public class ReportController {
-	
+
 	@Autowired
 	private ReportDAO dao;
-	
+
 	@ResponseBody
 	@PostMapping("/report")
-	public String report(ReportDTO dto) {		
-		int result = dao.report(dto);
-		if(result > 0) {
-			return "success";
+	public String report(ReportDTO dto) {
+
+		if(!dao.reportCheck(dto)) {
+			int result = dao.report(dto);
+			if(result > 0) {
+				return "success";
+			}else {
+				return "fail";
+			}
 		}else {
-			return "fail";
+			return "already_reported";
 		}
 	}
-	
+
 }
