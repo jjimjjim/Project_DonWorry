@@ -41,11 +41,26 @@ public class AdminController {
 		int recordTotalCount = bdao.mainRecordTotalCount();
 		
 		model.addAttribute("currentPage",page);
-		model.addAttribute("recordCountPerPage",10);
+		model.addAttribute("recordCountPerPage",5);
 		model.addAttribute("naviCountPerPage",10);
 		model.addAttribute("recordTotalCount",recordTotalCount);
 		model.addAttribute("board_mainList", board_mainList);
 		return "admin/admin_boards";
+	}
+	
+	@RequestMapping("/admin_board_detail")
+	public String admin_board_detail(int seq, int page, Model model){
+		BoardsDTO dto = bdao.detail(seq);
+		model.addAttribute("dto",dto);
+		model.addAttribute("currentPage",page);
+		return "admin/admin_board_detail";
+	}
+	
+	@RequestMapping("/admin_board_delete")
+	public String delete(int seq, int page) {
+		bdao.delete(seq);
+		
+		return "redirect:/admin/admin_boards?page="+page;
 	}
 	
 //	@RequestMapping("/admin_boards")

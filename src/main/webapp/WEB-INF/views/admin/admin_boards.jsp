@@ -466,8 +466,8 @@ body {
                         </td>
                         <td><span class="state-pill state-show">일반</span></td>
                         <td>
-                            <button class="board-detail-btn" type="button">보기</button>
-                            <button class="board-del-btn" type="button">삭제</button>
+                            <button class="board-detail-btn" type="button" data-seq="${i.seq}">보기</button>
+                            <button class="board-del-btn" type="button" data-seq="${i.seq}">삭제</button>
                         </td>
                     </tr>
                 </c:forEach>                  
@@ -607,6 +607,20 @@ body {
 		btn.attr("onclick","location.href='/admin/admin_boards?page="+ (endNavi+1) +"'");
 		board_navi.append(btn);
 	}
+	
+	//보기 버튼 클릭
+	$(".board-detail-btn").on("click",function(){
+		let seq = $(this).data("seq");
+		let page = "${currentPage}" || "1";//page 비었을 경우 대비
+		location.href='/admin/admin_board_detail?seq='+seq+'&page='+page;
+	});
+	
+	//삭제 버튼 클릭
+	$(".board-del-btn").on("click",function(){
+		let seq = $(this).data("seq");
+		let page = "${currentPage}";
+		location.href='/admin/admin_board_delete?seq='+seq+'&page='+page;
+	});
 	
  
 //====================공지글=======================//
