@@ -476,7 +476,7 @@ body {
                    <i class="fa-solid fa-wrench fa-lg" style="color: rgb(36, 99, 235); margin-right:6px;"></i>
                     관리자 대시보드
                 </a> 
-                <a href="/admin/admin_boards">
+                <a href="/admin/admin_boards?page=1">
                    <i class="fa-solid fa-file-pen fa-lg" style="color: rgb(197, 197, 197); margin-right:6px;"></i>
                     게시물 관리
                 </a>  

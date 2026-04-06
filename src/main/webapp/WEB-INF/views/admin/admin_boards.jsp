@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
+ <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
+ <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>   
 <!DOCTYPE html>
 <html>
 <head>
@@ -430,8 +431,8 @@ body {
                 </select>
                 <select>
                     <option>전체 상태</option>
-                    <option>게시중</option>
-                    <option>숨김</option>
+                    <option>신고</option>
+                    <option>일반</option>
                 </select>
                 <input type="text" placeholder="제목, 작성자 검색">
                 <button class="btn-blue" type="button">검색</button>
@@ -450,30 +451,22 @@ body {
                     </tr>
                 </thead>
                 <tbody>
+                <c:forEach var="i" items="${board_mainList}">
                     <tr>
-                        <td>2001</td>
+                        <td>${i.seq}</td>
                         <td>자유</td>
-                        <td>급여 계산 관련 질문 있어요</td>
-                        <td>Project_Vision</td>
-                        <td>2026-04-01</td>
-                        <td><span class="state-pill state-show">게시중</span></td>
+                        <td>${i.title}</td>
+                        <td>${i.member_id}</td>
+                        <td id="write_date">
+                        	<fmt:formatDate value="${i.write_date}" pattern="yyyy-MM-dd"/>
+                        </td>
+                        <td><span class="state-pill state-show">일반</span></td>
                         <td>
                             <button class="btn-light-blue" type="button">보기</button>
                             <button class="btn-red" type="button">삭제</button>
                         </td>
                     </tr>
-                    <tr>
-                        <td>2002</td>
-                        <td>자유</td>
-                        <td>급여 계산 관련 질문 있어요</td>
-                        <td>Project_Vision</td>
-                        <td>2026-04-01</td>
-                        <td><span class="state-pill state-show">게시중</span></td>
-                        <td>
-                            <button class="btn-light-blue" type="button">보기</button>
-                            <button class="btn-red" type="button">삭제</button>
-                        </td>
-                    </tr>                    
+                </c:forEach>                  
                 </tbody>
             </table>
 
