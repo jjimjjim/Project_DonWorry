@@ -33,10 +33,10 @@ public class AdminController {
 		
 		return "admin/admin_members";
 	}
-	//public List<BoardsDTO> mainList(int start, int end)
+	
 	@RequestMapping("/admin_boards")
-	public String toBoards(int page, Model model) {
-		List<BoardsDTO> board_mainList =  bdao.mainList(page*10-9,page*10);
+	public String adminBoards(int page, Model model) {
+		List<BoardsDTO> board_mainList =  bdao.mainList(page*5-4,page*5);
 		
 		int recordTotalCount = bdao.recordTotalCount();
 		
@@ -47,6 +47,18 @@ public class AdminController {
 		model.addAttribute("board_mainList", board_mainList);
 		return "admin/admin_boards";
 	}
+	
+//	@RequestMapping("/admin_boards")
+//	public String noticeBoards(int page, Model model) {
+//		
+//		int recordTotalCount = bdao.recordTotalCount();
+//		
+//		model.addAttribute("currentPage",page);
+//		model.addAttribute("recordCountPerPage",10);
+//		model.addAttribute("naviCountPerPage",10);
+//		model.addAttribute("recordTotalCount",recordTotalCount);
+//		return "admin/admin_boards";
+//	}
 	
 	@RequestMapping("/notice_write")
 	public String adminWrite() {

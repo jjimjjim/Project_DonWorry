@@ -512,7 +512,7 @@ body {
                 <i class="fa-solid fa-user-shield "></i>
                 회원 관리
             </a>
-            <a href="/admin/admin_boards" class="admin-tool-btn">
+            <a href="/admin/admin_boards?page=1" class="admin-tool-btn">
                 <i class="fa-solid fa-file-pen"></i>
                 게시물 관리
             </a>

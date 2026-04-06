@@ -405,8 +405,8 @@ body {
         <section class="summary-grid">
             <div class="summary-card">
                 <div class="summary-label">전체 게시글</div>
-                <div class="summary-value">1,200</div>
-                <div class="summary-sub">오늘 신규 27건</div>
+                <div class="summary-value">${recordTotalCount}</div>
+                <div class="summary-sub">오늘 신규 ${recordTotalCount}건</div>
             </div>
             <div class="summary-card notice">
                 <div class="summary-label">공지 게시글</div>
@@ -453,8 +453,12 @@ body {
                 <tbody>
                 <c:forEach var="i" items="${board_mainList}">
                     <tr>
-                        <td>${i.seq}</td>
-                        <td>자유</td>
+                        <td>${i.seq}</td>                       
+                        <c:choose>
+	                        <c:when test="${i.category =='free'}"><td>자유</td></c:when>
+	                        <c:when test="${i.category =='qna'}"><td>질문</td></c:when>
+	                        <c:when test="${i.category =='review'}"><td>리뷰</td></c:when>
+                        </c:choose>                       
                         <td>${i.title}</td>
                         <td>${i.member_id}</td>
                         <td id="write_date">
@@ -470,12 +474,7 @@ body {
                 </tbody>
             </table>
 
-            <div class="pagination-wrap">
-                <button class="page-btn">&lt;</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">&gt;</button>
+            <div class="pagination-wrap" id="admin_board_navi">
             </div>
         </section>
 
@@ -536,12 +535,12 @@ body {
                 </tbody>
             </table>
 
-            <div class="pagination-wrap">
-                <button class="page-btn">&lt;</button>
+            <div class="pagination-wrap" id="admin_notice_navi">
+    <!--             <button class="page-btn">&lt;</button>
                 <button class="page-btn active">1</button>
                 <button class="page-btn">2</button>
                 <button class="page-btn">3</button>
-                <button class="page-btn">&gt;</button>
+                <button class="page-btn">&gt;</button> -->
             </div>
         </section>
     </main>
@@ -551,5 +550,102 @@ body {
         <p style="margin-top:10px; font-size:11px;">개인정보처리방침 | 이용약관 | 고객센터</p>
     </div>
 </div>
+<script>
+
+	let recordTotalCount = ${recordTotalCount}; // 총 개수
+	let recordCountPerPage = ${recordCountPerPage}; // 한페이지에 몇개 (5)
+	let naviCountPerPage  = ${naviCountPerPage }; // navi 몇개 (10)
+	let currentPage = ${currentPage}; // 현재 페이지
+	let pageTotalCount = Math.ceil(recordTotalCount/recordCountPerPage); 
+	
+	let startNavi = Math.floor((currentPage - 1) / naviCountPerPage) * naviCountPerPage +1;
+	let endNavi = startNavi + naviCountPerPage - 1;
+	
+	if(endNavi > pageTotalCount){
+		endNavi = pageTotalCount;
+	}
+	
+	let needPrev = true;
+	let needNext = true;
+	
+	if(startNavi == 1){
+		needPrev = false;
+	}
+	if(endNavi == pageTotalCount){
+		needNext = false;
+	}
+	
+	/*게시물 관리 id = admin_board_navi*/
+	let board_navi = $("#admin_board_navi");
+	
+	//이전 버튼 <
+	if(needPrev){	
+		let btn = $("<button>");
+		btn.addClass("page-btn");
+		btn.html("&lt;");
+		btn.attr("onclick","location.href='/admin/admin_boards?page="+ (startNavi-1)+"'");
+		board_navi.append(btn);
+	}
+	
+	for(let i = startNavi; i <= endNavi; i++){
+		let btn = $("<button>");
+		btn.addClass("page-btn");
+		btn.html(i);
+		btn.attr("onclick","location.href='/admin/admin_boards?page="+ i +"'");
+		
+		if(i== currentPage){
+			btn.addClass("active");//현재 페이지 파란색 처리
+		}
+		board_navi.append(btn);
+	}
+	
+	//다음 버튼 >
+	if(needNext){		 
+		let btn = $("<button>");
+		btn.addClass("page-btn");
+		btn.html("&gt;");//구글 라이브러리 > 모양
+		btn.attr("onclick","location.href='/admin/admin_boards?page="+ (endNavi+1) +"'");
+		board_navi.append(btn);
+	}
+	
+ 
+
+/*  
+ 
+ //공지글 관리 id = admin_notice_navi
+	let notice_navi = $("#admin_notice_navi");
+	
+	//이전 버튼 <
+	if(needPrev){	
+		let btn = $("<button>");
+		btn.addClass("page-btn");
+		btn.html("&lt;");
+		btn.attr("onclick","location.href='/admin/admin_boards?page="+ (startNavi-1)+"'");
+		notice_navi.append(btn);
+	}
+	
+	for(let i = startNavi; i <= endNavi; i++){
+		let btn = $("<button>");
+		btn.addClass("page-btn");
+		btn.html(i);
+		btn.attr("onclick","location.href='/admin/admin_boards?page="+ i +"'");
+		
+		if(i== currentPage){
+			btn.addClass("active");//현재 페이지 파란색 처리
+		}
+		notice_navi.append(btn);
+	}
+	
+	//다음 버튼 >
+	if(needNext){		 
+		let btn = $("<button>");
+		btn.addClass("page-btn");
+		btn.html("&gt;");//구글 라이브러리 > 모양
+		btn.attr("onclick","location.href='/admin/admin_boards?page="+ (endNavi+1) +"'");
+		notice_navi.append(btn);
+	} 
+	
+	*/
+</script>
 </body>
 </html>
