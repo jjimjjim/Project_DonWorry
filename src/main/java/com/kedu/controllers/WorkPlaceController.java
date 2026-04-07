@@ -83,9 +83,14 @@ public class WorkPlaceController {
 	
 	@ResponseBody
 	@RequestMapping("/update")
-	public int updateDetail(WorkPlaceDTO dto, HttpSession session) {
-	    String memberId = (String)session.getAttribute("loginId");
-		return dao.update(dto, memberId);
+	public String updateDetail(WorkPlaceDTO dto) {
+		int result = dao.update(dto);
+		
+		if(result > 0) {
+	        return "redirect:/salary/calendar?updateSuccess=true";
+	    } else {
+	        return "redirect:/salary/calendar?updateSuccess=false";
+	    }
 	}
 	
 	

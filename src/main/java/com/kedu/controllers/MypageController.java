@@ -100,7 +100,7 @@ public class MypageController {
 	
 	@RequestMapping("/employ_activity")
 	public String toEmploy_activity() {
-		return "/mypagr/employ_activity";
+		return "/mypage/employ_activity";
 	}
 	
 }
