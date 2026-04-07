@@ -28,8 +28,8 @@ public class WorkPlaceController {
 	
 	@RequestMapping("/insert")
 	public String insert(WorkPlaceDTO dto, HttpSession session) {
-		String memberId = (String) session.getAttribute("loginId");
-	    dto.setId(memberId);
+		String memberId = (String) session.getAttribute("loginId");	
+		dto.setId(memberId);
 	    if(dto.getPay_type() == null) dto.setPay_type("시급");
 	    
 	    if (dto.getWork_start_time() != null && dto.getWork_start_time().isEmpty()) {
@@ -61,7 +61,15 @@ public class WorkPlaceController {
 	    
 		dao.insertToworkpalce(dto);
 		
-		return "redirect:/salary/calendar";
+		return "redirect:/salary/calendar?insertSuccess=true";
+    
+	}
+	
+	@ResponseBody
+	@RequestMapping("/countrow")
+	public int countrow(HttpSession session) {
+	    String memberId = (String) session.getAttribute("loginId");
+	    return dao.countRow(memberId);
 	}
 	
 	
@@ -90,6 +98,18 @@ public class WorkPlaceController {
 	        return "redirect:/salary/calendar?updateSuccess=true";
 	    } else {
 	        return "redirect:/salary/calendar?updateSuccess=false";
+	    }
+	}
+	
+
+	@RequestMapping("/delete")
+	public String deleteDetail(int seq) {
+		int result =  dao.deleteBySeq(seq);
+		
+		if(result > 0) {
+	        return "redirect:/salary/calendar?deleteSuccess=true";
+	    } else {
+	        return "redirect:/salary/calendar?deleteSuccess=false";
 	    }
 	}
 	
