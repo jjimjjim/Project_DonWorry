@@ -485,10 +485,8 @@ body {
 
             <div class="filter-row">
                 <select>
-                    <option>전체 게시판</option>
-                    <option>자유 게시판</option>
-                    <option>후기 게시판</option>
-                    <option>질문 게시판</option>
+                    <option>최신순</option>
+                    <option>과거순</option>
                 </select>
                 <input type="text" placeholder="제목 검색">
                 <button class="btn-blue" type="button">검색</button>
