@@ -76,7 +76,7 @@ public class JobPostController {
 	public String selectByLocation(String selectByLocation, Model model) {
 		List<JobPostDTO> list;
 		list = dao.selectByLocation(selectByLocation);
-		model.addAttribute("list", list);
+		model.addAttribute("jobList", list);
 		return "jobpost/jobpost";
 	}
 

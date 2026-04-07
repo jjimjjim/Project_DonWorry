@@ -117,8 +117,40 @@ public class MembersDAO {
 	        dto.setId(rs.getString("id"));
 	        dto.setName(rs.getString("name"));
 	        dto.setNickname(rs.getString("nickname"));
+	        dto.setPhone(rs.getString("phone"));
+	        dto.setEmail(rs.getString("email"));
+	        dto.setType(rs.getString("type"));
+	        dto.setState(rs.getString("state"));
+	        dto.setRrn(rs.getString("rrn"));
+	        dto.setBusiness_number(rs.getString("business_number"));
 	        dto.setJoin_date(rs.getTimestamp("join_date"));
 	        return dto;
 	    });
+	}
+	
+	public List<MembersDTO> getMembers(int start, int end) {
+	    String sql = "SELECT * FROM ("
+	               + "    SELECT m.*, ROW_NUMBER() OVER(ORDER BY join_date DESC) AS rn "
+	               + "    FROM members m "
+	               + ") WHERE rn BETWEEN ? AND ?";
+	               
+	    return jdbc.query(sql, (rs, rowNum) -> {
+	        MembersDTO dto = new MembersDTO();
+	        dto.setId(rs.getString("id"));
+	        dto.setName(rs.getString("name"));
+	        dto.setNickname(rs.getString("nickname"));
+	        dto.setPhone(rs.getString("phone"));
+	        dto.setEmail(rs.getString("email"));
+	        dto.setType(rs.getString("type")); // 개인, 사업자, 관리자
+	        dto.setState(rs.getString("state")); // 탈퇴 여부 등
+	        dto.setRrn(rs.getString("rrn"));
+	        dto.setJoin_date(rs.getTimestamp("join_date"));
+	        return dto;
+	    }, start, end);
+	}
+	
+	public int membersTotalCount() {
+		String sql = "select count(*) from members";
+		return jdbc.queryForObject(sql,Integer.class);
 	}
 }

@@ -1,5 +1,6 @@
 package com.kedu.controllers;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 import com.kedu.dao.QnaDAO;
 import com.kedu.dao.Qna_replyDAO;
+import com.kedu.dto.QnaDTO;
 import com.kedu.dto.Qna_replyDTO;
 
 @Controller
@@ -31,11 +33,12 @@ public class Qna_replyController {
 	@RequestMapping("/insert")
 	public String insert(Qna_replyDTO dto,HttpSession session) {
 		String loginId = (String)session.getAttribute("loginId");
-//		if(!loginId.equals("admin")) {
-//			return "denied";
-//		}
+		if(!loginId.equals("admin")) {
+			return "denied";
+		}
 		dto.setMember_id(loginId);
 		dao.insert(dto);
+		System.out.println(dto.getQna_num());
 		qdao.statusUpdate(dto.getQna_num());
 		return "success";
 	}
@@ -43,6 +46,11 @@ public class Qna_replyController {
 	@RequestMapping("/list")
 	public String list(int qna_num) {
 		List<Qna_replyDTO> list = dao.list(qna_num);
+		for(Qna_replyDTO dto : list) {
+        	dto.setWrite_date_str(
+    		        new SimpleDateFormat("yyyy-MM-dd").format(dto.getWrite_date())
+    		    );
+        }
 		return gson.toJson(list);
 	}
 

@@ -434,8 +434,8 @@
                                     </td>
                                     <td>
                                         <span
-                                            class="status-badge ${dto.status == '답변완료' ? 'status-complete' : 'status-waiting'}">
-                                            ${dto.status == '답변완료' ? '답변완료' : '접수중'}
+                                            class="status-badge ${dto.status == 'status-complete' ? 'status-complete' : 'status-waiting'}">
+                                            ${dto.status == 'status-complete' ? '답변완료' : '접수중'}
                                         </span>
                                     </td>
                                 </tr>

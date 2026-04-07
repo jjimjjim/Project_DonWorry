@@ -14,8 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kedu.dao.FilesDAO;
 import com.kedu.dao.QnaDAO;
+import com.kedu.dao.Qna_replyDAO;
 import com.kedu.dto.FilesDTO;
 import com.kedu.dto.QnaDTO;
+import com.kedu.dto.Qna_replyDTO;
 
 @Controller
 @RequestMapping("/qna")
@@ -26,6 +28,9 @@ public class QnaController {
 	
 	@Autowired
 	private FilesDAO fdao;
+	
+	@Autowired
+	private Qna_replyDAO qdao;
 	
 	@RequestMapping("/qna")
 	public String qna(HttpSession session,Model model) {
@@ -55,6 +60,8 @@ public class QnaController {
 	public String detail(int seq,Model model) {
 		QnaDTO dto = dao.detail(seq);
 		model.addAttribute("dto",dto);
+		List<Qna_replyDTO> list = qdao.list(seq);
+		model.addAttribute("list",list);
 		return "/qna/detail";
 	}
 	@RequestMapping("/toUpdate")

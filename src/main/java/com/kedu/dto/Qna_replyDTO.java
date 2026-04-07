@@ -10,6 +10,16 @@ public class Qna_replyDTO {
 	private String content;
 	private Timestamp write_date;
 	
+	private String write_date_str;
+	
+	public String getWrite_date_str() {
+		return write_date_str;
+	}
+
+	public void setWrite_date_str(String write_date_str) {
+		this.write_date_str = write_date_str;
+	}
+
 	public Qna_replyDTO() {}
 	
 	public Qna_replyDTO(int seq, int qna_num, String member_id, String content, Timestamp write_date) {

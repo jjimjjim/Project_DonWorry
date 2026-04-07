@@ -10,6 +10,16 @@ public class QnaDTO {
 	private String status;
 	private Timestamp write_date;
 	
+	private String write_date_str;
+	
+	public String getWrite_date_str() {
+		return write_date_str;
+	}
+
+	public void setWrite_date_str(String write_date_str) {
+		this.write_date_str = write_date_str;
+	}
+
 	public QnaDTO() {}
 	
 	public QnaDTO(int seq, String member_id, String title, String content, String status, Timestamp write_date) {

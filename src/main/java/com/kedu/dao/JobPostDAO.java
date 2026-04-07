@@ -85,21 +85,30 @@ public class JobPostDAO {
     // [3] 검색 리스트 조회
     public List<JobPostDTO> searchKeywordPaged(String keyword, int start, int end, Integer startT, Integer endT) {
         StringBuilder sql = new StringBuilder();
+        // 1. 서브쿼리 시작
         sql.append("SELECT * FROM ( SELECT p.*, c1.cat_name AS main_category_name, c2.cat_name AS sub_category_name, ");
         sql.append("ROW_NUMBER() OVER(ORDER BY p.write_date DESC) AS rn FROM job_post p ");
-        sql.append("LEFT JOIN job_categories c1 ON p.main_category = c1.cat_id LEFT JOIN job_categories c2 ON p.sub_category = c2.cat_id ");
-        sql.append("WHERE (p.sido LIKE ? OR p.gugun LIKE ? OR p.dong LIKE ? OR p.title LIKE ? OR p.company_name LIKE ?) ");
+        sql.append("LEFT JOIN job_categories c1 ON p.main_category = c1.cat_id ");
+        sql.append("LEFT JOIN job_categories c2 ON p.sub_category = c2.cat_id ");
+        
+        // 2. [수정] 카테고리명(cat_name) 검색 조건 추가
+        sql.append("WHERE (p.sido LIKE ? OR p.gugun LIKE ? OR p.dong LIKE ? OR p.title LIKE ? OR p.company_name LIKE ? ");
+        sql.append("OR c1.cat_name LIKE ? OR c2.cat_name LIKE ?) "); // <-- 이 부분 추가!
         
         String tag = "%" + keyword + "%";
         List<Object> params = new ArrayList<>();
-        for(int i=0; i<5; i++) params.add(tag);
+        
+        // 파라미터가 5개에서 7개로 늘어남!
+        for(int i=0; i<7; i++) params.add(tag); 
 
+        // 3. 시간 필터링
         if (startT != null && endT != null) {
             sql.append(" AND p.work_starttime >= ? AND p.work_endtime <= ? ");
             params.add(startT); 
             params.add(endT);
         }
         
+        // 4. 페이징 처리
         sql.append(") WHERE rn BETWEEN ? AND ?");
         params.add(start); 
         params.add(end);
@@ -109,17 +118,23 @@ public class JobPostDAO {
 
     // [4] 검색 결과 총 개수
     public int getSearchTotalCount(String keyword, Integer startT, Integer endT) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM job_post WHERE (sido LIKE ? OR gugun LIKE ? OR dong LIKE ? OR title LIKE ? OR company_name LIKE ?) ");
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(*) FROM job_post p ");
+        sql.append("LEFT JOIN job_categories c1 ON p.main_category = c1.cat_id "); // 조인 필요
+        sql.append("LEFT JOIN job_categories c2 ON p.sub_category = c2.cat_id ");
+        sql.append("WHERE (p.sido LIKE ? OR p.gugun LIKE ? OR p.dong LIKE ? OR p.title LIKE ? OR p.company_name LIKE ? ");
+        sql.append("OR c1.cat_name LIKE ? OR c2.cat_name LIKE ?) "); // 조인된 카테고리명 검색
         
         String tag = "%" + keyword + "%";
         List<Object> params = new ArrayList<>();
-        for(int i=0; i<5; i++) params.add(tag);
-
+        for(int i=0; i<7; i++) params.add(tag);
+        
         if (startT != null && endT != null) {
-            sql.append(" AND work_starttime >= ? AND work_endtime <= ? ");
+            sql.append(" AND p.work_starttime >= ? AND p.work_endtime <= ? ");
             params.add(startT); 
             params.add(endT);
         }
+        
         return jdbc.queryForObject(sql.toString(), Integer.class, params.toArray());
     }
 
@@ -146,13 +161,22 @@ public class JobPostDAO {
             dto.getContent(), dto.getBenefit()
         );
     }
-
-    // --- 나머지 메서드 유지 ---
+    
     public List<JobPostDTO> selectByLocation(String keyword) {
-        String sql = "SELECT p.*, c1.cat_name AS main_category_name, c2.cat_name AS sub_category_name FROM job_post p "
-                   + "LEFT JOIN job_categories c1 ON p.main_category = c1.cat_id LEFT JOIN job_categories c2 ON p.sub_category = c2.cat_id "
-                   + "WHERE REPLACE(NVL(p.sido,'') || NVL(p.gugun,'') || NVL(p.dong,''), ' ', '') LIKE ? ORDER BY p.write_date DESC";
-        return jdbc.query(sql, jobPostMapper, "%" + keyword.replace(" ", "").trim() + "%");
+        String cleanKeyword = (keyword == null) ? "" : keyword.replaceAll("\\s", "");
+        if (cleanKeyword.isEmpty()) return new ArrayList<>();
+
+        // 각 컬럼이 NULL일 경우를 대비해 빈 문자열('')로 치환한 뒤 합치기
+        String sql = "SELECT p.*, c1.cat_name AS main_category_name, c2.cat_name AS sub_category_name "
+                   + "FROM job_post p "
+                   + "LEFT JOIN job_categories c1 ON p.main_category = c1.cat_id "
+                   + "LEFT JOIN job_categories c2 ON p.sub_category = c2.cat_id "
+                   + "WHERE REPLACE(NVL(p.sido, '') || NVL(p.gugun, '') || NVL(p.dong, ''), ' ', '') LIKE ? "
+                   + "ORDER BY p.write_date DESC";
+
+        String searchTag = "%" + cleanKeyword + "%";
+        
+        return jdbc.query(sql, jobPostMapper, searchTag);
     }
 
     public JobPostDTO getPostDetail(int seq) {
