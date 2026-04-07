@@ -91,6 +91,8 @@ public class BoardsController {
 		
 		return "redirect:/boards/mainboard_list?page=1";
 	}
+	
+	
 	@RequestMapping("/detail")
 	public String detail(int seq,Model model,HttpSession session) {
 		BoardsDTO dto = dao.detail(seq);
