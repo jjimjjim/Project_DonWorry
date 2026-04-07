@@ -88,16 +88,20 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/admin_members")
-	public String toMembers(Model model, int page) {
+	public String toMembers(Model model, @RequestParam(value="page", defaultValue="1") int page) {
 		List<MembersDTO> membersList = dao.getMembers(page*10-9, page*10);
 		
+		int statecount = dao.getStateCount();
 		int recordTotalCount = dao.membersTotalCount();
+		System.out.println(recordTotalCount);
 		
 		model.addAttribute("currentPage",page);
 		model.addAttribute("recordCountPerPage",10);
 		model.addAttribute("naviCountPerPage",10);
 		model.addAttribute("recordTotalCount",recordTotalCount);
 		model.addAttribute("membersList", membersList);
+		model.addAttribute("membersCount", recordTotalCount);
+		model.addAttribute("StateCount", statecount);
 		
 		return "admin/admin_members";
 	}
@@ -220,11 +224,26 @@ public class AdminController {
         
         return response;
     }
+	
 	@RequestMapping("/qnaDetail")
 	public String qnaDetail(int seq,Model model) {
 		model.addAttribute("dto",qdao.detail(seq));
 		
 		return "/admin/qna_detail";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/changeMemberState")
+	public String changeMemberState(String nickname, String state) {
+	    try {
+	        // id와 바꿀 state('Y' or 'N')를 같이 던짐
+	        int result = dao.updateMemberState(nickname, state);
+	        
+	        return (result > 0) ? "success" : "fail";
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "error";
+	    }
 	}
 	
 	
