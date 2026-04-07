@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>     
+ <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%> 
+ <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>     
 <!DOCTYPE html>
 <html>
 <head>
@@ -450,27 +451,27 @@ body {
 
             <div class="page-date-box">
                 <i class="fa-regular fa-envelope-open" style="margin-right:6px;"></i>
-                미처리 문의 23건
+                미처리 문의 ${waitCount }건
             </div>
         </div>
 
         <section class="summary-grid">
             <div class="summary-card">
                 <div class="summary-label">전체 문의</div>
-                <div class="summary-value">323</div>
-                <div class="summary-desc">이번 주 신규 18건</div>
+                <div class="summary-value">${allCount }</div>
+                <div class="summary-desc">이번 주 신규 ${weekNewCount }건</div>
             </div>
 
             <div class="summary-card">
                 <div class="summary-label">답변 대기</div>
-                <div class="summary-value">23</div>
-                <div class="summary-desc">24시간 이상 경과 6건</div>
+                <div class="summary-value">${waitCount }</div>
+                <div class="summary-desc">24시간 이상 경과 ${overwaitCount }건</div>
             </div>
 
             <div class="summary-card">
                 <div class="summary-label">답변 완료</div>
-                <div class="summary-value">300</div>
-                <div class="summary-desc">평균 처리 시간 1.2일</div>
+                <div class="summary-value">${completeCount }</div>
+                <div class="summary-desc">평균 처리 시간 <fmt:formatNumber value="${replyTime}" pattern="0.0"/>일</div>
             </div>
         </section>
 
@@ -480,96 +481,31 @@ body {
             </div>
 
             <div class="filter-row">
-                <select>
-                    <option>전체 분류</option>
-                    <option>회원</option>
-                    <option>급여</option>
-                    <option>구인구직</option>
-                    <option>신고</option>
-                </select>
+                    <select id="statusFilter">
+                        <option value="all">전체 상태</option>
+                        <option value="status-waiting">답변 대기</option>
+                        <option value="status-complete">답변 완료</option>
+                    </select>
 
-                <select>
-                    <option>전체 상태</option>
-                    <option>답변 대기</option>
-                    <option>답변 완료</option>
-                </select>
+                    <input type="text" id="searchInput" placeholder="문의 제목, 작성자 검색">
 
-                <input type="text" placeholder="문의 제목, 작성자 검색">
+                    <button type="button" class="btn-search" id="searchBtn">검색</button>
+                </div>
 
-                <button type="button" class="btn-search">검색</button>
-            </div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>문의번호</th>
+                            <th colspan='2'>제목</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                            <th colspan='2'>상태</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inquiryTableBody"></tbody>
+                </table>
 
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>문의번호</th>
-                        <th>분류</th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>작성일</th>
-                        <th>상태</th>
-                        <th>관리</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1200</td>
-                        <td>회원</td>
-                        <td>본인 인증 오류 문의</td>
-                        <td>user001</td>
-                        <td>2026-04-01</td>
-                        <td><span class="status-badge status-wait">답변 대기</span></td>
-                        <td>
-                            <button type="button" class="btn-blue-light">상세</button>
-                            <button type="button" class="btn-blue-light">답변</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1199</td>
-                        <td>급여</td>
-                        <td>주휴수당 계산 기준 문의</td>
-                        <td>user002</td>
-                        <td>2026-04-01</td>
-                        <td><span class="status-badge status-wait">답변 대기</span></td>
-                        <td>
-                            <button type="button" class="btn-blue-light">상세</button>
-                            <button type="button" class="btn-blue-light">답변</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1198</td>
-                        <td>구인구직</td>
-                        <td>사업자 인증 승인 일정 문의</td>
-                        <td>user003</td>
-                        <td>2026-03-31</td>
-                        <td><span class="status-badge status-done">답변 완료</span></td>
-                        <td>
-                            <button type="button" class="btn-blue-light">상세</button>
-                            <button type="button" class="btn-red">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1197</td>
-                        <td>신고</td>
-                        <td>신고 접수 후 처리 상태 문의</td>
-                        <td>user004</td>
-                        <td>2026-03-31</td>
-                        <td><span class="status-badge status-done">답변 완료</span></td>
-                        <td>
-                            <button type="button" class="btn-blue-light">상세</button>
-                            <button type="button" class="btn-red">삭제</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="pagination-wrap">
-                <button class="page-btn" type="button">&lt;</button>
-                <button class="page-btn active" type="button">1</button>
-                <button class="page-btn" type="button">2</button>
-                <button class="page-btn" type="button">3</button>
-                <button class="page-btn" type="button">&gt;</button>
-            </div>
+                <div class="pagination-wrap" id="paginationBox"></div>
         </section>
 
     </main>
@@ -580,6 +516,130 @@ body {
     </div>
 
 </div>
+<script>
+$(document).ready(function() {
+    // 1. 처음 페이지 로드 시 1페이지 목록 불러오기
+    loadInquiryList(1);
 
+    // 2. 검색 버튼 클릭 이벤트
+    $("#searchBtn").on("click", function() {
+        loadInquiryList(1);
+    });
+
+    // 3. 상태 필터 변경 시 즉시 검색
+    $("#statusFilter").on("change", function() {
+        loadInquiryList(1);
+    });
+
+    // 4. 엔터키 검색 지원
+    $("#searchInput").on("keyup", function(e) {
+        if (e.key === "Enter") loadInquiryList(1);
+    });
+
+    // 5. 페이지 번호 클릭 이벤트 (동적 생성이므로 document 위임)
+    $(document).on("click", ".page-btn", function() {
+        const targetPage = $(this).data("page");
+        if(targetPage) loadInquiryList(targetPage);
+    });
+});
+
+/**
+ * 서버로부터 데이터를 받아와 화면을 그리는 핵심 함수
+ */
+function loadInquiryList(page) {
+    const status = $("#statusFilter").val();
+    const keyword = $("#searchInput").val();
+
+    $.ajax({
+        url: "/admin/api/inquiry_list", // 아까 만든 컨트롤러 주소
+        type: "GET",
+        data: {
+            page: page,
+            status: status,
+            keyword: keyword
+        },
+        dataType: "json",
+        success: function(res) {
+            // 테이블 그리기
+            renderTable(res.mainList);
+            // 페이징 그리기
+            renderPagination(res.currentPage, res.recordTotalCount, res.recordCountPerPage, res.naviCountPerPage);
+        },
+        error: function(err) {
+            console.error("데이터 로드 실패:", err);
+            alert("목록을 불러오는 중 오류가 발생했습니다.");
+        }
+    });
+}
+
+/**
+ * 테이블 렌더링
+ */
+function renderTable(list) {
+    let html = "";
+    if (!list || list.length === 0) {
+        html = '<tr><td colspan="6" style="padding:50px 0; color:#94a3b8;">검색 결과가 없습니다.</td></tr>';
+    } else {
+        list.forEach(item => {
+            // 상태에 따른 클래스와 텍스트 분기
+            const isWait = item.status === 'status-waiting';
+            const badgeClass = isWait ? 'status-wait' : 'status-done';
+            const statusText = isWait ? '답변 대기' : '답변 완료';
+
+            html += `
+            	<tr onclick="location.href='/admin/qnaDetail?seq=`+item.seq+`'" style="cursor:pointer;">
+                    <td>`+item.seq+`</td>
+                    <td colspan="2">`+item.title+`</td>
+                    <td>`+item.member_id+`</td>
+                    <td>`+item.write_date_str+`</td>
+                    <td colspan="2">`;
+                    html += "<span class='status-badge " + badgeClass + "'>" + statusText + "</span>";
+                        //<span class="status-badge ${badgeClass}">`+statusText+`</span>
+                      html +=`  
+                    </td>
+                </tr>
+            `;
+        });
+    }
+    $("#inquiryTableBody").html(html);
+}
+
+/**
+ * 페이징 버튼 렌더링
+ */
+function renderPagination(currentPage, totalCount, recordPerPage, naviPerPage) {
+    if (totalCount === 0) {
+        $("#paginationBox").empty();
+        return;
+    }
+
+    const totalPage = Math.ceil(totalCount / recordPerPage);
+    const startNavi = Math.floor((currentPage - 1) / naviPerPage) * naviPerPage + 1;
+    let endNavi = startNavi + naviPerPage - 1;
+    if (endNavi > totalPage) endNavi = totalPage;
+
+    let html = "";
+
+    // 이전 버튼 (<)
+    if (startNavi > 1) {
+    html += "<button class='page-btn' data-page='" + (startNavi - 1) + "'>&lt;</button>";
+}
+
+    // 숫자 버튼
+    for (let i = startNavi; i <= endNavi; i++) {
+        const activeClass = (i === currentPage) ? "active" : "";
+        html += "<button class='page-btn " +activeClass+"' data-page='"+i+"'>"+i+"</button>";
+    }
+
+    // 다음 버튼 (>)
+    if (endNavi < totalPage) {
+        html += "<button class='page-btn' data-page='"+(endNavi + 1)+"'>&gt;</button>";
+    }
+
+    $("#paginationBox").html(html);
+}
+
+
+</script>
 </body>
 </html>

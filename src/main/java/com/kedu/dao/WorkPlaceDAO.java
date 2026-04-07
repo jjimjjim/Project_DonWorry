@@ -2,6 +2,8 @@ package com.kedu.dao;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,13 +16,19 @@ public class WorkPlaceDAO {
 	@Autowired
 	public JdbcTemplate jdbc;
 	
+	public int countRow(String id) {
+		String sql = "select count(*) from workplace where id = ?";
+		return jdbc.queryForObject(sql, int.class, id);
+	}
+	
 	public int insertToworkpalce(WorkPlaceDTO dto) {
+		
 	    String sql = "INSERT INTO workplace ("
 	            + "seq, id, name, pay_per_hour, pay_type, pay_cycle, payday, "
 	            + "tax_applied, insurance_applied, employment_insurance, "
 	            + "work_start_time, work_end_time, workplace_date"
 	            + ") VALUES (workplace_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-	            + "TO_DATE(?, 'HH24:MI'), TO_DATE(?, 'HH24:MI'), sysdate)";
+	            + "?, ?, sysdate)";
 
 	    return jdbc.update(sql,
 	            dto.getId(),
@@ -41,9 +49,9 @@ public class WorkPlaceDAO {
 	    String sql = "select "
 	            + "seq, id, name, pay_per_hour, pay_type, pay_cycle, payday, "
 	            + "tax_applied, insurance_applied, employment_insurance, "
-	            + "to_char(work_start_time, 'HH24:MI') as work_start_time, "
-	            + "to_char(work_end_time, 'HH24:MI') as work_end_time, "
-	            + "to_char(workplace_date, 'YYYY-MM-DD HH24:MI:SS') as workplace_date "
+	            + "work_start_time, "
+	            + "work_end_time, "
+	            + "workplace_date "
 	            + "from workplace where id = ?";
 
 	    return jdbc.query(sql, new BeanPropertyRowMapper<>(WorkPlaceDTO.class), memberId);
@@ -63,6 +71,11 @@ public class WorkPlaceDAO {
 					dto.getPay_cycle(), dto.getPayday(), dto.getTax_applied(), 
 					dto.getInsurance_applied(), dto.getEmployment_insurance(),
 					dto.getWork_start_time(), dto.getWork_end_time(), dto.getSeq());
+	}
+	
+	public int deleteBySeq(int seq) {
+		String sql = "delete from workplace where seq = ?";
+		return jdbc.update(sql,seq);
 	}
 	
 }

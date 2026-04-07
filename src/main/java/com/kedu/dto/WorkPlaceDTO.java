@@ -10,7 +10,7 @@ public class WorkPlaceDTO {
     private String pay_type; // 기본값 '시급'
     private String pay_cycle;
     private int payday;
-    private String tax_applied; // 'Y' or 'N'
+    private String tax_applied;
     private String insurance_applied; // 'Y' or 'N'
     private String employment_insurance; // 'Y' or 'N'
     private String work_start_time; // HH:mm 형식

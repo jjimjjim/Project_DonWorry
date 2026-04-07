@@ -1,17 +1,24 @@
 package com.kedu.controllers;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kedu.dao.BoardsDAO;
 import com.kedu.dao.MembersDAO;
+import com.kedu.dao.QnaDAO;
 import com.kedu.dto.BoardsDTO;
 import com.kedu.dto.MembersDTO;
+import com.kedu.dto.QnaDTO;
 
 @Controller
 @RequestMapping("/admin")
@@ -23,6 +30,9 @@ public class AdminController {
 	
 	@Autowired
 	private BoardsDAO bdao;
+	
+	@Autowired
+	private QnaDAO qdao;
 	
 	@RequestMapping("/admin/admin_main")
 	public String adminMain(Model model) {
@@ -131,8 +141,53 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/admin_inquiry")
-	public String toInquiry() {
+	public String toInquiry(Model model) {
+			
+		model.addAttribute("allCount",qdao.selectAllCount());
+		model.addAttribute("waitCount",qdao.selectWaitCount());
+		model.addAttribute("completeCount",qdao.selectCompleteCount());
+		
+		model.addAttribute("weekNewCount",qdao.selectWeekNewCount());
+		model.addAttribute("overwaitCount",qdao.selectOverdueWaitCount());
+		model.addAttribute("replyTime",qdao.selectAvgReplyTime());
+		
+		
 		return "admin/admin_inquiry";
+	}
+	@ResponseBody
+    @RequestMapping("/api/inquiry_list")
+    public Map<String, Object> getInquiryList(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "all") String status,
+            @RequestParam(defaultValue = "") String keyword) {
+        
+        int recordCountPerPage = 10;
+        int naviCountPerPage = 10;
+        
+        // 검색 조건이 포함된 리스트와 전체 개수 조회
+        List<QnaDTO> mainList = qdao.selectSearchList(page, status, keyword, recordCountPerPage);
+        for(QnaDTO dto : mainList) {
+        	dto.setWrite_date_str(
+    		        new SimpleDateFormat("yyyy-MM-dd").format(dto.getWrite_date())
+    		    );
+        }
+        
+        int recordTotalCount = qdao.selectSearchCount(status, keyword);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("mainList", mainList);
+        response.put("currentPage", page);
+        response.put("recordCountPerPage", recordCountPerPage);
+        response.put("naviCountPerPage", naviCountPerPage);
+        response.put("recordTotalCount", recordTotalCount);
+        
+        return response;
+    }
+	@RequestMapping("/qnaDetail")
+	public String qnaDetail(int seq,Model model) {
+		model.addAttribute("dto",qdao.detail(seq));
+		
+		return "/admin/qna_detail";
 	}
 	
 	

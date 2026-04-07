@@ -442,6 +442,81 @@
             background-color: #e7f5ff;
             color: #228be6;
         }
+        /* 답변 목록 컨테이너 */
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* 답변 카드 아이템 */
+.reply-card {
+    background: #f8fafc;
+    padding: 20px;
+    border-left: 5px solid #2563eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* 답변 헤더 (관리자 아이콘 + 날짜) */
+.reply-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.reply-card-header strong {
+    color: #1e293b;
+    font-size: 15px;
+}
+
+.reply-card-header i {
+    margin-right: 6px;
+    color: #2563eb;
+}
+
+.reply-card-date {
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+/* 답변 본문 내용 */
+.reply-card-content {
+    color: #334155;
+    line-height: 1.6;
+    font-size: 14px;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
+/* 답변 푸터 (삭제 버튼) */
+.reply-card-footer {
+    text-align: right;
+    margin-top: 15px;
+}
+
+.btn-reply-del {
+    padding: 5px 12px;
+    font-size: 12px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-reply-del:hover {
+    background-color: #dc2626;
+}
+
+/* 답변 없을 때 메시지 */
+.no-reply {
+    padding: 30px;
+    color: #94a3b8;
+    text-align: center;
+    font-size: 14px;
+}
 </style>
 </head>
 <body>
@@ -540,9 +615,10 @@
                     </span>
                 </div>
                 <div class="info-right">
-                    <span class="status-badge ${dto.status == '답변완료' ? 'status-complete' : 'status-waiting'}">
-                                            ${dto.status == '답변완료' ? '답변완료' : '접수중'}
-                    </span>
+                     <span
+                                            class="status-badge ${dto.status == 'status-complete' ? 'status-complete' : 'status-waiting'}">
+                                            ${dto.status == 'status-complete' ? '답변완료' : '접수중'}
+                                        </span>
                     
                 </div>
             </div>
@@ -586,20 +662,41 @@
 
         <!-- 댓글 영역 -->
         <div class="comment-section">
+    <h3 class="comment-title">답변</h3>
 
-            <h3 class="comment-title">답변</h3>
-
-            <!-- 댓글 작성 -->
-
-            <div class="comment-write">
-
-                <textarea placeholder="답변할 내용을 입력하세요" name="content" class="content"></textarea>
-                <button class="reply-insert-btn">등록</button>
-            </div>
-
-            <!-- 댓글 리스트 -->
-            <div class="comment-list"></div>
-        </div>
+    <div class="comment-list">
+        <c:choose>
+            <c:when test="${empty list}">
+                <p class="no-reply">등록된 답변이 없습니다.</p>
+            </c:when>
+            
+            <c:otherwise>
+                <c:forEach var="comment" items="${list}">
+                    <div class="reply-card">
+                        <div class="reply-card-header">
+                            <strong>
+                                <i class="fa-solid fa-headset"></i>관리자 답변
+                            </strong>
+                            <span class="reply-card-date">
+                                <fmt:formatDate value="${comment.write_date}" pattern="yyyy-MM-dd HH:mm" />
+                            </span>
+                        </div>
+                        
+                        <div class="reply-card-content">${comment.content}</div>
+                        
+                        <c:if test="${loginId == comment.member_id}">
+                            <div class="reply-card-footer">
+                                <button type="button" class="btn-reply-del" onclick="deleteReply(${comment.seq})">
+                                    삭제
+                                </button>
+                            </div>
+                        </c:if>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</div>
     
 </div>
 <div class="container-footer">
@@ -615,70 +712,7 @@ $(".qna-delete-btn").on("click",function(){
 	 location.href = "/qna/delete?seq="+${dto.seq}
 })
 
-$(document).ready(function() {
-    getReplyList();
-});
 
-// 1. 답변 등록
-$(document).on("click", ".reply-insert-btn", function() {
-    let content = $(".reply-content").val().trim();
-    if(content === "") { alert("내용을 입력해주세요."); return; }
-
-    $.ajax({
-        url: "/qna_reply/insert",
-        type: "post",
-        data: {
-            qna_num: "${dto.seq}", // 원본 문의글 번호
-            content: content
-        }
-    }).done(function(resp) {
-        if(resp === "success") {
-            $(".reply-content").val("");
-            getReplyList(); // 목록 갱신
-            // 관리자 답변은 보통 1개이므로 입력창을 숨기기도 함
-            $(".reply-write-container").hide();
-        } else {
-            alert("권한이 없거나 등록에 실패했습니다.");
-        }
-    });
-});
-
-// 2. 답변 목록 불러오기
-function getReplyList() {
-    $.ajax({
-        url: "/qna_reply/list",
-        data: { qna_num: "${dto.seq}" },
-        dataType: "json"
-    }).done(function(list) {
-        let html = "";
-        let loginId = "${loginId}";
-        
-        if(list.length === 0) {
-            html = "<p>등록된 답변이 없습니다.</p>";
-        }
-
-        list.forEach(function(comment) {
-            html += `
-            <div class="comment-item" style="background:#f9f9f9; padding:15px; margin-bottom:10px; border-left:5px solid #007bff;">
-                <div class="comment-header" style="display:flex; justify-content:space-between;">
-                    <strong>[관리자 답변] \${comment.member_id}</strong>
-                    <span>\${comment.write_date_str}</span>
-                </div>
-                <div class="comment-content" style="margin-top:10px;">\${comment.content}</div>
-                <div class="comment-actions" style="text-align:right;">`;
-            
-            // 본인이 쓴 답변일 때만 수정/삭제 노출
-            if(loginId === comment.member_id) {
-                html += `
-                    <button onclick="deleteReply(\${comment.seq})">삭제</button>`;
-            }
-            
-            html += `</div>
-            </div>`;
-        });
-        $(".comment-list").html(html);
-    });
-}
 </script>
 </body>
 </html>
