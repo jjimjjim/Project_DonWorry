@@ -656,8 +656,7 @@
     </nav>
 
     <div class="page">
-        <div class="page-title">구인 활동 관리</div>
-        <hr class="title-line">
+
 
         <div class="comm-header">
             <i class="fa-solid fa-briefcase fa-4x"></i>
@@ -667,7 +666,7 @@
 
         <div class="top-action-row">
             <div class="top-action-left">
-                <button type="button" class="top-action-btn">공고 등록</button>
+           
             </div>
             <div class="top-action-right">
                 <button type="button" class="top-sub-btn">구직자 이력서 보기</button>
@@ -822,9 +821,7 @@
             <a href="#" class="page-num"><span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span></a>
         </div>
 
-        <div class="bottom-action-row">
-            <button type="button" class="mypage-btn" onclick="location.href='/mypage/toMypage'">마이페이지</button>
-        </div>
+       
     </div>
 </div>
 

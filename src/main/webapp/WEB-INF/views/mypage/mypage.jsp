@@ -539,7 +539,7 @@
             </a>
         </div> 
         <div class="my-activity-item">
-            <a href="/mypage/job_activity" class="my-apply-list">
+            <a href="/mypage/employ_activity" class="my-apply-list">
                 <div class="item-name">
                     <i class="fa-solid fa-user-check" style="color: rgb(110, 110, 110); margin-right:5px;"></i></i>
                     구인 활동 관리

@@ -108,4 +108,17 @@ public class MembersDAO {
 		return jdbc.update(sql,dto.getNickname(),dto.getPhone(),dto.getEmail(),id);
 	}
 	
+	
+	public List<MembersDTO> getRecentMembers() {
+	    String sql = "select * from members order by join_date desc";
+
+	    return jdbc.query(sql, (rs, i) -> {
+	        MembersDTO dto = new MembersDTO();
+	        dto.setId(rs.getString("id"));
+	        dto.setName(rs.getString("name"));
+	        dto.setNickname(rs.getString("nickname"));
+	        dto.setJoin_date(rs.getTimestamp("join_date"));
+	        return dto;
+	    });
+	}
 }

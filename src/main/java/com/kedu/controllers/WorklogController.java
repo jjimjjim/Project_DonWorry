@@ -47,10 +47,15 @@ public class WorklogController {
 		return "error";
 	}
 	
-	@ResponseBody
 	@RequestMapping("/update")
-	public int update(WorklogDTO dto) {
-		return dao.update(dto);
+	public String update(WorklogDTO dto) {
+		int result = dao.update(dto);
+		
+		if(result > 0) {
+	        return "redirect:/salary/calendar?updateSuccess=true";
+	    } else {
+	        return "redirect:/salary/calendar?updateSuccess=false";
+	    }
 	}
 
 }
