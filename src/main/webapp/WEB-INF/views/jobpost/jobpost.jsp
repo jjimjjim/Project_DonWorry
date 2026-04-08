@@ -794,7 +794,6 @@ body {
 			</div>
 
 		</div>
-
 		<div class="job-list">
 			<c:forEach var="post" items="${jobList}">
 				<div class="job-card">

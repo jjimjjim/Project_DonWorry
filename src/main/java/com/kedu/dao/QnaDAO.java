@@ -56,6 +56,23 @@ public class QnaDAO {
 		String sql = "select count(*) from qna where status = 'status-waiting'";
 		return jdbc.queryForObject(sql,Integer.class);
 	}
+	
+	public int getUnansweredCount() {
+	    String sql = "SELECT COUNT(*) FROM qna WHERE status = 'status-waiting'";
+	    return jdbc.queryForObject(sql, Integer.class);
+	}
+	
+	public int getOverdueCount() {
+	    String sql = "SELECT COUNT(*) FROM qna WHERE status = 'status-waiting' AND write_date < SYSDATE - 1";
+	    return jdbc.queryForObject(sql, Integer.class);
+	}
+	
+	public int getTodayInquiryCount() {
+	    String sql = "SELECT COUNT(*) FROM qna WHERE TO_CHAR(write_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')";
+	    
+	    return jdbc.queryForObject(sql, Integer.class);
+	}
+	
 	public int selectCompleteCount() {
 		String sql = "select count(*) from qna where status = 'status-complete'";
 		return jdbc.queryForObject(sql,Integer.class);

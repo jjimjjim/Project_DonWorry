@@ -190,4 +190,10 @@ public class JobPostDAO {
                    + "FROM job_post p LEFT JOIN job_categories c1 ON p.main_category = c1.cat_id LEFT JOIN job_categories c2 ON p.sub_category = c2.cat_id ) WHERE rn BETWEEN 1 AND 3";
         return jdbc.query(sql, jobPostMapper);
     }
+    
+    public int getPostCount() {
+    	String sql = "select count(*) from job_post";
+    	
+    	return jdbc.queryForObject(sql, Integer.class);
+    }
 }

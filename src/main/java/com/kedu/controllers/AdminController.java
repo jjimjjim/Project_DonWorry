@@ -19,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kedu.dao.AdminDAO;
 import com.kedu.dao.BoardsDAO;
 import com.kedu.dao.FilesDAO;
+import com.kedu.dao.JobPostDAO;
 import com.kedu.dao.MembersDAO;
 import com.kedu.dao.QnaDAO;
 import com.kedu.dao.ReplyDAO;
+import com.kedu.dao.ReportDAO;
 import com.kedu.dto.BoardsDTO;
 import com.kedu.dto.FilesDTO;
 import com.kedu.dto.MembersDTO;
@@ -50,49 +52,95 @@ public class AdminController {
 	@Autowired
 	private ReplyDAO rdao;
 	
-	@RequestMapping("/admin/admin_main")
-	public String adminMain(Model model) {
-		
-		List<MembersDTO> recentMembersList = dao.getRecentMembers();
-
-	    model.addAttribute("today", "2026-04-06");
-
-	    model.addAttribute("totalMembers", 3300);
-	    model.addAttribute("todayJoinCount", 18);
-
-	    model.addAttribute("totalBoards", 1200);
-	    model.addAttribute("todayBoardCount", 27);
-
-	    model.addAttribute("unansweredInquiryCount", 23);
-	    model.addAttribute("overdueInquiryCount", 6);
-	    model.addAttribute("todayInquiryCount", 9);
-
-	    model.addAttribute("businessMemberCount", 323);
-	    model.addAttribute("businessMemberPercent", 9.8);
-	    model.addAttribute("personalMemberCount", 2977);
-	    model.addAttribute("personalMemberPercent", 90.2);
-
-	    model.addAttribute("jobPostCount", 132);
-	    model.addAttribute("recruitingJobCount", 98);
-
-	    model.addAttribute("reportCount", 13);
-	    model.addAttribute("urgentReportCount", 4);
-
-	    model.addAttribute("visitorChartLabels", Arrays.asList("4/1", "4/2", "4/3", "4/4", "4/5", "4/6", "4/7"));
-	    model.addAttribute("visitorChartData", Arrays.asList(120, 148, 162, 155, 180, 176, 190));
-
-	    model.addAttribute("postChartLabels", Arrays.asList("11월", "12월", "1월", "2월", "3월", "4월"));
-	    model.addAttribute("boardChartData", Arrays.asList(120, 180, 240, 210, 230, 260));
-	    model.addAttribute("inquiryChartData", Arrays.asList(80, 130, 180, 160, 170, 190));
-
-	    model.addAttribute("recentMembers", recentMembersList);
-
-	    return "admin/admin_main";
-	}
+	@Autowired
+	private JobPostDAO jdao;
+	
+	@Autowired
+	private ReportDAO rrdao;
 	
 	@RequestMapping("/admin_main")
-	public String toAdmin() {
-		return "admin/admin_main";
+	public String adminMain(Model model, @RequestParam(value="page", defaultValue="1") int page) {
+		int recordTotalCount;
+	    int start = page * 7 - 6;
+	    int end = page * 7;
+	    
+		List<MembersDTO> recentMembersList = dao.getRecentMembers(start, end);
+		recordTotalCount = dao.getRecentMembersCount();
+		int totalMembers = dao.membersTotalCount();
+	    int todayJoin = dao.getTodayJoinCount();
+	    
+	    int totalBoards = bdao.mainRecordTotalCount();
+	    int todayBoards = bdao.getTodayBoardCount();
+	    
+	    int unansweredQna = qdao.getUnansweredCount();
+	    int overdueQna = qdao.getOverdueCount();
+	    int todayInquiryCount = qdao.getTodayInquiryCount();
+	    
+	    int reportStatusCount = rrdao.getReportStatusCount();
+	    
+	    int businessCount = dao.getbusinessMemberCount();
+	    int personalCount = dao.getpersonalMemberCount();
+	    
+	    int jobCount = jdao.getPostCount();
+	    
+	    int reportCount = rrdao.getReportCount();
+	    
+	    
+	    
+	    // 2. 퍼센트 계산 (0으로 나누기 방지)
+	    int validUserSum = personalCount + businessCount;
+
+	 // 2. 이 합계를 분모로 퍼센트 계산
+	 double bizPercent = (validUserSum > 0) ? (double)businessCount / validUserSum * 100 : 0;
+	 double perPercent = (validUserSum > 0) ? (double)personalCount / validUserSum * 100 : 0;
+
+	    model.addAttribute("totalMembers", totalMembers);
+	    model.addAttribute("todayJoinCount", todayJoin);
+
+	    model.addAttribute("totalBoards", totalBoards);
+	    model.addAttribute("todayBoardCount", todayBoards);
+
+	    model.addAttribute("unansweredInquiryCount", unansweredQna);
+	    model.addAttribute("overdueInquiryCount", overdueQna);
+	    model.addAttribute("todayInquiryCount", todayInquiryCount);
+
+	    model.addAttribute("businessMemberCount", businessCount);
+	    model.addAttribute("businessMemberPercent", String.format("%.1f", bizPercent)); // 소수점 한자리
+	    model.addAttribute("personalMemberCount", personalCount);
+	    model.addAttribute("personalMemberPercent", String.format("%.1f", perPercent));
+
+	    model.addAttribute("jobPostCount", jobCount);
+//	    model.addAttribute("recruitingJobCount", 98);
+
+	    model.addAttribute("reportCount", reportCount);
+	    model.addAttribute("urgentReportCount", reportStatusCount);
+
+//	    model.addAttribute("visitorChartLabels", Arrays.asList("4/1", "4/2", "4/3", "4/4", "4/5", "4/6", "4/7"));
+//	    model.addAttribute("visitorChartData", Arrays.asList(120, 148, 162, 155, 180, 176, 190));
+//
+//	    model.addAttribute("postChartLabels", Arrays.asList("11월", "12월", "1월", "2월", "3월", "4월"));
+//	    model.addAttribute("boardChartData", Arrays.asList(120, 180, 240, 210, 230, 260));
+//	    model.addAttribute("inquiryChartData", Arrays.asList(80, 130, 180, 160, 170, 190));
+
+	    model.addAttribute("recentMembers", recentMembersList);
+	    
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("recordCountPerPage", 7);
+	    model.addAttribute("naviCountPerPage", 10);
+	    model.addAttribute("recordTotalCount", recordTotalCount);
+	    
+	    int pageCount = (int)Math.ceil(recordTotalCount / (double)7); 
+
+	 int startNavi = ((page - 1) / 10) * 10 + 1;
+
+	 int endNavi = startNavi + 10 - 1;
+	 if (endNavi > pageCount) { endNavi = pageCount; }
+
+	 model.addAttribute("startNavi", startNavi);
+	 model.addAttribute("endNavi", endNavi);
+	 model.addAttribute("pageCount", pageCount);
+
+	    return "admin/admin_main";
 	}
 	
 	@RequestMapping("/admin_members")
