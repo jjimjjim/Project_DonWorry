@@ -53,6 +53,11 @@ public class BoardsDAO {
 		
 	}
 	
+	public int getTodayBoardCount() {
+	    String sql = "SELECT COUNT(*) FROM boards WHERE TO_CHAR(write_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')";
+	    return jdbc.queryForObject(sql, Integer.class);
+	}
+	
 	public int mainRecordTotalCount() {
 		String sql = "select count(*) from boards where member_id != '관리자'";
 		return jdbc.queryForObject(sql,Integer.class);
