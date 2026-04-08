@@ -154,6 +154,41 @@
 	    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); /* 미세한 그림자 효과 */
 	}
 
+ /* 하단 고정 글쓰기 버튼 스타일 추가 */
+        .floating-write-btn {
+            position: fixed;
+            /* 글쓰기 버튼 고정(따라다님) */
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 15px 25px;
+            background-color: #2563eb;
+            /* 파란색 포인트 컬러 */
+            color: white;
+            border: none;
+            border-radius: 30px;
+            /* 둥근 모양 */
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s, transform 0.2s;
+            z-index: 1000;
+            /* 다른 요소보다 위에 오도록 설정 */
+        }
+
+        .floating-write-btn:hover {
+            background-color: #0056b3;
+            /* 호버 시 더 짙은 파란색 */
+            transform: translateY(-3px);
+            /* 약간 위로 떠오르는 효과 */
+        }
+
+        .floating-write-btn .material-symbols-outlined {
+            font-size: 22px;
+        }
+
     .page-nav { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 40px; }
     .page-num { display: flex; justify-content: center; align-items: center; width: 40px; height: 40px; border: 1px solid #dee2e6; background-color: white; color: #495057; text-decoration: none; border-radius: 10px; font-size: 14px; }
     .page-num.active { background-color: #2563eb; color: white; border-color: #2563eb; }
@@ -266,6 +301,10 @@
             <a href="#" class="page-num active">1</a>
             <a href="#" class="page-num"><span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span></a>
         </div>
+         <button class="floating-write-btn">
+                <span class="material-symbols-outlined">edit</span>
+                <span>글쓰기</span>
+            </button>
     </div>
 </div>
 <div class="container-footer">
