@@ -12,6 +12,17 @@ public class BoardsDTO {
 	private int view_count;
 	private Timestamp write_date;
 	
+	private int bookmarked;
+	
+	
+	
+	public int getBookmarked() {
+		return bookmarked;
+	}
+
+	public void setBookmarked(int bookmarked) {
+		this.bookmarked = bookmarked;
+	}
 	private int reply_count;
 	
 	private int report_count;

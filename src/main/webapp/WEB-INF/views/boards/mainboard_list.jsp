@@ -446,6 +446,37 @@
             border-color: #007bff;
             font-weight: bold;
         }
+        .post-card {
+    position: relative; /* 별 아이콘의 absolute 배치를 위한 기준 */
+    background-color: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+        
+        
+        /* 북마크 별 아이콘 스타일 */
+.bookmark-btn {
+    position: absolute;
+    top: 20px;    /* 상단 여백 */
+    right: 20px;  /* 우측 여백 */
+    font-size: 20px; /* 별 크기 조정 */
+    color: #ccc;  /* 기본 빈 별 색상 */
+    transition: color 0.2s, transform 0.2s;
+    z-index: 10;  /* 클릭이 잘 되도록 우선순위 높임 */
+}
+
+.bookmark-btn:hover {
+    transform: scale(1.2);
+}
+
+/* 활성화된(북마크된) 별 스타일 */
+.bookmark-btn.active {
+    color: #ffc107; /* 노란색 꽉 찬 별 */
+}
 </style>
 </head>
 <body>
@@ -557,38 +588,37 @@
         <section class="post-list">
             <div class="post-container">
             
-                <c:forEach var="i" items="${mainList }">
-                <c:if test="${i.member_id!='관리자'}">
-                    <article class="post-card"
-                        onclick="location.href='/boards/view?seq=${i.seq}&view_count=${i.view_count }'">
-                        <div class="user-info">
-                            <div class="profile-img green">편의</div>
-                            <div class="meta">
-                                <span class="nickname">${i.member_id }</span>
-                                <span class="tag free">
-                                    <c:choose>
-                                        <c:when test="${i.category == 'main'}">메인게시판</c:when>
-                                        <c:when test="${i.category == 'free'}">자유게시판</c:when>
-                                        <c:when test="${i.category == 'qna'}">질문게시판</c:when>
-                                        <c:when test="${i.category == 'review'}">리뷰게시판</c:when>
-                                    </c:choose>
-                                </span>
-                                <p class="time">
-                                    <fmt:formatDate value="${i.write_date }" pattern="yyyy-MM-dd" />
-                                </p>
+                <c:forEach var="i" items="${mainList}">
+                    <c:if test="${i.member_id != '관리자'}">
+                        <article class="post-card">
+                            <i class="${i.bookmarked == 1 ? 'fa-solid active' : 'fa-regular'} fa-star bookmark-btn"
+                                data-seq="${i.seq}" onclick="toggleBookmark(event, this)"></i>
+
+                            <div onclick="location.href='/boards/view?seq=${i.seq}&view_count=${i.view_count}'">
+                                <div class="user-info">
+                                    <div class="meta">
+                                        <span class="nickname">${i.member_id}</span>
+                                        <span class="tag free">
+                                            <c:choose>
+                                                <c:when test="${i.category == 'main'}">메인게시판</c:when>
+                                                <c:when test="${i.category == 'free'}">자유게시판</c:when>
+                                                <c:when test="${i.category == 'qna'}">질문게시판</c:when>
+                                                <c:when test="${i.category == 'review'}">리뷰게시판</c:when>
+                                            </c:choose>
+                                        </span>
+                                        <p class="time">
+                                            <fmt:formatDate value="${i.write_date}" pattern="yyyy-MM-dd" />
+                                        </p>
+                                    </div>
+                                </div>
+                                <h2 class="post-title">${i.title}</h2>
+                                <div class="post-footer">
+                                    <span><span
+                                            class="material-symbols-outlined">visibility</span>${i.view_count}</span>
+                                    <span><i class="fa-regular fa-message"></i> ${i.reply_count}</span>
+                                </div>
                             </div>
-                        </div>
-                        <h2 class="post-title">${i.title }</h2>
-                        <div class="post-footer">
-                            <span>
-                                <span class="material-symbols-outlined">조회수</span>${i.view_count }
-                            </span>
-                            <span>
-                                <i class="fa-regular fa-message" style="color: rgb(203, 203, 203);"></i> ${i.reply_count
-                                }
-                            </span>
-                        </div>
-                    </article>
+                        </article>
                     </c:if>
                 </c:forEach>
             </div>
@@ -671,6 +701,27 @@ $(".floating-write-btn").on("click",function(){
 				a.attr("href","/boards/mainboard_list?page="+(endNavi+1));
 				a.append(span);
 				$(".page-nav").append(a);
+		}
+		
+		function toggleBookmark(event, obj) {
+		    event.stopPropagation(); // 카드 클릭 이벤트 전파 방지
+		    
+		    let boardSeq = $(obj).data("seq");
+
+		    $.ajax({
+		        url: "/bookmark/toggle",
+		        type: "POST",
+		        data: { board_seq: boardSeq },
+		        success: function(res) {
+		            if (res === "added") {
+		                $(obj).addClass("fa-solid active").removeClass("fa-regular");
+		            } else if (res === "removed") {
+		                $(obj).addClass("fa-regular").removeClass("fa-solid active");
+		            } else if (res === "login_required") {
+		                alert("로그인이 필요한 서비스입니다.");
+		            }
+		        }
+		    });
 		}
 </script>
 </body>

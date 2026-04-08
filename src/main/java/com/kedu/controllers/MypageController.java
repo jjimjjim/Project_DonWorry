@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,10 +18,12 @@ import com.google.gson.Gson;
 import com.kedu.commons.EncryptionUtils;
 import com.kedu.dao.BoardsDAO;
 import com.kedu.dao.FilesDAO;
+import com.kedu.dao.JobPostDAO;
 import com.kedu.dao.MembersDAO;
 import com.kedu.dao.MypageDAO;
 import com.kedu.dto.BoardsDTO;
 import com.kedu.dto.FilesDTO;
+import com.kedu.dto.JobPostDTO;
 import com.kedu.dto.MembersDTO;
 
 @Controller
@@ -35,6 +38,8 @@ public class MypageController {
 	private BoardsDAO bdao;
 	@Autowired
 	private FilesDAO fdao;
+	@Autowired
+	private JobPostDAO jpdao;
 	
 	@Autowired
 	private Gson gson;
@@ -109,7 +114,20 @@ public class MypageController {
 	}
 	
 	@RequestMapping("/employ_activity")
-	public String toEmploy_activity() {
+	public String toEmploy_activity(HttpSession session, Model model, int page) {
+		String memberId = (String)session.getAttribute("loginId");
+		
+		int count = jpdao.mypostRecordTotalCount(memberId);
+		List<JobPostDTO> allList = jpdao.selectById(memberId, page*2-1, page*2);
+		
+		int recordTotalCount = jpdao.mypostRecordTotalCount(memberId);
+		
+		model.addAttribute("currentPage", page);
+		model.addAttribute("recordCountPerPage",2);
+		model.addAttribute("naviCountPerPage",10);
+		model.addAttribute("recordTotalCount",recordTotalCount);
+		model.addAttribute("allList", allList);
+		model.addAttribute("count", count);
 		return "mypage/employ_activity";
 	}
 	
@@ -117,7 +135,7 @@ public class MypageController {
 	public String toMypost(HttpSession session, Model model, int page) {
 		String memberId = (String)session.getAttribute("loginId");
 		
-		int count = bdao.countMypost(memberId);
+		int count = bdao.mypostRecordTotalCount(memberId);
 		List<BoardsDTO> allList = bdao.selectById(memberId, page*10-9, page*10);
 		
 		int recordTotalCount = bdao.mypostRecordTotalCount(memberId);
@@ -245,6 +263,33 @@ public class MypageController {
 		
 		return "redirect:/mypage/mypost?page=1";
 	}
-
+	
+	@RequestMapping("/myjobpost")
+	public String toMyjobpost(int seq, Model model) {
+		JobPostDTO dto = jpdao.getPostDetail(seq);
+		model.addAttribute(dto);
+		return "mypage/myjobpost";
+	}
+	
+	
+	@RequestMapping("/bookmark")
+	public String bookmark(HttpSession session, Model model,@RequestParam(value="page", defaultValue="1") int page) {
+		String memberId = (String)session.getAttribute("loginId");
+		
+		//int count = bdao.mypostRecordTotalCount(memberId);
+		int count = bdao.bookmarkRecordTotalCount(memberId);
+		List<BoardsDTO> bookmarkList = bdao.selectByBookmark(memberId, page*10-9, page*10);
+		//List<BoardsDTO> allList = bdao.selectById(memberId, page*10-9, page*10);
+		
+		//int recordTotalCount = bdao.mypostRecordTotalCount(memberId);
+		
+		model.addAttribute("currentPage", page);
+		model.addAttribute("recordCountPerPage",10);
+		model.addAttribute("naviCountPerPage",10);
+		model.addAttribute("recordTotalCount",count);
+		model.addAttribute("bookmarkList", bookmarkList);
+		model.addAttribute("count", count);
+		return "mypage/bookmark";
+	}
 	
 }
