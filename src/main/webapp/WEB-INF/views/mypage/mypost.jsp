@@ -503,19 +503,12 @@
             <p>내가 작성한 게시글을 한눈에 확인하고 관리해보세요</p>
         </div>
 
-        <nav class="tab-menu">
-            <button class="tab-item active" data-filter="all">메인게시판</button>
-            <button class="tab-item" data-filter="free">자유게시판</button>
-            <button class="tab-item" data-filter="qna">질문게시판</button>
-            <button class="tab-item" data-filter="review">리뷰게시판</button>
-        </nav>
-
         <div class="toolbar">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="searchInput" placeholder="제목이나 내용을 검색해보세요">
             </div>
-            <a href="/boards/toWrite"><button class="write-btn">
+            <a href="/mypage/toWrite"><button class="write-btn">
                 <i class="fa-solid fa-pen" style="margin-right: 6px;"></i> 글쓰기
             </button></a>
         </div>
@@ -523,11 +516,7 @@
         <section class="post-list">
             <div class="list-top">
                 <div class="list-count">전체 게시글 ${fn:length(allList)}개</div>
-                <select class="sort-select">
-                    <option>최신순</option>
-                    <option>조회순</option>
-                    <option>댓글순</option>
-                </select>
+     
             </div>
 
             <div class="post-container" id="postContainer">
