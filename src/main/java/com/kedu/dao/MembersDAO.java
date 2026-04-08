@@ -109,8 +109,12 @@ public class MembersDAO {
 	}
 	
 	
-	public List<MembersDTO> getRecentMembers() {
-	    String sql = "select * from members order by join_date desc";
+	public List<MembersDTO> getRecentMembers(int start, int end) {
+		String sql = "SELECT * FROM ("
+	               + "  SELECT m.*, ROW_NUMBER() OVER(ORDER BY join_date DESC) rn "
+	               + "  FROM members m "
+	               + "  WHERE join_date >= SYSDATE - 7" // 최근 7일 조건
+	               + ") WHERE rn BETWEEN ? AND ?";
 
 	    return jdbc.query(sql, (rs, i) -> {
 	        MembersDTO dto = new MembersDTO();
@@ -125,29 +129,13 @@ public class MembersDAO {
 	        dto.setBusiness_number(rs.getString("business_number"));
 	        dto.setJoin_date(rs.getTimestamp("join_date"));
 	        return dto;
-	    });
+	    }, start, end);
 	}
 	
-//	public List<MembersDTO> getMembers(int start, int end) {
-//	    String sql = "SELECT * FROM ("
-//	               + "    SELECT m.*, ROW_NUMBER() OVER(ORDER BY join_date DESC) AS rn "
-//	               + "    FROM members m "
-//	               + ") WHERE rn BETWEEN ? AND ?";
-//	               
-//	    return jdbc.query(sql, (rs, rowNum) -> {
-//	        MembersDTO dto = new MembersDTO();
-//	        dto.setId(rs.getString("id"));
-//	        dto.setName(rs.getString("name"));
-//	        dto.setNickname(rs.getString("nickname"));
-//	        dto.setPhone(rs.getString("phone"));
-//	        dto.setEmail(rs.getString("email"));
-//	        dto.setType(rs.getString("type")); // 개인, 사업자, 관리자
-//	        dto.setState(rs.getString("state")); // 탈퇴 여부 등
-//	        dto.setRrn(rs.getString("rrn"));
-//	        dto.setJoin_date(rs.getTimestamp("join_date"));
-//	        return dto;
-//	    }, start, end);
-//	}
+	public int getRecentMembersCount() {
+	    String sql = "SELECT COUNT(*) FROM members WHERE join_date >= SYSDATE - 7";
+	    return jdbc.queryForObject(sql, Integer.class);
+	}
 	
 	public List<MembersDTO> getMembers(int start, int end) {
 	    String sql = "SELECT * FROM ("
@@ -191,6 +179,21 @@ public class MembersDAO {
 	        
 	        return dto;
 	    }, start, end);
+	}
+	
+	public int getTodayJoinCount() {
+	    String sql = "SELECT COUNT(*) FROM members WHERE TO_CHAR(join_date, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')";
+	    return jdbc.queryForObject(sql, Integer.class);
+	}
+	
+	public int getbusinessMemberCount() {
+		String sql = "select count(*) from members where type='사업자'";
+		return jdbc.queryForObject(sql, Integer.class);
+	}
+	
+	public int getpersonalMemberCount() {
+		String sql = "select count(*) from members where type='개인'";
+		return jdbc.queryForObject(sql, Integer.class);
 	}
 	
 	public int membersTotalCount() {

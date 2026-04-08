@@ -22,5 +22,15 @@ public class ReportDAO {
 		System.out.println(result);
 		return result > 0;
 	}
+	
+	public int getReportCount() {
+		String sql = "select count(*) from report";
+		return jdbc.queryForObject(sql, Integer.class);
+	}
+	
+	public int getReportStatusCount() {
+		String sql = "select count(*) from report where status='접수'";
+		return jdbc.queryForObject(sql, Integer.class);
+	}
 
 }
