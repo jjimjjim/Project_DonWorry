@@ -63,7 +63,7 @@ public class AdminController {
 	@RequestMapping("/admin/admin_main")
 	public String adminMain(Model model) {
 		
-		List<MembersDTO> recentMembersList = dao.getRecentMembers();
+		//List<MembersDTO> recentMembersList = dao.getRecentMembers();
 
 	    model.addAttribute("today", "2026-04-06");
 
