@@ -424,6 +424,7 @@ body {
 	display: flex;
 	gap: 10px;
 	margin-top: 10px;
+	justify-content: flex-end;
 }
 
 .btn-apply {
@@ -853,11 +854,31 @@ body {
 					</div>
 
 					<div class="job-btn-group">
-						<button class="btn-apply" data-seq="${post.seq }">지원하기</button>
+						<c:if test="${type != '사업자'}">
+							<button class="btn-apply" data-seq="${post.seq }">지원하기</button>
+						</c:if>
 						<button class="btn-detail"
 							onclick="location.href='/jobposts/jobdetail?seq=${post.seq}&page=${currentPage }'">자세히
 							보기</button>
 					</div>
+						<!-- 이력서 모달창 -->
+					<div id="resumeModal"
+						style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000;">
+						<div
+							style="width: 400px; background: #fff; margin: 100px auto; padding: 20px; border-radius: 12px;">
+							<h4 style="margin-bottom: 15px;">지원할 이력서를 선택해주세요</h4>
+							<ul id="modalResumeList"
+								style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+							</ul>
+							<div style="text-align: right; margin-top: 20px;">
+								<button type="button" onclick="$('#resumeModal').hide()"
+									style="padding: 8px 15px; border: none; background: #eee; border-radius: 6px; cursor: pointer;">취소</button>
+								<button type="button" id="btnConfirmApply"
+									style="padding: 8px 15px; border: none; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer;">지원하기</button>
+							</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</c:forEach>
@@ -1112,27 +1133,70 @@ body {
 	        location.href = url;
 	    });
 	    
+	    let selectedJobSeq = null; // 어떤 공고에 지원할지 저장할 변수
+
 	    $(".btn-apply").on("click", function() {
 	        let loginId = "${loginId}";
-	        let jobPostNum = $(this).attr("data-seq");
+	        selectedJobSeq = $(this).attr("data-seq"); // 클릭한 공고 번호 저장
 
-	        if (!loginId || loginId === "null") { 
+	        if (!loginId || loginId === "" || loginId === "null") {
 	            alert("로그인이 필요한 서비스입니다.");
 	            location.href = "/members/toLogin";
-	        }else {
-	        	location.href = "/jobapplys/insert?jobPostNum=" + jobPostNum;
+	            return;
 	        }
+
+	        // [Step 1] Ajax로 내 이력서 목록 가져오기
+	        $.ajax({
+	            url: "/jobapplys/getMyResumes", // 컨트롤러에 새로 만들 주소
+	            type: "get",
+	            success: function(resumes) {
+	                if (resumes.length === 0) {
+	                    alert("등록된 이력서가 없습니다. 이력서를 먼저 작성해주세요!");
+	                    return;
+	                }
+
+	                let html = "";
+	                resumes.forEach(r => {
+	                    html += `<li style="padding:10px; border-bottom:1px solid #eee;">
+	                                <label style="cursor:pointer; display:block;">
+	                                    <input type="radio" name="resumeIdx" value="\${r.seq}"> \${r.title}
+	                                </label>
+	                             </li>`;
+	                });
+	                $("#modalResumeList").html(html);
+	                $("#resumeModal").show(); // 모달 띄우기
+	            }
+	        });
+	    });
+
+	    // [Step 2] 모달 안에서 진짜 '지원하기' 눌렀을 때
+	    $("#btnConfirmApply").on("click", function() {
+	        let resumeNum = $("input[name='resumeIdx']:checked").val();
+	        
+	        if (!resumeNum) {
+	            alert("이력서를 선택해주세요.");
+	            return;
+	        }
+
+	        // 최종 지원 요청
+	        location.href = `/jobapplys/insert?jobPostNum=\${selectedJobSeq}&resumeNum=\${resumeNum}`;
 	    });
 	    
 	    $(function() {
 	        let errorMsg = "${error}"; 
 	        let successMsg = "${message}";
+	        let resume = "${resume}";
 	        if (errorMsg !== "") {
 	            alert(errorMsg);
 	        }
 
 	        if (successMsg !== "") {
 	            alert(successMsg);
+	        }
+	        
+	        if(resume !== ""){
+	        	alert(resume);
+	        	location.href = "/mypage/resume";
 	        }
 	    });
 	    

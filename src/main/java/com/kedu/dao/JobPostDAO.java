@@ -54,7 +54,6 @@ public class JobPostDAO {
 
     // [1] 기본 리스트 조회
     public List<JobPostDTO> jobList(int start, int end, String workDay, Integer startT, Integer endT) {
-    	System.out.println("데이터 :" +  workDay);
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * FROM ( SELECT p.*, c1.cat_name AS main_category_name, c2.cat_name AS sub_category_name, ");
         sql.append("ROW_NUMBER() OVER(ORDER BY p.write_date DESC) AS rn FROM job_post p ");
@@ -166,6 +165,11 @@ public class JobPostDAO {
         
         return jdbc.queryForObject(sql.toString(), Integer.class, params.toArray());
     }
+    
+    public int seqNextval() {
+		String sql = "select job_post_seq.nextval from dual";
+		return jdbc.queryForObject(sql,Integer.class);
+	}
 
     // [5] 공고 등록 (0을 1440으로 변환하는 로직)
     public int insert(JobPostDTO dto) {
@@ -181,7 +185,7 @@ public class JobPostDAO {
             endTime = 1440;
         }
 
-        return jdbc.update(sql, 
+        return jdbc.update(sql,
             dto.getMember_id(), dto.getCompany_name(), dto.getPhone(), 
             dto.getSido(), dto.getGugun(), dto.getDong(), dto.getAddress_detail(), 
             dto.getCount(), dto.getTitle(), dto.getPay(), dto.getWork_days(), 
