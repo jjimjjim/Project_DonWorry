@@ -1116,11 +1116,23 @@ body {
 	        let loginId = "${loginId}";
 	        let jobPostNum = $(this).attr("data-seq");
 
-	        if (!loginId || loginId === "null") {
+	        if (!loginId || loginId === "null") { 
 	            alert("로그인이 필요한 서비스입니다.");
 	            location.href = "/members/toLogin";
 	        }else {
 	        	location.href = "/jobapplys/insert?jobPostNum=" + jobPostNum;
+	        }
+	    });
+	    
+	    $(function() {
+	        let errorMsg = "${error}"; 
+	        let successMsg = "${message}";
+	        if (errorMsg !== "") {
+	            alert(errorMsg);
+	        }
+
+	        if (successMsg !== "") {
+	            alert(successMsg);
 	        }
 	    });
 	    
