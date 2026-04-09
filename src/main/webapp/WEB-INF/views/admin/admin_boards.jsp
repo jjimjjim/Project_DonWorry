@@ -444,17 +444,11 @@ body {
 
             <div class="filter-row">
                 <select>
-                    <option value="main">전체 게시판</option>
-                    <option value="free">자유 게시판</option>
-                    <option value="review">후기 게시판</option>
-                    <option value="QA">질문 게시판</option>
-                </select>
-                <select>
                     <option>전체 상태</option>
                     <option value="report">신고</option>
                     <option value="normal">일반</option>
                 </select>
-                <input type="text" placeholder="제목, 작성자 검색">
+                <input type="text" placeholder="작성자 검색">
                 <button class="btn-blue" type="button">검색</button>
             </div>
 
