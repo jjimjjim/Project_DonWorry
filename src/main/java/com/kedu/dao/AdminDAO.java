@@ -15,32 +15,101 @@ public class AdminDAO {
 
 	@Autowired
 	private JdbcTemplate jdbc;
+	//게시글 신고 카운트
+	public int getRecordTotalCount(String category, String keyword) {
+	    // 1. 기본 SQL (관리자 제외)
+	    String sql = "SELECT COUNT(*) FROM ( "
+	               + "    SELECT b.seq "
+	               + "    FROM boards b "
+	               + "    LEFT JOIN members m ON b.member_id = m.id "
+	               + "    LEFT JOIN report rp ON b.seq = rp.boards_seq "
+	               + "    WHERE b.member_id != 'admin' ";
+
+	    // 2. 검색어 조건 추가
+	    if (keyword != null && !keyword.trim().isEmpty()) {
+	        sql += " AND m.nickname LIKE '%' || ? || '%' ";
+	    }
+
+	    sql += " GROUP BY b.seq ";
+
+	    // 3. [핵심] 리스트 쿼리와 똑같은 HAVING 조건을 걸어줘야 개수가 맞습니다!
+	    if ("report".equals(category)) {
+	        sql += " HAVING COUNT(rp.seq) > 0 ";
+	    } else if ("normal".equals(category)) {
+	        sql += " HAVING COUNT(rp.seq) = 0 ";
+	    }
+
+	    sql += " )";
+
+	    if (keyword != null && !keyword.trim().isEmpty()) {
+	        return jdbc.queryForObject(sql, Integer.class, keyword);
+	    } else {
+	        return jdbc.queryForObject(sql, Integer.class);
+	    }
+	}
+	//게시글 작성자로 검색
+	public List<BoardsDTO> searchById(int start, int end, String keyword ,String category) {
+		String sql = "SELECT * FROM ( "
+	            + "    SELECT "
+	            + "        b.seq, "
+	            + "        m.nickname AS member_id, "
+	            + "        b.category, "
+	            + "        b.title, "
+	            + "        b.content, "
+	            + "        b.view_count, "
+	            + "        b.write_date, "
+	            + "        COUNT(DISTINCT r.seq) AS reply_count, "
+	            + "        COUNT(DISTINCT rp.seq) AS report_count, "
+	            + "        ROW_NUMBER() OVER(ORDER BY COUNT(distinct rp.seq) DESC, b.seq DESC) AS rn "
+	            + "    FROM boards b "
+	            + "    LEFT JOIN members m ON b.member_id = m.id "
+	            + "    LEFT JOIN reply r ON b.seq = r.parent_seq "
+	            + "    LEFT JOIN report rp ON b.seq = rp.boards_seq "
+	            + "    WHERE m.nickname LIKE '%' || ? || '%' AND b.member_id != 'admin' "
+	            + "    GROUP BY b.seq, m.nickname, b.category, b.title, b.content, b.view_count, b.write_date ";
+		System.out.println("DAO에 들어온 카테고리: " + category);
+		//신고 일반 카테고리 조건 추가
+				if("report".equals(category)) {
+					sql += " HAVING COUNT(distinct rp.seq)>0";
+				}else if("normal".equals(category)) {
+					sql += " HAVING COUNT(distinct rp.seq)=0";
+				}
+				sql +=") WHERE rn BETWEEN ? AND ?";
+		return jdbc.query(sql, new BeanPropertyRowMapper<BoardsDTO>(BoardsDTO.class),keyword,start,end);
+	}
 	
 	//게시글 가져옴
-	public List<BoardsDTO> admin_boardList(int start, int end) {
-		String sql = "SELECT * FROM ("
-		        + "    SELECT "
-		        + "        b.seq, "
-		        + "        m.nickname AS member_id, "
-		        + "        b.category, "
-		        + "        b.title, "
-		        + "        b.content, "
-		        + "        b.view_count, "
-		        + "        b.write_date, "
-		        + "        COUNT(DISTINCT r.seq) AS reply_count, "
-		        + "        COUNT(DISTINCT rp.seq) AS report_count, "
-		        + "        ROW_NUMBER() OVER(ORDER BY b.seq DESC) AS rn "
-		        + "    FROM boards b "
-		        + "    LEFT JOIN members m ON b.member_id = m.id "
-		        + "    LEFT JOIN reply r ON b.seq = r.parent_seq "
-		        + "    LEFT JOIN report rp ON b.seq = rp.boards_seq "
-		        + "	   WHERE b.member_id != 'admin' \r\n"
-		        + "    GROUP BY "
-		        + "        b.seq, m.nickname, b.category, b.title, "
-		        + "        b.content, b.view_count, b.write_date "
-		        + ") WHERE rn BETWEEN ? AND ?";
-		
-		return jdbc.query(sql, new BeanPropertyRowMapper<BoardsDTO>(BoardsDTO.class), start, end);
+	public List<BoardsDTO> admin_boardList(int start, int end,String category) {
+		String sql = "SELECT * FROM ( "
+	            + "    SELECT "
+	            + "        b.seq, "
+	            + "        m.nickname AS member_id, "
+	            + "        b.category, "
+	            + "        b.title, "
+	            + "        b.content, "
+	            + "        b.view_count, "
+	            + "        b.write_date, "
+	            + "        COUNT(DISTINCT r.seq) AS reply_count, "
+	            + "        COUNT(DISTINCT rp.seq) AS report_count, "
+	            + "        ROW_NUMBER() OVER(ORDER BY COUNT(distinct rp.seq) DESC, b.seq DESC) AS rn "
+	            + "    FROM boards b "
+	            + "    LEFT JOIN members m ON b.member_id = m.id "
+	            + "    LEFT JOIN reply r ON b.seq = r.parent_seq "
+	            + "    LEFT JOIN report rp ON b.seq = rp.boards_seq "
+	            + "    WHERE b.member_id != 'admin' "
+	            + "    GROUP BY b.seq, m.nickname, b.category, b.title, b.content, b.view_count, b.write_date ";
+
+	    // 만약 category 조건이 들어오면 HAVING 절을 추가
+	    if ("report".equals(category)) {
+	        sql += " HAVING COUNT(DISTINCT rp.seq) > 0 ";
+	    } else if ("normal".equals(category)) {
+	        sql += " HAVING COUNT(DISTINCT rp.seq) = 0 ";
+	    }
+
+	    // [중요] 여기서 괄호를 '하나'만 닫아야 합니다!
+	    sql += " ) WHERE rn BETWEEN ? AND ? ";
+	    
+	    return jdbc.query(sql, new BeanPropertyRowMapper<BoardsDTO>(BoardsDTO.class), start, end);
 	}
 	
 

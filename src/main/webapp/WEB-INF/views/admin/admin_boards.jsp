@@ -441,17 +441,18 @@ body {
             <div class="panel-head">
                 <h3>게시글 목록</h3>
             </div>
-
+		<form action="/admin/admin_boards" method="get" id="board-searchForm">
             <div class="filter-row">
-                <select>
-                    <option>전체 상태</option>
+                <select name="category" class="category-select">
+                    <option value="all">전체 상태</option>
                     <option value="report">신고</option>
                     <option value="normal">일반</option>
                 </select>
-                <input type="text" placeholder="작성자 검색">
-                <button class="btn-blue" type="button">검색</button>
+                <input type="text" name="keyword" placeholder="작성자 검색" class="keyword">
+                <button class="btn-blue board-search-btn" type="button">검색</button>
+                <button class="btn-blue board-all-btn" type="button">전체</button>
             </div>
-
+		</form>
             <table class="admin-table">
                 <thead>
                     <tr>
@@ -515,15 +516,6 @@ body {
                 <h3>공지글 목록</h3>
             </div>
 
-            <div class="filter-row">
-                <select>
-                    <option>최신순</option>
-                    <option>과거순</option>
-                </select>
-                <input type="text" placeholder="제목 검색">
-                <button class="btn-blue" type="button">검색</button>
-            </div>
-
             <table class="admin-table">
                 <thead>
                     <tr>
@@ -564,7 +556,8 @@ body {
      <p style="margin-top:10px; font-size:11px;">개인정보처리방침 | 이용약관 | 고객센터</p>
   </div>
 <script>
-
+	let keyword = "${keyword}";
+	let category = "${category}";
 	let recordTotalCount = ${recordTotalCount}; // 총 개수
 	let recordCountPerPage = ${recordCountPerPage}; // 한페이지에 몇개 (5)
 	let naviCountPerPage  = ${naviCountPerPage }; // navi 몇개 (10)
@@ -593,19 +586,16 @@ body {
 	
 	//이전 버튼 <
 	if(needPrev){	
-		let btn = $("<button>");
-		btn.addClass("page-btn");
-		btn.html("&lt;");
-		btn.attr("onclick","location.href='/admin/admin_boards?page="+ (startNavi-1)+"'");
+		let btn = $("<button>").addClass("page-btn").html("&lt;");
+		//btn.attr("onclick","location.href='/admin/admin_boards?page="+ (startNavi-1)+"'");
+		btn.attr("onclick","location.href='"+getPageUrl(startNavi-1) + "'");
 		board_navi.append(btn);
 	}
 	
 	for(let i = startNavi; i <= endNavi; i++){
-		let btn = $("<button>");
-		btn.addClass("page-btn");
-		btn.html(i);
-		btn.attr("onclick","location.href='/admin/admin_boards?page="+ i +"'");
-		
+		let btn = $("<button>").addClass("page-btn").html(i);
+		//btn.attr("onclick","location.href='/admin/admin_boards?page="+ i +"'");
+		btn.attr("onclick","location.href='"+getPageUrl(i)+"'");
 		if(i== currentPage){
 			btn.addClass("active");//현재 페이지 파란색 처리
 		}
@@ -614,12 +604,55 @@ body {
 	
 	//다음 버튼 >
 	if(needNext){		 
-		let btn = $("<button>");
-		btn.addClass("page-btn");
-		btn.html("&gt;");//구글 라이브러리 > 모양
-		btn.attr("onclick","location.href='/admin/admin_boards?page="+ (endNavi+1) +"'");
+		let btn = $("<button>").addClass("page-btn").html("&gt;");//구글 라이브러리 > 모양
+		//btn.attr("onclick","location.href='/admin/admin_boards?page="+ (endNavi+1) +"'");
+		btn.attr("onclick","location.href='"+getPageUrl(endNavi+1) + "'");
 		board_navi.append(btn);
 	}
+	
+	//검색 키워드 
+	function getPageUrl(page){//이동 페이지 값 받아
+		let cat = /*$("select[name='category']").val() ||*/ "${category}" || "all";
+		let url = "/admin/admin_boards?page="+page+"&category="+cat; //해당 페이지 주소로 만들어줌
+		if(keyword && keyword.trim()!= ""){//검색어가 있고 빈 문자열이 아니어야함
+			url+="&keyword="+encodeURIComponent(keyword);
+		//검색어에 한글이나 특수문자가 섞여 있을 때 브라우저가 주소를 안전하게 인식하도록 변환해주는 장치
+		}
+		return url;
+	}
+	
+	//검색 버튼 클릭
+	$(".board-search-btn").on("click",function(){
+		let category = $("select[name='category']").val(); // 카테고리 값 가져오기
+		let keyword = $(".keyword").val();
+		location.href = "/admin/admin_boards?page=1&category=" + category +"&keyword="+encodeURIComponent(keyword);
+	})
+	
+	//전체 버튼 클릭
+	$(".board-all-btn").on("click",function(){
+		location.href = "/admin/admin_boards?page=1&category=all";
+	})
+	//카테고리 선택
+	$("select[name='category']").on("change", function() {
+    let category = $(this).val();
+    let keyword = $(".keyword").val();
+    
+    let url = "/admin/admin_boards?page=1&category=" + category;
+    
+    // 키워드가 입력되어 있다면 키워드도 같이 보냄
+    if(keyword && keyword.trim() != "") {
+        url += "&keyword=" + encodeURIComponent(keyword);
+    }
+    
+    location.href = url;
+});
+	//카테고리 유지
+	$(document).ready(function(){
+		let curCategory = "${category}";
+		if(curCategory){
+			$("select[name='category']").val(curCategory);
+		}
+	})
 	
 	//보기 버튼 클릭
 	$(".board-detail-btn").on("click",function(){

@@ -179,17 +179,34 @@ public class AdminController {
 
 	    return "admin/admin_members";
 	}
-
+	
 	/* 관리자 - 게시물 관리 */
 	@RequestMapping("/admin_boards")
-	public String adminBoards(int page, Model model) {
+	public String adminBoards(Integer page, String keyword,String category, Model model) {
+		if(category == null)
+			category = "all";
+		
+		if(page==null)	
+			page=1;
+		int start = page*5-4;
+		int end = page*5;
+		
 		//회원 게시글 페이지네이션 적용
-		List<BoardsDTO> board_mainList =  adao.admin_boardList(page*5-4,page*5);		
-		int recordTotalCount = bdao.mainRecordTotalCount();
+		List<BoardsDTO> board_mainList;	
+		int recordTotalCount = adao.getRecordTotalCount(category,keyword);
 
+		if(keyword != null && !keyword.isEmpty()) {
+			//검색어 있을때
+			board_mainList =  adao.searchById(start,end,keyword,category);
+		}else {
+			//검색어 없을때 기본리스트
+			board_mainList =  adao.admin_boardList(start,end,category);	
+//			recordTotalCount = bdao.mainRecordTotalCount(); //카테고리 전
+		}
 		model.addAttribute("currentPage",page);
 		model.addAttribute("recordCountPerPage",5);
 		model.addAttribute("naviCountPerPage",10);
+		
 		model.addAttribute("recordTotalCount",recordTotalCount);
 		model.addAttribute("board_mainList", board_mainList);
 
@@ -200,6 +217,8 @@ public class AdminController {
 		//댓글 목록
 		int replyCount = rdao.replyCount();
 		model.addAttribute("replyCount",replyCount);
+		model.addAttribute("category",category);
+		model.addAttribute("keyword",keyword);
 		return "admin/admin_boards";
 	}
 

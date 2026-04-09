@@ -394,12 +394,6 @@ body {
 
             <div class="filter-row">
                 <select>
-                    <option value="main">전체 게시판</option>
-                    <option value="free">자유 게시판</option>
-                    <option value="review">후기 게시판</option>
-                    <option value="QA">질문 게시판</option>
-                </select>
-                <select>
                     <option>전체 상태</option>
                     <option>신고</option>
                     <option>일반</option>
