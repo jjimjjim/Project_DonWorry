@@ -306,18 +306,25 @@
         }
         /* 시급(마지막 항목) 강조 */
         .item-result {
-            display: flex;         /* 요소들을 가로로 나열 */
-            align-items: center;    /* 수직 중앙 정렬 (핵심!) */
-            gap: 5px;              /* 숫자와 아이콘 사이 간격 */
+            display: flex;         
+            align-items: center;    
+            gap: 10px;              /* 숫자와 아이콘 사이 간격 */
             font-weight: 700;
             color: #666;
-            text-align: right;
+            text-align: right;                  
+    		height: 100%;    
+    		min-height: 55px;       /* 15px 마진 위아래 준 것과 비슷한 효과 */
+    		min-width: 60px;        /* 숫자가 없어도 화살표 위치 고정 */  
+    		justify-content: flex-end; /* 오른쪽 끝으로 밀기 */    
         }
         .apply-list-count {
             font-weight: normal;
             color: #666;
-            margin-right: 5px;
-            margin-top:15px;
+            min-width: 25px;        /* 숫자가 차지할 최소 너비 확보 */
+    text-align: right;      /* 너비 안에서 오른쪽으로 붙임 */
+           /*  margin-top:15px; */
+            line-height: 1;         /* 텍스트 줄높이 초기화 */
+            
         }
         .item-name {
             font-size: 15px;
@@ -331,9 +338,10 @@
             margin-top:3px;
         }
         .material-symbols-outlined {
-            margin-bottom:3px;
-            font-size: 13px;
-            margin-top:3px
+           /*  margin-bottom:3px; */
+            font-size: 15px;
+            display: flex;
+            /* margin-top:3px */
         }
         /*하단 푸터*/
         .container-footer{
@@ -451,7 +459,7 @@
                     구직 활동 관리
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">12</span>
+                    <span class="apply-list-count" >12</span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -463,7 +471,7 @@
                     내가 작성한 글
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">12</span>
+                    <span class="apply-list-count" >12</span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -475,7 +483,7 @@
                     북마크 글 보기
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">${bookmarkCount }</span>
+                    <span class="apply-list-count" >${bookmarkCount }</span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -491,7 +499,7 @@
                     이력서 관리
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">12</span>
+                    <span class="apply-list-count" >12</span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div>
             </a>
@@ -503,7 +511,7 @@
                     알림 설정
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">12</span>
+                    <span class="apply-list-count" >12</span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -515,7 +523,7 @@
                     계정 설정
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">12</span>
+                    <span class="apply-list-count" ></span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -534,7 +542,7 @@
                     구인 활동 관리
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">12</span>
+                    <span class="apply-list-count" >12</span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -546,7 +554,7 @@
                     내가 작성한 글
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">12</span>
+                    <span class="apply-list-count" >12</span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -558,7 +566,7 @@
                     북마크 글 보기
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">${bookmarkCount }</span>
+                    <span class="apply-list-count" >${bookmarkCount }</span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -574,7 +582,7 @@
                     알림 설정
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">12</span>
+                    <span class="apply-list-count" >12</span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -586,8 +594,8 @@
                     계정 설정
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" style="margin-bottom:15px; font-size: 13px;">12</span>
-                    <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
+                    <span class="apply-list-count"></span>
+                    <span class="material-symbols-outlined" style="font-size: 20px; ">chevron_right</span>
                 </div> 
             </a>
         </div>       
