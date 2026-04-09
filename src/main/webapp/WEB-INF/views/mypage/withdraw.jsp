@@ -32,11 +32,11 @@ body {
 
 /* 레이아웃 컨테이너 */
 .container {
-	max-width: 1100px;
-	margin: 0 auto;
-	padding: 0 20px;
-	
-	flex: 1;  /* 풋터 하단 이동 */
+        max-width: 1100px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        flex: 1;
 }
 /* 로그인 및 관리자 */
 .logout-btn {
@@ -159,8 +159,9 @@ body {
    본문 영역
 ========================= */
 .page-section {
-	padding: 56px 0 72px;
-	background: #ffffff;
+        padding: 56px 0 72px;
+        width: 70%;
+        margin: auto;
 }
 
 .page-inner {
