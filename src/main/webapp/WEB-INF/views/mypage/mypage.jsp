@@ -493,7 +493,7 @@
     <div class="my-activity">
         <div class="my-activity-title">설정</div>
         <div class="my-activity-item">
-            <a href="spe.html" class="my-apply-list">
+            <a href="/mypage/myresume" class="my-apply-list">
                 <div class="item-name">
                     <i class="fa-regular fa-pen-to-square" style="color: rgb(110, 110, 110); margin-right:5px;"></i></i>
                     이력서 관리

@@ -19,12 +19,14 @@ import com.google.gson.Gson;
 import com.kedu.commons.EncryptionUtils;
 import com.kedu.dao.BoardsDAO;
 import com.kedu.dao.BookmarkDAO;
+import com.kedu.dao.CateGoryDAO;
 import com.kedu.dao.FilesDAO;
 import com.kedu.dao.JobPostDAO;
 import com.kedu.dao.MembersDAO;
 import com.kedu.dao.MypageDAO;
 import com.kedu.dao.ResumeDAO;
 import com.kedu.dto.BoardsDTO;
+import com.kedu.dto.CateGoryDTO;
 import com.kedu.dto.FilesDTO;
 import com.kedu.dto.JobPostDTO;
 import com.kedu.dto.MembersDTO;
@@ -47,7 +49,11 @@ public class MypageController {
 	@Autowired
 	private BookmarkDAO bookdao;
 	@Autowired
+
+    private CateGoryDAO catdao;
+
 	private ResumeDAO rdao;
+
 	
 	
 	@Autowired
@@ -307,8 +313,8 @@ public class MypageController {
 	
 	@RequestMapping("/myjobpost")
 	public String toMyjobpost(int seq, Model model) {
-		JobPostDTO dto = jpdao.getPostDetail(seq);
-		model.addAttribute(dto);
+		JobPostDTO post = jpdao.getPostDetail(seq);
+		model.addAttribute("post", post);
 		return "mypage/myjobpost";
 	}
 	
@@ -355,6 +361,55 @@ public class MypageController {
 	        return "redirect:/mypage/toAccount"; // 원래 있던 페이지 주소
 	    }
 	}
+	@RequestMapping("/myresume")
+	public String myResume(HttpSession session,Model model) {
+		String id = (String)session.getAttribute("loginId");
+		int count = rdao.countById(id);
+		model.addAttribute("count",count);
+		List<ResumeDTO> list = rdao.myList(id);
+		model.addAttribute("list",list);
+		
+		return "mypage/resume/myresume";
+	}
+	@RequestMapping("/resume_detail")
+	public String resume_detail(int seq,Model model) {
+		ResumeDTO dto = rdao.detail(seq);
+		model.addAttribute("dto",dto);
+		return "mypage/resume/detail";
+	}
+	@RequestMapping("/resume_delete")
+	public String resume_delete(int seq) {
+		rdao.delete(seq);
+		return "redirect:/mypage/myresume";
+	}
 	
+	
+	@RequestMapping("/myjobpost_update")
+	public String toMyjobpost_update(int seq, HttpSession session, Model model) {
+		String memberId = (String)session.getAttribute("loginId");
+		JobPostDTO post = jpdao.getPostDetail(seq);
+		
+		List<CateGoryDTO> upperList = catdao.getUpperCategories();
+		
+		model.addAttribute("upperList", upperList);
+		model.addAttribute("post", post);
+		
+		System.out.println("sysout: " + post.getWork_starttime());
+		return "mypage/myjobpost_update";
+		
+		
+	}
+	
+	@RequestMapping("/jobpost_update")
+	public String JobPostUpdate(JobPostDTO dto, int seq) {
+		int result = jpdao.JobPostUpdate(dto);
+		
+		
+		if(result > 0) {
+			return "redirect:/mypage/myjobpost?seq="+seq;
+		}else {
+			return "redirect:/mypage/myjobpost?isSuccess=false"+seq;
+		}
+	}
 	
 }

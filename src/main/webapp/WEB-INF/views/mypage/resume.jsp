@@ -293,7 +293,7 @@
                         <span><i class="fa-solid fa-briefcase" style="margin-right:8px;"></i> <span id="selectedCategory">직종 선택</span></span>
                         <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #ccc;"></i>
                     </button>
-                    <input type="hidden" name="prferred_job" id="preferred_job">
+                    <input type="hidden" name="preferred_job" id="preferred_job">
 
                     <div id="categoryLayer">
                         <div class="category-lists">

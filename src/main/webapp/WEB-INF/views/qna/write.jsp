@@ -284,6 +284,19 @@
                     word-break: break-all;
                 }
             }
+            /* 에디터 내부 이미지 스타일 제어 */
+.toastui-editor-contents img {
+    max-width: 100%;    /* 부모 너비를 넘지 않음 */
+    height: auto;       /* 비율 유지 */
+    display: block;     /* 하단 여백 제거 */
+    margin: 10px 0;    /* 이미지 위아래 여백 */
+}
+
+/* 편집 모드(WYSIWYG)에서도 적용 */
+.toastui-editor-ww-container img {
+    max-width: 100%;
+    height: auto;
+}
 </style>
 </head>
 <body>
