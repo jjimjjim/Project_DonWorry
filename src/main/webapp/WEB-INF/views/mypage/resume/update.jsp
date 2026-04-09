@@ -277,23 +277,24 @@
     </nav>
 
     <div class="page">
-        <div class="page-title">이력서 등록</div>
+        <div class="page-title">이력서 수정</div>
         <hr class="title-line">
 
-        <form action="/mypage/insert_resume" method="post">
+        <form action="/mypage/update_resume" method="post">
+        <input type = "hidden" name = "seq" value = "${dto.seq }">
             <div class="resume-form-card">
                 <div class="form-group">
                     <label class="form-label">이력서 제목</label>
-                    <input type="text" name="title" class="form-input" placeholder="나를 표현하는 한 줄 제목을 입력하세요 (예: 성실함이 강점인 신입입니다!)" required>
+                    <input type="text" name="title" class="form-input" value = "${dto.title }" required>
                 </div>
 
                 <div class="form-group" style="position: relative;">
                     <label class="form-label">희망 업종</label>
                     <button type="button" class="filter-btn" id="btnCategory">
-                        <span><i class="fa-solid fa-briefcase" style="margin-right:8px;"></i> <span id="selectedCategory">직종 선택</span></span>
+                        <span><i class="fa-solid fa-briefcase" style="margin-right:8px;"></i> <span id="selectedCategory">${empty dto.preferred_job ? '직종 선택' : dto.preferred_job}</span></span>
                         <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #ccc;"></i>
                     </button>
-                    <input type="hidden" name="preferred_job" id="preferred_job">
+                    <input type="hidden" name="preferred_job" id="preferred_job" value="${dto.preferred_job}">
 
                     <div id="categoryLayer">
                         <div class="category-lists">
@@ -316,13 +317,13 @@
                 <div class="form-group">
 				    <label class="form-label">희망 근무 조건</label>
 				    <div class="radio-group">
-				        <input type="radio" name="working_condition" id="day_weekday"  class="form-input" value="평일" required>
+				        <input type="radio" name="working_condition" id="day_weekday"  class="form-input" value="평일" ${dto.working_condition == '평일' ? 'checked' : ''}required>
 				        <label for="day_weekday" class="radio-label">평일</label>
 				
-				        <input type="radio" name="working_condition" id="day_weekend" class="form-input" value="주말">
+				        <input type="radio" name="working_condition" id="day_weekend" class="form-input" value="주말" ${dto.working_condition == '주말' ? 'checked' : ''}>
 				        <label for="day_weekend" class="radio-label">주말</label>
 				
-				        <input type="radio" name="working_condition" id="day_none" class="form-input" value="요일무관">
+				        <input type="radio" name="working_condition" id="day_none" class="form-input" value="요일무관" ${dto.working_condition == '요일무관' ? 'checked' : ''}>
 				        <label for="day_none" class="radio-label">요일무관</label>
 				    </div>
 				</div>
@@ -330,29 +331,29 @@
 				<div class="form-group">
 				    <label class="form-label">경력 여부</label>
 				    <div class="radio-group">
-				        <input type="radio" name="career" id="career_new" value="신입" class="rdo-career" checked>
+				        <input type="radio" name="career" id="career_new" value="신입" class="rdo-career" ${dto.career == '신입' ? 'checked' : ''}>
 				        <label for="career_new" class="radio-label">신입</label>
 				
-				        <input type="radio" name="career" id="career_old" value="경력" class="rdo-career">
+				        <input type="radio" name="career" id="career_old" value="경력" class="rdo-career" ${dto.career == '경력' ? 'checked' : ''}>
 				        <label for="career_old" class="radio-label">경력</label>
 				    </div>
 
 				</div>
                 <div class="form-group">
                     <label class="form-label">경력 사항</label>
-                    <input type="text" name="career_write" class="form-input" id="career_input" disabled 
-                    placeholder="예: 스타벅스 강남점 6개월 근무 (경력이 없다면 '신입' 기재)">
+                    <input type="text" name="career_write" class="form-input" id="career_input" 
+                    ${dto.career == '경력' ? '' : 'disabled'} value = "${dto.career_write }" placeholder="예: 스타벅스 강남점 6개월 근무">
                 </div>
 
                 <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label">간단 자기소개</label>
-                    <textarea name="introduction" class="form-input" placeholder="자신의 강점이나 근무 태도 등을 자유롭게 작성해 주세요."></textarea>
+                    <textarea name="introduction" class="form-input" placeholder="자신의 강점이나 근무 태도 등을 자유롭게 작성해 주세요.">${dto.introduction }</textarea>
                 </div>
             </div>
 
             <div class="post-footer">
                 <button type="button" class="apply-cancel-btn" onclick="history.back();">취소</button>
-                <button type="submit" class="apply-detail-btn">등록하기</button>
+                <button type="submit" class="apply-detail-btn">수정하기</button>
             </div>
         </form>
     </div>

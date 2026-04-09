@@ -424,6 +424,7 @@ body {
 	display: flex;
 	gap: 10px;
 	margin-top: 10px;
+	justify-content: flex-end;
 }
 
 .btn-apply {
@@ -853,11 +854,31 @@ body {
 					</div>
 
 					<div class="job-btn-group">
-						<button class="btn-apply">지원하기</button>
+						<c:if test="${type != '사업자'}">
+							<button class="btn-apply" data-seq="${post.seq }">지원하기</button>
+						</c:if>
 						<button class="btn-detail"
-							onclick="location.href='/jobposts/jobdetail?seq=${post.seq}'">자세히
+							onclick="location.href='/jobposts/jobdetail?seq=${post.seq}&page=${currentPage }'">자세히
 							보기</button>
 					</div>
+						<!-- 이력서 모달창 -->
+					<div id="resumeModal"
+						style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000;">
+						<div
+							style="width: 400px; background: #fff; margin: 100px auto; padding: 20px; border-radius: 12px;">
+							<h4 style="margin-bottom: 15px;">지원할 이력서를 선택해주세요</h4>
+							<ul id="modalResumeList"
+								style="list-style: none; padding: 0; max-height: 300px; overflow-y: auto;">
+							</ul>
+							<div style="text-align: right; margin-top: 20px;">
+								<button type="button" onclick="$('#resumeModal').hide()"
+									style="padding: 8px 15px; border: none; background: #eee; border-radius: 6px; cursor: pointer;">취소</button>
+								<button type="button" id="btnConfirmApply"
+									style="padding: 8px 15px; border: none; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer;">지원하기</button>
+							</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</c:forEach>
@@ -1108,11 +1129,79 @@ body {
 	            }
 	            url += "&startTime=" + startTime + "&endTime=" + endTime;
 	        }
+	});
+	    
+	    $(function() {
+	        // [1] 페이지 로드 시 서버로부터 온 알림 메시지 처리 (1회성)
+	        // 컨트롤러에서 RedirectAttributes로 보낸 메시지는 여기서 딱 한 번만 띄운다.
+	        const successMsg = "${message}";
+	        const resumeMsg = "${resume}";
 	        
-	        location.href = url;
+	        if (successMsg !== "") alert(successMsg);
+	        if (resumeMsg !== "") alert(resumeMsg);
+
+	        // [2] 지원하기 버튼 클릭 시 (이력서 목록 가져오기)
+	        let selectedJobSeq = null; 
+
+	        $(".btn-apply").on("click", function() {
+	            const loginId = "${loginId}";
+	            selectedJobSeq = $(this).attr("data-seq");
+
+	            if (!loginId || loginId === "" || loginId === "null") {
+	                alert("로그인이 필요한 서비스입니다.");
+	                location.href = "/members/toLogin";
+	                return;
+	            }
+
+	            $.ajax({
+	                url: "/jobapplys/getMyResumes",
+	                type: "get",
+	                success: function(resumes) {
+	                    if (!resumes || resumes.length === 0) {
+	                        alert("등록된 이력서가 없습니다. 이력서를 먼저 작성해주세요!");
+	                        location.href = "/mypage/resume";
+	                        return; // 로직 중단
+	                    }
+
+	                    let html = "";
+	                    resumes.forEach(r => {
+	                        html += `
+	                            <li style="padding:10px; border-bottom:1px solid #eee;">
+	                                <label style="cursor:pointer; display:block;">
+	                                    <input type="radio" name="resumeIdx" value="\${r.seq}"> \${r.title}
+	                                </label>
+	                            </li>`;
+	                    });
+	                    
+	                    $("#modalResumeList").html(html);
+	                    $("#resumeModal").fadeIn(200); // 부드럽게 나타나기
+	                },
+	                error: function() {
+	                    alert("이력서 목록을 가져오는 데 실패했습니다.");
+	                }
+	            });
+	        });
+
+	        // [3] 모달 내 '최종 지원하기' 버튼 클릭 시
+	        $("#btnConfirmApply").on("click", function() {
+	            const resumeNum = $("input[name='resumeIdx']:checked").val();
+	            
+	            if (!resumeNum) {
+	                alert("지원하실 이력서를 선택해주세요.");
+	                return;
+	            }
+
+	            // 서버로 전송 (여기서는 알림 메시지 체크를 하지 않음!)
+	            location.href = `/jobapplys/insert?jobPostNum=\${selectedJobSeq}&resumeNum=\${resumeNum}`;
+	        });
+
+	        // [4] 모달 외부나 취소 버튼 클릭 시 닫기 기능 (추가 권장)
+	        $(document).on("click", function(e) {
+	            if ($(e.target).is("#resumeModal")) {
+	                $("#resumeModal").fadeOut(200);
+	            }
+	        });
 	    });
-	    
-	    
 	});
 	</script>
 </body>

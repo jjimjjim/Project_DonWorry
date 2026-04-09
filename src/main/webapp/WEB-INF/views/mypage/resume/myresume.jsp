@@ -267,6 +267,8 @@ body {
 	margin-bottom: 20px;
 	width: 100%;
 	transition: all 0.2s ease;
+	cursor: pointer;
+	
 }
 
 .post-card:hover {
@@ -310,14 +312,23 @@ body {
 	margin-top: 6px;
 }
 
-.status-freeboard { background-color:#cff7ef; color: #179791; } /* 초록색 */
-.status-reviewboard{ background-color: #cfe5ff; color: #185fb0; }
-.status-qnaboard{ background-color: #ffb2b7; color: #a91620;}
+.tag.question {
+	background-color: #e7f3ff;
+	color: #007bff;
+}
+
+.tag.free {
+	background-color: #e6fffa;
+	color: #38b2ac;
+}
 
 .status-tag {
 	font-size: 12px;
 	padding: 4px 10px;
 	border-radius: 8px;
+	background-color: #f8f9fa;
+	color: #868e96;
+	border: 1px solid #e9ecef;
 	font-weight: 600;
 }
 
@@ -518,59 +529,41 @@ body {
 		<div class="page">
 			<div class="comm-header">
 				<i class="fa-regular fa-pen-to-square fa-4x" style="color: #e9ecef;"></i>
-				<h5>내가 작성한 글</h5>
-				<p>내가 작성한 게시글을 한눈에 확인하고 관리해보세요</p>
+				<h5>내 이력서</h5>
+				<p>내가 작성한 이력서를 한눈에 확인하고 관리해보세요</p>
 			</div>
 
 			<div class="toolbar">
-				<div class="search-box">
-					<i class="fa-solid fa-magnifying-glass"></i> <input type="text"
-						id="searchInput" placeholder="제목이나 내용을 검색해보세요">
-				</div>
-				<a href="/mypage/toWrite"><button class="write-btn">
-						<i class="fa-solid fa-pen" style="margin-right: 6px;"></i> 글쓰기
+				<div></div>
+				<a href="/mypage/resume"><button class="write-btn">
+						<i class="fa-solid fa-pen" style="margin-right: 6px;"></i> 이력서등록
 					</button></a>
 			</div>
 
 			<section class="post-list">
 				<div class="list-top">
-					<div class="list-count">전체 게시글 ${count }개</div>
+					<div class="list-count">전체 이력서 ${count }개</div>
 
 				</div>
 
 				<div class="post-container" id="postContainer">
-					<c:forEach var="a" items="${allList }">
+					<c:forEach var="a" items="${list }">
+					
 						<div class="post-card" data-type="community"
-							onclick="location.href='/mypage/view?seq=${a.seq}&view_count=${a.view_count }'">
+							onclick="location.href='/mypage/resume_detail?seq=${a.seq }'">
 							<div class="post-top">
 								<div class="post-title">${a.title }</div>
-								<span class="tag"> 
-									<c:choose>
-										<c:when test="${a.category == 'main'}">메인게시판</c:when>
-										<c:when test="${a.category == 'free'}">
-										<span class="tag status-tag status-freeboard">자유게시판</span>
-										</c:when>
-										<c:when test="${a.category == 'qna'}">
-										<span class="tag status-tag status-qnaboard">질문게시판</span>
-										</c:when>
-										<c:when test="${a.category == 'review'}">
-										<span class="tag status-tag status-reviewboard">리뷰게시판</span>
-										</c:when>
-									</c:choose>
+								<span class="tag free"> 
+										${a.career }
+									
 								</span>
 								<div class="post-meta"">
-									<fmt:formatDate value="${a.write_date}"
+									<fmt:formatDate value="${a.resume_date}"
 										pattern="yyyy-MM-dd HH:mm" />
 								</div>
 							</div>
-
-							<div class="post-content">${a.content }</div>
-
-							<div class="post-info-row">
-								<span><i class="fa-regular fa-eye"></i>조회수 ${a.view_count }</span>
-								<span><i class="fa-regular fa-comment-dots"></i> 댓글
-									${a.reply_count }</span>
-							</div>
+	  
+							${empty a.preferred_job ? '희망직종 없음' : a.preferred_job} / ${a.working_condition}
 						</div>
 					</c:forEach>
 				</div>
@@ -595,11 +588,11 @@ body {
 
 	<script>
 
-	let recordTotalCount = ${recordTotalCount}; // 총 개수
-	let recordCountPerPage = ${recordCountPerPage}; // 한페이지에 몇개 (10)
-	let naviCountPerPage  = ${naviCountPerPage }; // navi 몇개 (10)
-	let currentPage = ${currentPage}; // 현재 페이지
-	let pageTotalCount = Math.ceil(recordTotalCount/recordCountPerPage); 
+	//let recordTotalCount = ${recordTotalCount}; // 총 개수
+	//let recordCountPerPage = ${recordCountPerPage}; // 한페이지에 몇개 (10)
+	//let naviCountPerPage  = ${naviCountPerPage }; // navi 몇개 (10)
+	//let currentPage = ${currentPage}; // 현재 페이지
+	l//et pageTotalCount = Math.ceil(recordTotalCount/recordCountPerPage); 
 	
 	let startNavi = Math.floor((currentPage - 1) / naviCountPerPage) * naviCountPerPage +1;
 	let endNavi = startNavi + naviCountPerPage - 1;
@@ -696,6 +689,7 @@ body {
         $(".list-count").text("전체 게시글 " + visibleCount + "개");
         $("#emptyBox").toggle(visibleCount === 0);
     });
+    
 </script>
 
 </body>

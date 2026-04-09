@@ -1,7 +1,9 @@
 package com.kedu.controllers;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -11,10 +13,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kedu.dao.CateGoryDAO;
+import com.kedu.dao.FilesDAO;
 import com.kedu.dao.JobPostDAO;
 import com.kedu.dto.CateGoryDTO;
+import com.kedu.dto.FilesDTO;
 import com.kedu.dto.JobPostDTO;
 
 @Controller
@@ -25,6 +30,8 @@ public class JobPostController {
 	private JobPostDAO dao;
 	@Autowired
 	private CateGoryDAO catdao;
+	@Autowired
+	private FilesDAO fdao;
 
 	@RequestMapping("/jobpost")
 	public String jobpost(Model model, 
@@ -32,7 +39,8 @@ public class JobPostController {
 			@RequestParam(value="page", defaultValue="1") int page,
 			@RequestParam(value="workDay", required=false) String workDay, 
 			@RequestParam(value="startTime", required=false) Integer starttime, 
-			@RequestParam(value="endTime", required=false) Integer endtime) {
+			@RequestParam(value="endTime", required=false) Integer endtime,
+			String selectByLocation){
 
 		List<JobPostDTO> jobList;
 		int recordTotalCount;
@@ -52,7 +60,13 @@ public class JobPostController {
 			jobList = dao.searchKeywordPaged(searchKeyword, start, end, workDay, starttime, endtime);
 			recordTotalCount = dao.getSearchTotalCount(searchKeyword, workDay, starttime, endtime);
 			model.addAttribute("searchKeyword", searchKeyword);
-		} else {
+		} else if(selectByLocation != null) {
+			jobList = dao.selectByLocation(selectByLocation);
+			recordTotalCount = dao.getSearchTotalCount(selectByLocation, workDay, starttime, endtime);
+			model.addAttribute("selectByLocation", selectByLocation);
+		}
+		
+		else {
 			jobList = dao.jobList(start, end, workDay, starttime, endtime);
 			recordTotalCount = dao.jobRecordTotalCount(workDay, starttime, endtime);
 		}
@@ -82,11 +96,33 @@ public class JobPostController {
 	}
 
 	@RequestMapping("/insert")
-	public String insert(JobPostDTO dto, HttpSession session) {
+	public String insert(JobPostDTO dto, HttpSession session, MultipartFile[] files) {
+//		int nextVal = dao.seqNextval();
 		String memberId = (String) session.getAttribute("loginId");
 		dto.setMember_id(memberId);
 
 		dao.insert(dto);
+		
+//		String savePath = "c:/files";
+//		File savePathFile = new File(savePath);
+//
+//		if(!savePathFile.exists()) {
+//			savePathFile.mkdir();
+//		}
+//		for(MultipartFile file : files) {
+//			if(!file.isEmpty()) { // 비어있는 더미 파일 객체라면 무시
+//				String oriName = file.getOriginalFilename(); // 파일 원본 이름
+//				String sysName = UUID.randomUUID() + "_" + oriName; // 중복되지 않게 가공된 파일 이름
+//				try {
+//					file.transferTo(new File(savePath+"/"+sysName));
+//				}catch(Exception e) {
+//					e.printStackTrace();
+//					return "error";
+//				}
+//				
+//				fdao.upload(new FilesDTO(0,oriName,sysName,nextVal));
+//			}	
+//		}
 
 		return "redirect:/jobposts/jobpost";
 	}
@@ -111,10 +147,11 @@ public class JobPostController {
 	}
 
 	@RequestMapping("/jobdetail")
-	public String jobdetail(int seq, Model model) {
+	public String jobdetail(int seq, Model model, int page) {
 		JobPostDTO post = dao.getPostDetail(seq);
 
 		model.addAttribute("post", post);
+		model.addAttribute("page", page);
 		return "jobpost/jobdetail";
 	}
 

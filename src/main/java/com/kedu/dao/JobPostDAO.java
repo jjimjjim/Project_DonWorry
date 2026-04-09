@@ -54,7 +54,6 @@ public class JobPostDAO {
 
     // [1] 기본 리스트 조회
     public List<JobPostDTO> jobList(int start, int end, String workDay, Integer startT, Integer endT) {
-    	System.out.println("데이터 :" +  workDay);
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT * FROM ( SELECT p.*, c1.cat_name AS main_category_name, c2.cat_name AS sub_category_name, ");
         sql.append("ROW_NUMBER() OVER(ORDER BY p.write_date DESC) AS rn FROM job_post p ");
@@ -166,6 +165,11 @@ public class JobPostDAO {
         
         return jdbc.queryForObject(sql.toString(), Integer.class, params.toArray());
     }
+    
+    public int seqNextval() {
+		String sql = "select job_post_seq.nextval from dual";
+		return jdbc.queryForObject(sql,Integer.class);
+	}
 
     // [5] 공고 등록 (0을 1440으로 변환하는 로직)
     public int insert(JobPostDTO dto) {
@@ -181,7 +185,7 @@ public class JobPostDAO {
             endTime = 1440;
         }
 
-        return jdbc.update(sql, 
+        return jdbc.update(sql,
             dto.getMember_id(), dto.getCompany_name(), dto.getPhone(), 
             dto.getSido(), dto.getGugun(), dto.getDong(), dto.getAddress_detail(), 
             dto.getCount(), dto.getTitle(), dto.getPay(), dto.getWork_days(), 
@@ -239,5 +243,37 @@ public class JobPostDAO {
     	
     	return jdbc.queryForObject(sql, Integer.class);
     }
+    
+    public int JobPostUpdate(JobPostDTO dto) {
+    	String sql = "update job_post set company_name = ?, phone = ?, sido = ?, gugun =?,"
+    			+ "dong = ?, address_detail = ?, count = ?, title = ?, pay = ?,"
+    			+ "work_days = ?, work_starttime = ?, work_endtime = ?,"
+    			+ "main_category = ?, sub_category = ?, content = ?, benefit = ? where seq =?";
+    	
+    	String[] startArr = dto.getWork_starttime().split(":");
+    	int startTime = Integer.parseInt(startArr[0]) * 60 
+    	              + Integer.parseInt(startArr[1]);
+
+    	String[] endArr = dto.getWork_endtime().split(":");
+    	int endTime = Integer.parseInt(endArr[0]) * 60 
+    	            + Integer.parseInt(endArr[1]);
+
+    	if(endTime == 0) {
+    	    endTime = 1440;
+    	}
+        // 종료 시간이 0(자정)이라면 1440으로 변경해서 DB 정합성 유지
+        if(endTime == 0) {
+            endTime = 1440;
+        }
+
+        
+    	return jdbc.update(sql, dto.getCompany_name(), dto.getPhone(), dto.getSido(),
+    			dto.getGugun(), dto.getDong(), dto.getAddress_detail(), dto.getCount(),
+    			dto.getTitle(), dto.getPay(), dto.getWork_days(), startTime,
+    			endTime, dto.getMain_category(), dto.getSub_category(),
+    			dto.getContent(), dto.getBenefit(), dto.getSeq());
+    }
+    
+    
 
 }
