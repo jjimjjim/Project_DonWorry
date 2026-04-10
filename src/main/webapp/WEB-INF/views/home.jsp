@@ -690,6 +690,15 @@
             <img src="/upload/popup-banner.jpg" alt="이벤트 배너" class="popup-img">
         
 
+<script>
+$(function() {
+    let successMsg = "${joinSuccess}";
+    if (successMsg !== "") {
+        alert(successMsg);
+        location.href = "/members/toLogin";
+    }
+});
+</script>
         <div class="modal-footer">
             <label>
                 <input type="checkbox" id="today-check"> 오늘 하루 보지 않기
