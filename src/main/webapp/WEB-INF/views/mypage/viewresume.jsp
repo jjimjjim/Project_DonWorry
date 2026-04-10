@@ -480,11 +480,7 @@
 
                     <div class="summary-meta">
                         <span><i class="fa-regular fa-user"></i>지원자 ${applicant.name}</span>
-                        <span><i class="fa-solid fa-phone"></i>${applicant.phone}</span>
-                        <span><i class="fa-regular fa-calendar"></i>
-                            등록일
-                            <fmt:formatDate value="${applicant.resume_date}" pattern="yyyy-MM-dd" />
-                        </span>
+                        <span><i class="fa-solid fa-phone"></i>연락처 ${applicant.phone}</span>
                     </div>
                 </div>
 
@@ -511,8 +507,6 @@
                             <select name="apply_status" class="status-select">
                                 <option value="${applicant.apply_status}">상태 선택</option>
                                 <option value="지원 완료" ${applicant.apply_status == '지원 완료' ? 'selected' : ''}>지원 완료</option>
-                                <option value="서류 검토중" ${applicant.apply_status == '서류 검토중' ? 'selected' : ''}>서류 검토중</option>
-                                <option value="서류 합격" ${applicant.apply_status == '서류 합격' ? 'selected' : ''}>서류 합격</option>
                                 <option value="면접 예정" ${applicant.apply_status == '면접 예정' ? 'selected' : ''}>면접 예정</option>
                                 <option value="최종 합격" ${applicant.apply_status == '최종 합격' ? 'selected' : ''}>최종 합격</option>
                                 <option value="불합격" ${applicant.apply_status == '불합격' ? 'selected' : ''}>불합격</option>

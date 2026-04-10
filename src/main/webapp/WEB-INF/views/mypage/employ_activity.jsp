@@ -690,9 +690,23 @@ body {
 				</div>
 			</div>
 
+<!-- 			<nav class="tab-menu"> -->
+<!-- 				<button class="tab-item active">진행 중 공고</button> -->
+<!-- 				<button class="tab-item">마감 공고</button> -->
+<!-- 			</nav> -->
+			
 			<nav class="tab-menu">
-				<button class="tab-item active">진행 중 공고</button>
-				<button class="tab-item">마감 공고</button>
+			    <button type="button"
+			        class="tab-item ${status eq '진행중' ? 'active' : ''}"
+			        onclick="location.href='/mypage/employ_activity?page=1&status=진행중'">
+			        진행 중 공고
+			    </button>
+			
+			    <button type="button"
+			        class="tab-item ${status eq '마감' ? 'active' : ''}"
+			        onclick="location.href='/mypage/employ_activity?page=1&status=마감'">
+			        마감 공고
+			    </button>
 			</nav>
 
 			<div class="search-box">
@@ -754,7 +768,7 @@ body {
 													<span class="step-badge blue">${e.apply_status}</span>
 												</c:if>
 												<button type="button" class="dark-btn"
-													onclick="location.href='/mypage/viewresume?resume_num=${e.resume_num}'">지원자
+													onclick="location.href='/mypage/viewresume?apply_seq=${e.apply_seq}'">지원자
 													관리</button>
 											</div>
 										</div>
@@ -783,10 +797,15 @@ body {
 	</div>
 
 	<script>
-		$(".tab-item").on("click", function() {
-			$(".tab-item").removeClass("active");
-			$(this).addClass("active");
-		});
+
+	
+// 		$(".tab-item").on("click", function() {
+// 			$(".tab-item").removeClass("active");
+// 			$(this).addClass("active");
+// 		});
+		console.log("${status}");
+		let status = "${status}";
+		
 		let recordTotalCount = $
 		{
 			recordTotalCount
@@ -830,14 +849,14 @@ body {
 			span.html("chevron_left");
 			let a = $("<a>");
 			a.addClass("page-num");
-			a.attr("href", "/mypage/employ_activity?page=" + (startNavi - 1));
+			a.attr("href", "/mypage/employ_activity?page=" + (startNavi - 1) + "&status=" + encodeURIComponent(status));
 			a.append(span);
 			$(".page-nav").append(a);
 		}
 
 		for (let i = startNavi; i <= endNavi; i++) {
 			let a = $("<a>")
-			a.attr("href", "/mypage/employ_activity?page=" + i);
+			a.attr("href", "/mypage/employ_activity?page=" + i + "&status=" + encodeURIComponent(status));
 			a.addClass("page-num");
 
 			if (i == currentPage) {
@@ -855,7 +874,7 @@ body {
 			span.html("chevron_right");
 			let a = $("<a>");
 			a.addClass("page-num");
-			a.attr("href", "/mypage/employ_activity?page=" + (endNavi + 1));
+			a.attr("href", "/mypage/employ_activity?page=" + (endNavi + 1) + "&status=" + encodeURIComponent(status));
 			a.append(span);
 			$(".page-nav").append(a);
 		}
