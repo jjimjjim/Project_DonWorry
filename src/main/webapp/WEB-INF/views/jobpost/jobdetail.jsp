@@ -403,7 +403,7 @@ img{
 				</div>
 			</div>
 			<c:if test="${nickName==null }">
-				<a class="my-page" href="members/toLogin"> <i
+				<a class="my-page" href="/members/toLogin"> <i
 					class="fa-solid fa-user-gear fa-lg"
 					style="color: rgb(197, 197, 197);"></i> 마이페이지
 				</a>
