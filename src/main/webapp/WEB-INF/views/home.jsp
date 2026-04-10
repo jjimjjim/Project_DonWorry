@@ -278,19 +278,33 @@
 
         /* 각 텍스트 항목 공통 스타일 */
         .job-item-info > div, 
-        .job-item-info > span {
-            flex: 1;            /* 모든 항목이 동일 너비 */
-            font-size: 14px;
-            color: #333;
-            text-align: left;   /* 왼 정렬 */
-        }
-        /* 시급(마지막 항목) 강조 */
-        .job-pay {
-            flex: 1;
-            text-align: right;  /* 시급만 오른쪽 정렬 */
-            font-weight: 700;
-            color: #2563eb;
-        }
+.job-item-info > span {
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+    text-align: left;
+    
+    /* --- 말줄임표 처리를 위한 핵심 추가 속성 --- */
+    white-space: nowrap;      /* 줄바꿈 방지 */
+    overflow: hidden;         /* 영역 밖 숨김 */
+    text-overflow: ellipsis;  /* 넘치는 부분 ... 처리 */
+    min-width: 0;             /* flex 아이템에서 말줄임이 작동하기 위한 필수 조건 */
+}
+
+/* 상호명에 좀 더 여유 공간을 주고 싶다면 flex 비율을 조정할 수 있습니다 */
+.job-item-info .item-name {
+    flex: 1.5;               /* 다른 항목보다 조금 더 넓게 배정 */
+    font-weight: 700;
+}
+
+.job-pay {
+    flex: 1;
+    text-align: right;
+    font-weight: 700;
+    color: #2563eb;
+    /* 시급은 숫자가 중요하므로 말줄임에서 제외하거나 충분한 너비 확보 */
+    overflow: visible !important; 
+}
         .job-pay-label {
             font-weight: normal;
             color: #666;
@@ -318,6 +332,7 @@
             display: flex;
             justify-content: space-between; /* 왼쪽 텍스트와 오른쪽 시급을 양끝으로 */
             align-items: flex-end;         /* 아래쪽 기준으로 정렬 */
+            
         }
 
         /* 게시물 왼쪽 정보 (이름, 역할 등) */
@@ -333,6 +348,9 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            width: 100%;             /* 부모 너비를 꽉 채우도록 설정 */
+    		overflow: hidden;        /* 자식 요소의 말줄임이 작동하도록 설정 */
+    		justify-content: space-between; /* 추가: 양 끝 정렬 */
         }
 
         .item-name {
@@ -342,19 +360,28 @@
 
         /* 상태 태그 (근무중, 퇴사 등) */
         .status-tag {
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
+		    flex-shrink: 0; /* 추가: 태그가 찌그러지지 않도록 설정 */
+		    font-size: 11px;
+		    padding: 2px 8px;
+		    border-radius: 4px;
+		    font-weight: bold;
+		    white-space: nowrap; /* 추가: 태그 안 글자 줄바꿈 방지 */
+		}
         .status-freeboard { background-color:#cff7ef; color: #179791; } /* 초록색 */
         .status-reviewboard{ background-color: #cfe5ff; color: #185fb0; }
 		.status-qnaboard{ background-color: #ffb2b7; color: #a91620;}
 
         .contents-title {
-            font-size: 17px;
-            color: #252525;
-        }
+		    font-size: 17px;
+		    color: #252525;
+		    display: inline-block;
+		    /* 제목이 너무 길어서 태그를 침범하지 않도록 너비 조정 */
+		    max-width: calc(100% - 100px); 
+		    white-space: nowrap;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		    vertical-align: middle;
+		}
         .writer{
             font-size: 14px;
             color: #888;
