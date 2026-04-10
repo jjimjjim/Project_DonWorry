@@ -172,13 +172,15 @@ public class MypageController {
 	}
 	
 	@RequestMapping("/employ_activity")
-	public String toEmploy_activity(HttpSession session, Model model, int page) {
+	public String toEmploy_activity(HttpSession session, Model model,
+	        @RequestParam(defaultValue = "1") int page,
+	        @RequestParam(defaultValue = "진행중") String status) {
 		String memberId = (String)session.getAttribute("loginId");
 		
-		int count = jpdao.mypostRecordTotalCount(memberId);
-		List<JobPostDTO> allList = jpdao.selectById(memberId, page*2-1, page*2);
+		int count = jpdao.mypostRecordTotalCount(memberId, status);
+		List<JobPostDTO> allList = jpdao.selectById(memberId, status, page*2-1, page*2);
 		
-		int recordTotalCount = jpdao.mypostRecordTotalCount(memberId);
+		int recordTotalCount = jpdao.mypostRecordTotalCount(memberId, status);
 		
 	    Map<Integer, List<ApplicantResumeDTO>> applicantMap = new HashMap<>();
 
@@ -194,6 +196,7 @@ public class MypageController {
 		model.addAttribute("allList", allList);
 		model.addAttribute("count", count);
 		  model.addAttribute("applicantMap", applicantMap);
+		  model.addAttribute("status", status);
 		return "mypage/employ_activity";
 	}
 	
@@ -333,7 +336,10 @@ public class MypageController {
 	@RequestMapping("/myjobpost")
 	public String toMyjobpost(int seq, Model model) {
 		JobPostDTO post = jpdao.getPostDetail(seq);
+		List<ApplicantResumeDTO> dto = ardao.selectApplicantsByPost(seq);
+		
 		model.addAttribute("post", post);
+		model.addAttribute("dto", dto);
 		return "mypage/myjobpost";
 	}
 	
@@ -446,9 +452,24 @@ public class MypageController {
 	}
 	
 	@RequestMapping("/viewresume")
-	public String toViewResume(int resume_num) {
+	public String toViewResume(int apply_seq, Model model) {
+		ApplicantResumeDTO list = ardao.selectDetailByPost(apply_seq);
 		
+		model.addAttribute("applicant", list);
 		return "mypage/viewresume";
+	}
+	
+	@RequestMapping("/updateApplyStatus")
+	public String updateApplyStatus(String apply_status, int apply_seq) {
+		ardao.updateApplyStatus(apply_status, apply_seq);
+		return "redirect:/mypage/employ_activity?page=1";
+		
+	}
+	
+	@RequestMapping("/jobpost_close")
+	public String jobpostClose(int seq) {
+	    jpdao.closeJobPost(seq);
+	    return "redirect:/mypage/employ_activity?page=1";
 	}
 	
 }

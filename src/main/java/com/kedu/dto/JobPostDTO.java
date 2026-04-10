@@ -29,6 +29,8 @@ public class JobPostDTO {
     private String content;
     private String benefit;
     private Timestamp write_date;
+    
+    private String status; // 추가
 
     public JobPostDTO() {
         super();
@@ -38,7 +40,7 @@ public class JobPostDTO {
     public JobPostDTO(int seq, String member_id, String company_name, String phone, String main_category,
             String sub_category, String main_category_name, String sub_category_name, String sido, String gugun, 
             String dong, String address_detail, int count, String title, String pay, String work_days, 
-            String work_starttime, String work_endtime, String content, String benefit, Timestamp write_date) {
+            String work_starttime, String work_endtime, String content, String benefit, Timestamp write_date, String status) {
         super();
         this.seq = seq;
         this.member_id = member_id;
@@ -78,6 +80,14 @@ public class JobPostDTO {
 
     public void setSub_category_name(String sub_category_name) {
         this.sub_category_name = sub_category_name;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     // 기존 Getter / Setter
