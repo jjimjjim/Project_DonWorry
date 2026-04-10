@@ -220,6 +220,7 @@
             font-weight: 800;
             margin-bottom: 20px;
             line-height: 1.4;
+            word-break: break-all;
         }
 
         /* 작성 정보 */
