@@ -395,6 +395,19 @@ body {
 	margin-top: 10px;
 	font-size: 14px;
 }
+
+/* 푸터 및 플로팅 */
+.container-footer {
+	border-top: 1px solid #e5e7eb;
+	background-color: #f9fafb;
+	padding: 40px 0;
+	margin-top: 80px;
+	text-align: center;
+	color: #999;
+	font-size: 13px;
+	width: 100vw;
+	margin-left: calc(-50vw + 50%);
+}
 </style>
 </head>
 <body>
@@ -573,6 +586,13 @@ body {
 		<div class="footer-link">
 			이미 계정이 있으신가요? <a href="/members/toLogin">로그인</a>
 		</div>
+		
+		
+	</div>
+	<div class="container-footer">
+		<p>© 2026 돈워리. All rights reserved.</p>
+		<p style="margin-top: 10px; font-size: 11px; letter-spacing: 0.5px;">개인정보처리방침
+			| 이용약관 | 고객센터</p>
 	</div>
 
 	<script>
