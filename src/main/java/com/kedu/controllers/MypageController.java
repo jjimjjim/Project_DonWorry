@@ -24,6 +24,7 @@ import com.kedu.dao.BoardsDAO;
 import com.kedu.dao.BookmarkDAO;
 import com.kedu.dao.CateGoryDAO;
 import com.kedu.dao.FilesDAO;
+import com.kedu.dao.JobApplyDAO;
 import com.kedu.dao.JobPostDAO;
 import com.kedu.dao.MembersDAO;
 import com.kedu.dao.MypageDAO;
@@ -50,6 +51,8 @@ public class MypageController {
 	private FilesDAO fdao;
 	@Autowired
 	private JobPostDAO jpdao;
+	@Autowired
+	private JobApplyDAO jadao;
 	@Autowired
 	private BookmarkDAO bookdao;
 	@Autowired
@@ -103,11 +106,15 @@ public class MypageController {
 	}
 	
 	@RequestMapping("/job_activity")
-	public String to_Job_activity(HttpSession session) {
+	public String to_Job_activity(HttpSession session,Model model) {
 		String id =(String)session.getAttribute("loginId");	
 		String type = (String)session.getAttribute("type");
 		
 		List<MembersDTO> list = mdao.selectAll(id);	
+		
+		//지원한 구ㅇ인공고
+		List<JobPostDTO> selectApplyList = jadao.selectApplyList(id);
+		model.addAttribute("selectApplyList",selectApplyList);
 		return "mypage/job_activity";
 	}
 	//이력서 작성

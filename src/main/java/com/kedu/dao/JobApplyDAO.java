@@ -1,10 +1,13 @@
 package com.kedu.dao;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.kedu.dto.JobApplyDTO;
+import com.kedu.dto.JobPostDTO;
 @Repository
 public class JobApplyDAO {
 	
@@ -22,5 +25,19 @@ public class JobApplyDAO {
 	    String sql = "SELECT COUNT(*) FROM job_apply WHERE member_id = ? AND job_post_num = ?";
 	    int count = jdbc.queryForObject(sql, Integer.class, id, jobPostNum);
 	    return count > 0;
+	}
+	
+	public List<JobPostDTO> selectApplyList(String id) {
+		String sql = "SELECT b.*, a.status AS status, a.resume_num, " +
+                "       c1.cat_name AS main_category_name, " + // 화면에 보여줄 이름
+                "       c2.cat_name AS sub_category_name " +  // 화면에 보여줄 이름
+                "FROM job_apply a " +
+                "JOIN job_post b ON a.job_post_num = b.seq " +
+                "LEFT JOIN job_categories c1 ON b.main_category = c1.cat_id " + // 숫자끼리 비교!
+                "LEFT JOIN job_categories c2 ON b.sub_category = c2.cat_id " +  // 숫자끼리 비교!
+                "WHERE a.member_id = ? " +
+                "ORDER BY a.seq DESC";
+	    
+	    return jdbc.query(sql, new BeanPropertyRowMapper<JobPostDTO>(JobPostDTO.class), id);
 	}
 }

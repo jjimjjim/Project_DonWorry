@@ -267,28 +267,30 @@
         </a>
         <nav class="tab-menu">
             <button class="tab-item active">지원 공고</button>
-            <button class="tab-item">지원 취소 공고</button>
         </nav>
 
         <section class="post-list">
             <div style="font-size: 14px; color: #868e96; margin-bottom: 15px; font-weight: 600; padding-left: 5px;">전체 지원 내역 (1)</div>
+            <c:forEach var="i" items="${selectApplyList}">
             <div class="post-container">
                 <div class="post-card">
                     <div class="user-info">
                         <div class="meta">
-                            <span class="nickname">스타벅스 강남점</span>
-                            <span class="job-category-tag">카페 / 베이커리</span>
-                            <span class="city-category-tag">서울시 / 강남구</span>
-                            <p class="time">지원일시: 2026.03.30</p>
+                            <span class="nickname">${i.company_name}</span>
+                            <span class="job-category-tag">${i.main_category_name}/${i.sub_category_name}</span>
+                            <span class="city-category-tag">${i.sido}/${i.gugun}/${i.dong}</span>
+                            <p class="time"></p>
                         </div>
                     </div>
-                    <h2 class="post-content">커피제조 및 고객 응대 업무를 담당할 신입 및 경력 직원을 모집합니다.</h2>
+                    <h2 class="post-content">${i.title}</h2>
                     <div class="post-footer">
                         <button class="apply-cancel-btn">지원 취소</button>
-                        <button class="apply-detail-btn">상세보기</button>
+                        <button class="apply-detail-btn"
+                        onclick="location.href='/jobposts/jobdetail?seq=${post.seq}&page=${currentPage}'">상세보기</button>
                     </div>
                 </div>
             </div>
+            </c:forEach>
         </section>
 
         <div class="page-nav">

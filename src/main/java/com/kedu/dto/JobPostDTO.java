@@ -31,8 +31,19 @@ public class JobPostDTO {
     private Timestamp write_date;
     
     private String status; // 추가
+    
+    private int resume_num;
+    
 
-    public JobPostDTO() {
+    public int getResume_num() {
+		return resume_num;
+	}
+
+	public void setResume_num(int resume_num) {
+		this.resume_num = resume_num;
+	}
+
+	public JobPostDTO() {
         super();
     }
 
