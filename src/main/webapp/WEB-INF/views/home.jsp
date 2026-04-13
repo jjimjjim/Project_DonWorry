@@ -628,7 +628,9 @@
             <a href="/salary/calendar" style="text-decoration: none; ">      
             <div class="card-title">${i.name }</div>
             <div class="info-item">
-            	<span class="info-label">예상 급여</span><span class="info-val blue">${i.totalPay}원</span>
+            	<span class="info-label">예상 급여</span><span class="info-val blue">
+            		<fmt:formatNumber value="${i.totalPay}" pattern="#,###" />원
+            	</span>
             </div>
             <div class="info-item">
             	<span class="info-label">근무 일수</span><span class="info-val">${i.workDays}일</span>

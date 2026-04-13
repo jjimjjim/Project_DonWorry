@@ -512,7 +512,7 @@
                     알림 설정
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" >12</span>
+                    <span class="apply-list-count" ></span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
@@ -583,7 +583,7 @@
                     알림 설정
                 </div>
                 <div class="item-result">
-                    <span class="apply-list-count" >12</span>
+                    <span class="apply-list-count" ></span>
                     <span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
                 </div> 
             </a>
