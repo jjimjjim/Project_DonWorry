@@ -314,7 +314,8 @@ public class AdminController {
 			rPage=1;
 		int rStart=rPage*5-4;
 		int rEnd = rPage * 5;
-		
+		//오늘 신규 댓글
+		int todayCount = adao.getTodayReplyCount();
 		//회원 댓글 전체 불러옴
 		List<ReplyDTO> replyList;
 		int recordTotalCount;
@@ -322,7 +323,7 @@ public class AdminController {
 		replyList = adao.searchReplyById(start,end,keyword,category);
 
 		recordTotalCount = adao.getReplyTotalCount(category,keyword);
-		
+		model.addAttribute("todayCount",todayCount);
 		model.addAttribute("currentPage",page);
 		model.addAttribute("recordCountPerPage",5);
 		model.addAttribute("naviCountPerPage",10);

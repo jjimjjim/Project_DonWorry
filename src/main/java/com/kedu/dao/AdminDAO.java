@@ -194,7 +194,11 @@ public class AdminDAO {
 		
 		return jdbc.query(sql,new BeanPropertyRowMapper<BoardsDTO>(BoardsDTO.class));		
 	}
-	
+	//오늘 신규 댓글
+	public int getTodayReplyCount() {
+		String sql = "SELECT COUNT(*) FROM reply WHERE write_date >= TRUNC(SYSDATE)";
+		return jdbc.queryForObject(sql, Integer.class);
+	}
 	//닉넴 키워드 검색 결과, 댓글 신고 카운트
 		public int getReplyTotalCount(String category, String keyword) {
 		    // 1. 기본 SQL (관리자 제외)
@@ -286,7 +290,7 @@ public class AdminDAO {
 		
 		return jdbc.query(sql, new BeanPropertyRowMapper<ReplyDTO>(ReplyDTO.class),rStart, rEnd);
 	}
-	
+	//신고된 댓글만
 	public int getReportReplyTotalCount() {
 		String sql = "SELECT COUNT(*) FROM ( "
 	               + "    SELECT r.seq "
@@ -295,6 +299,8 @@ public class AdminDAO {
 	               + "    GROUP BY r.seq )";
 		
 	    return jdbc.queryForObject(sql, Integer.class);
-	} 
+	}
+	
+	
 	
 }

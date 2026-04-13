@@ -166,6 +166,42 @@ body {
     padding: 22px;
 
 }
+/* ===== Summary Cards ===== */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.summary-card,
+.panel {
+    background: #fff;
+    border: 1px solid #e7eef8;
+    border-radius: 18px;
+    padding: 22px;
+
+}
+
+.summary-label {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.summary-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.summary-sub {
+    margin-top: 6px;
+    font-size: 13px;
+    /* color: #2563eb; */
+    color: #0f172a;
+}
 
 
 /* ===== Panel ===== */
@@ -437,7 +473,13 @@ body {
                 <p>커뮤니티 게시글 조회, 삭제가 가능합니다.</p>
             </div>
         </div>
-
+   		<section class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-label">전체 댓글</div>
+                <div class="summary-value">${recordTotalCount}</div>
+                <div class="summary-sub">오늘 신규 ${todayCount}건</div>
+            </div>
+        </section>
          <section class="panel">
             <div class="panel-head">
                 <h3>댓글 목록</h3>
