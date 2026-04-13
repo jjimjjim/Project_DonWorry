@@ -283,6 +283,9 @@ public class JobPostDAO {
         System.out.println("closeJobPost seq : " + seq);
         return result;
     }
-    
+    public int jobPostCount(String member_id) {
+    	String sql = "select count(*) from job_post where member_id = ?";
+    	return jdbc.queryForObject(sql,Integer.class,member_id);
+    }
 
 }
