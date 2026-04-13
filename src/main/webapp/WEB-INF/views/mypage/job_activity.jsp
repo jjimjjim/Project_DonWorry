@@ -280,6 +280,7 @@
         <section class="post-list">
             <div style="font-size: 14px; color: #868e96; margin-bottom: 15px; font-weight: 600; padding-left: 5px;">전체 지원 내역 (${selectApplyList.size()})</div>
             <c:if test="${selectApplyList.size()==0}">
+            <br><br><br>
 	            <div class="comm-header zero-header">
 	            <i class="fa-solid fa-exclamation fa-2xl" style="color: rgb(134, 142, 150);"></i>
 	            <h5>지원한 이력이 없습니다.</h5>
