@@ -475,6 +475,13 @@ img{
     display: block;     /* 하단 여백 제거 */
     margin: 10px 0;    /* 이미지 위아래 여백 */
         }
+        .comm-header { text-align: center; margin-bottom: 40px; }
+    .comm-header h5 { font-size: 24px; font-weight: 700; color: #333; margin-top: 15px; }
+    .comm-header p { color: #666; font-size: 15px; margin-top: 8px; }
+    .zero-header h5, p{
+    	color: #868E96;
+    	
+    }
 </style>
 </head>
 <body>
@@ -551,6 +558,14 @@ img{
 					<div class="list-count">전체 게시글 ${count }개</div>
 
 				</div>
+				<c:if test="${allList.size()==0}">
+            <br><br><br>
+	            <div class="comm-header zero-header">
+	            <i class="fa-solid fa-exclamation fa-2xl" style="color: rgb(134, 142, 150);"></i>
+	            <h5>내가 작성한 글이 없습니다.</h5>
+	            <p>커뮤니티에 첫 글을 남기고 사람들과 소통해 보세요.</p>
+	        	</div>
+            </c:if>
 
 				<div class="post-container" id="postContainer">
 					<c:forEach var="a" items="${allList }">

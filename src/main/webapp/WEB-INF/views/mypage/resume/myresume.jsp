@@ -479,6 +479,13 @@ body {
 		flex-wrap: wrap;
 	}
 }
+.comm-header { text-align: center; margin-bottom: 40px; }
+    .comm-header h5 { font-size: 24px; font-weight: 700; color: #333; margin-top: 15px; }
+    .comm-header p { color: #666; font-size: 15px; margin-top: 8px; }
+    .zero-header h5, p{
+    	color: #868E96;
+    	
+    }
 </style>
 </head>
 <body>
@@ -535,6 +542,7 @@ body {
 
 		<div class="page">
 			<div class="comm-header">
+			
 				<i class="fa-regular fa-pen-to-square fa-4x" style="color: #e9ecef;"></i>
 				<h5>내 이력서</h5>
 				<p>내가 작성한 이력서를 한눈에 확인하고 관리해보세요</p>
@@ -546,12 +554,21 @@ body {
 						<i class="fa-solid fa-pen" style="margin-right: 6px;"></i> 이력서등록
 					</button></a>
 			</div>
+			
 
 			<section class="post-list">
 				<div class="list-top">
 					<div class="list-count">전체 이력서 ${count }개</div>
 
 				</div>
+				<c:if test="${list.size()==0}">
+				<br><br><br>
+	            <div class="comm-header zero-header">
+	            <i class="fa-solid fa-exclamation fa-2xl" style="color: rgb(134, 142, 150);"></i>	            
+	            <h5>등록한 이력서가 없습니다.</h5>
+	            <p>이력서를 작성하고 구인 공고에 지원해보세요!</p>
+	        	</div>
+            </c:if>
 
 				<div class="post-container" id="postContainer">
 					<c:forEach var="a" items="${list }">
