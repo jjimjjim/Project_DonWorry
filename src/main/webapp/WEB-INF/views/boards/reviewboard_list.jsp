@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+    // 브라우저 캐시를 방지하여 '뒤로 가기' 시 서버를 다시 호출하게 함
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+    response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+    response.setDateHeader("Expires", 0); // Proxies
+%>    
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>    
 <!DOCTYPE html>
@@ -659,14 +665,14 @@ $(".floating-write-btn").on("click",function(){
 			span.html("chevron_left");
 			let a = $("<a>");
 			a.addClass("page-num");
-			a.attr("href","/boards/mainboard_list?page="+ (startNavi-1));
+			a.attr("href","/boards/reviewboard_list?page="+ (startNavi-1));
 			a.append(span);
 			$(".page-nav").append(a);
 		}
 		
 		for(let i = startNavi; i <= endNavi; i++){
 			let a = $("<a>")
-			a.attr("href" , "/boards/mainboard_list?page="+i);
+			a.attr("href" , "/boards/reviewboard_list?page="+i);
 			a.addClass("page-num");
 			
 			if (i == currentPage) {
@@ -684,7 +690,7 @@ $(".floating-write-btn").on("click",function(){
 				span.html("chevron_right");
 				let a = $("<a>");
 				a.addClass("page-num");
-				a.attr("href","/boards/mainboard_list?page="+(endNavi+1));
+				a.attr("href","/boards/reviewboard_list?page="+(endNavi+1));
 				a.append(span);
 				$(".page-nav").append(a);
 		}

@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+    // 브라우저 캐시를 방지하여 '뒤로 가기' 시 서버를 다시 호출하게 함
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+    response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+    response.setDateHeader("Expires", 0); // Proxies
+%>      
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>    
 <!DOCTYPE html>
@@ -721,11 +727,11 @@
                     <i class="fa-solid fa-house fa-lg" style="color: rgb(203, 203, 203);"></i>
                     홈
                 </a>
-                <a href="salary/calendar">
+                <a href="/salary/calendar">
                     <i class="fa-regular fa-calendar fa-lg" style="color:rgb(203, 203, 203); margin-right:5px;"></i>
                     급여 캘린더
                 </a>
-                <a href="#">
+                <a href="/jobposts/jobpost">
                     <i class="fa-solid fa-briefcase fa-lg" style="color: rgb(203, 203, 203); margin-right:5px;"></i>
                     구인구직
                 </a>
@@ -739,7 +745,7 @@
                 </div>
             </div>
             <c:if test="${nickName==null }">
-                <a class="my-page" href="members/toLogin">
+                <a class="my-page" href="/members/toLogin">
                     <i class="fa-solid fa-user-gear fa-lg" style="color: rgb(197, 197, 197);"></i>
                     마이페이지
                 </a>

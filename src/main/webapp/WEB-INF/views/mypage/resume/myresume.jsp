@@ -593,7 +593,7 @@ body {
 	//let recordCountPerPage = ${recordCountPerPage}; // 한페이지에 몇개 (10)
 	//let naviCountPerPage  = ${naviCountPerPage }; // navi 몇개 (10)
 	//let currentPage = ${currentPage}; // 현재 페이지
-	l//et pageTotalCount = Math.ceil(recordTotalCount/recordCountPerPage); 
+	//et pageTotalCount = Math.ceil(recordTotalCount/recordCountPerPage); 
 	
 	let startNavi = Math.floor((currentPage - 1) / naviCountPerPage) * naviCountPerPage +1;
 	let endNavi = startNavi + naviCountPerPage - 1;
