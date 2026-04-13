@@ -454,7 +454,7 @@
     	}
     })
     
-    // 등록 버튼을 누를 때 실행되는 함수 (예시)
+    // 등록 버튼을 누를 때 실행되는 함수
 	$("form").on("submit", function() {
 	    // 전송 직전에 disabled를 풀어줘야 서버로 데이터가 전송됩니다.
 	    $("#career_input").attr("disabled", false); 
