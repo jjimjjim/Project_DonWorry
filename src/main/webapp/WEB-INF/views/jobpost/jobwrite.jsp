@@ -563,6 +563,7 @@ textarea {
 						<!-- hidden (에디터 값 담기) -->
 						<input type="hidden" name="content" id="content">
 					</div>
+					
 				</div>
 
 
@@ -707,6 +708,23 @@ textarea {
 //             alert("로그인이 필요한 서비스입니다.");
 //             location.replace("/members/toLogin"); // 기록을 남기지 않고 이동
 //         }
+
+//         $('textarea[name="benefit"]').on('input', function() {
+//             let content = $(this).val();
+//             let count = content.length;
+//             const maxCount = 1000;
+
+//             // 1. 글자 수가 제한을 넘으면 자르기
+//             if (count > maxCount) {
+//                 alert("최대 1000자까지 입력 가능합니다.");
+//                 $(this).val(content.substring(0, maxCount)); // 1000자까지만 남김
+//                 count = maxCount; // 카운트도 1000으로 고정
+//             }
+
+//             // 2. 카운트 표시 업데이트 (.char-count 클래스를 가진 div 찾기)
+//             $(this).next('.char-count').text(count + " / " + maxCount);
+//         });
+        
     });
     
 
