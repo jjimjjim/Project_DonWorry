@@ -496,6 +496,13 @@ body {
 .bookmark-btn.active {
     color: #ffc107; /* 노란색 꽉 찬 별 */
 }
+.comm-header { text-align: center; margin-bottom: 40px; }
+    .comm-header h5 { font-size: 24px; font-weight: 700; color: #333; margin-top: 15px; }
+    .comm-header p { color: #666; font-size: 15px; margin-top: 8px; }
+    .zero-header h5, p{
+    	color: #868E96;
+    	
+    }
 </style>
 </head>
 <body>
@@ -556,6 +563,7 @@ body {
 				<h5>북마크 글 보기</h5>
 				<p>내가 북마크한 게시글을 한눈에 확인하고 관리해보세요</p>
 			</div>
+			
 
 			<div class="toolbar">
 				<div class="search-box">
@@ -570,6 +578,14 @@ body {
 					<div class="list-count">전체 게시글 ${count }개</div>
 
 				</div>
+				<c:if test="${bookmarkList.size()==0}">
+            <br><br><br>
+	            <div class="comm-header zero-header">
+	            <i class="fa-solid fa-exclamation fa-2xl" style="color: rgb(134, 142, 150);"></i>
+	            <h5>북마크한 글이 없습니다.</h5>
+	            <p>나중에 다시 보고 싶은 유익한 글을 북마크해 보세요.</p>
+	        	</div>
+            </c:if>
 
 				<div class="post-container" id="postContainer">
 					<c:forEach var="a" items="${bookmarkList }">

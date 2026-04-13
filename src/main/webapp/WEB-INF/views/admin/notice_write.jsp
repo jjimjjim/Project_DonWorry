@@ -381,7 +381,7 @@ body {
 	
 	                <!-- 버튼 영역 -->
 	                <div class="btn-group">
-	                    <button type="button" class="cancel-btn" onclick="location.href='/boards/mainboard_list?page=1'">취소</button>
+	                    <button type="button" class="cancel-btn" onclick="location.href='/admin/admin_boards'">취소</button>
 	                    <button type="submit" class="submit-btn">등록</button>
 	                </div>
                 </form>
