@@ -163,6 +163,7 @@ body {
 
 .card {
 	padding: 22px 20px;
+	margin: 10px;
 }
 
 .card-title {
@@ -664,22 +665,8 @@ body {
 
 		<div class="calendar-layout">
 			<div class="calendar-left">
-				<c:forEach var="i" items="${placeList}">
-					<div class="card" data-seq="${i.seq}">
-						<div class="card-title">${i.name}</div>
-						<div class="info-item">
-							<span class="info-label">예상 급여</span> <span class="info-val blue"><fmt:formatNumber
-									value="${i.totalPay}" pattern="#,###" />원</span>
-						</div>
-						<div class="info-item">
-							<span class="info-label">근무 일수</span> <span class="info-val">${i.workDays}일</span>
-						</div>
-						<div class="info-item">
-							<span class="info-label">근무 시간</span> <span class="info-val">${i.totalHours}시간</span>
-						</div>
-					</div>
-				</c:forEach>
 
+				<div class="card-list"></div>
 				<div class="card add-card" id="addWorkBtn">
 					<span>+ 근무지 등록</span>
 				</div>
@@ -757,6 +744,7 @@ body {
 	    const summaryInsuranceEl = document.getElementById("summaryInsurance");
 	    const summaryFinalPayEl = document.getElementById("summaryFinalPay");
 
+	    
 	    const workModal = document.getElementById("workModal");
 	    const closeModal = document.getElementById("closeModal");
 	    const cancelBtn = document.getElementById("cancelBtn");
@@ -956,7 +944,6 @@ body {
 	    function calculateBasePay(timeData, payPerHour, payType) {
 	        if (payType === "시급") return Math.floor((timeData.realWork / 60) * payPerHour);
 	        if (payType === "일급") return payPerHour;
-	        if (payType === "월급") return payPerHour;
 	        return 0;
 	    }
 
@@ -1206,6 +1193,8 @@ body {
 	        const currentDate = calendar.getDate();
 	        loadSalarySummary(currentDate.getFullYear(), currentDate.getMonth() + 1);
 	    }
+	    
+	    
 
 	    // =====================================================
 	    // ===== 근무 등록 =====
@@ -1438,7 +1427,67 @@ body {
 	        toggleEmploymentInsurance();
 	        syncInsuranceValues();
 	    }
+	    // =====================================================
+	    // ===== 근무지 카드 =====
+	    // =====================================================
+	    	
+	    function loadCurrentAll() {
+		    const currentDate = calendar.getDate();
+		
+		    const year = currentDate.getFullYear();
+		    const month = currentDate.getMonth() + 1;
 
+		    loadPlaceList(year, month);
+		}	
+	    	
+	    function loadPlaceList(year, month) {
+		    $.ajax({
+		        url: "/salary/placeListByMonth",
+		        type: "get",
+		        dataType: "json",
+		        data: { year: year, month: month },
+		        success: function (resp) {
+		            renderPlaceCards(resp);
+		        }
+		    });
+		}
+	    
+	    function renderPlaceCards(list) {
+	        const cardList = document.querySelector(".card-list");
+	        cardList.innerHTML = "";
+
+	        list.forEach(function (i) {
+	            const totalPay = formatWon(i.totalPay);
+	            const workDays = Number(i.workDays || 0);
+	            const totalHours = Number(i.totalHours || 0);
+
+	            let card = "";
+	            card += '<div class="card" data-seq="' + i.seq + '">';
+	            card += '    <div class="card-title">' + (i.name || "") + '</div>';
+	            card += '    <div class="info-item">';
+	            card += '        <span class="info-label">예상 급여</span>';
+	            card += '        <span class="info-val blue">' + totalPay + '</span>';
+	            card += '    </div>';
+	            card += '    <div class="info-item">';
+	            card += '        <span class="info-label">근무 일수</span>';
+	            card += '        <span class="info-val">' + workDays + '일</span>';
+	            card += '    </div>';
+	            card += '    <div class="info-item">';
+	            card += '        <span class="info-label">근무 시간</span>';
+	            card += '        <span class="info-val">' + totalHours + '시간</span>';
+	            card += '    </div>';
+	            card += '</div>';
+
+
+	            cardList.insertAdjacentHTML("beforeend", card);
+	        });
+	    }
+	    	
+	    	
+	    	
+	    	
+	    	
+	    	
 	    // =====================================================
 	    // ===== 근무지 상세 =====
 	    // =====================================================
@@ -1625,21 +1674,23 @@ body {
 	        },
 	        datesSet: function () {
 	            loadCurrentCalendarSummary();
+	            loadCurrentAll();
 	        }
 	    });
 
 	    calendar.render();
 	    loadCurrentCalendarSummary();
+	    loadCurrentAll();
 
 	    // =====================================================
 	    // ===== 이벤트 바인딩 =====
 	    // =====================================================
 
-	    document.querySelectorAll(".card[data-seq]").forEach(function (card) {
-	        card.addEventListener("click", function () {
-	            openWorkplaceDetailModal(this.dataset.seq);
-	        });
-	    });
+	    document.querySelector(".card-list").addEventListener("click", function (e) {
+		    const card = e.target.closest(".card[data-seq]");
+		    if (!card) return;
+		    openWorkplaceDetailModal(card.dataset.seq);
+		});
 
 	    closeModal.addEventListener("click", closeWorkModal);
 	    cancelBtn.addEventListener("click", closeWorkModal);
@@ -1747,25 +1798,25 @@ body {
 	    });
 
 	    detailDeleteBtn.addEventListener("click", function () {
+
+	        if (!confirm("정말 삭제하시겠습니까?")) return;
+	        
 	        const seq = detailSeqEl.value;
 
 	        $.ajax({
 	            url: "/worklog/delete",
-	            type: "get",
+	            type: "post",
 	            data: { seq: seq },
 	            success: function (resp) {
 	                if (Number(resp) > 0) {
 	                    alert("근무 내역을 삭제했습니다.");
-	                    const event = calendar.getEventById(String(seq));
-	                    if (event) event.remove();
-	                    closeDetailModalFunc();
-	                    loadCurrentCalendarSummary();
+	                    location.href = "/salary/calendar";
 	                } else {
-	                    alert("삭제할 근무 내역이 없습니다.");
+	                    alert("삭제할 근무지 내역이 없습니다.");
 	                }
 	            },
 	            error: function () {
-	                alert("근무 내역을 삭제하지 못했습니다.");
+	                alert("근무지 내역을 삭제하지 못했습니다.");
 	            }
 	        });
 	    });

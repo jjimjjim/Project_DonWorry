@@ -54,7 +54,7 @@ public class WorkPlaceDAO {
 	            + "work_start_time, "
 	            + "work_end_time, "
 	            + "workplace_date "
-	            + "from workplace where id = ?";
+	            + "from workplace where status = 'Y' and id = ?";
 
 	    return jdbc.query(sql, new BeanPropertyRowMapper<>(WorkPlaceDTO.class), memberId);
 	}

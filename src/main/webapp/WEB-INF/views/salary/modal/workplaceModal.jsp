@@ -29,7 +29,6 @@
 							name="pay_type" required>
 							<option value="시급">시급</option>
 							<option value="일급">일급</option>
-							<option value="월급">월급</option>
 						</select>
 					</div>
 				</div>
@@ -51,8 +50,7 @@
 								<c:forEach var="i" begin="1" end="31">
 									<option value="${i}">${i}일</option>
 								</c:forEach>
-							</select> <span style="font-size: 14px; color: #666;">매월 정해진 날짜에
-								급여가 계산됩니다.</span>
+							</select> <span style="font-size: 14px; color: #666;">급여 정산 기준으로 사용됩니다.</span>
 						</div>
 					</div>
 				</div>
