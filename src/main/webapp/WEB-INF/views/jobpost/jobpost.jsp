@@ -400,6 +400,26 @@ body {
 	width: fit-content;
 }
 
+.weekdays{
+	background: #fdf2f8;
+	color: #db2777;
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	white-space: nowrap;
+	width: fit-content;
+}
+
+.weekend{
+	background: #f0fdf4;
+	color: #16a34a;
+	padding: 2px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	white-space: nowrap;
+	width: fit-content;
+}
+
 .job-meta-row {
 	display: flex;
 	flex-wrap: wrap;
@@ -838,7 +858,16 @@ img{
 				<div class="job-info">
 					<div class="job-title-row">
 						<h3>${post.title}</h3>
-						<span class="job-badge">${post.work_days}</span>
+						
+						<c:choose>
+							<c:when test="${post.work_days =='주말'}">
+								<span class="job-badge weekend">${post.work_days}</span>
+							</c:when>
+							<c:when test="${post.work_days =='평일'}">
+								<span class="job-badge weekdays">${post.work_days}</span>
+							</c:when>
+							<c:otherwise><span class="job-badge">${post.work_days}</span></c:otherwise>
+						</c:choose>
 					</div>
 					<div class="company-name">${post.company_name}</div>
 <%-- 					<div class="job-desc">${post.content}</div> --%>
