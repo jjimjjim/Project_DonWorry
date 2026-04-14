@@ -353,6 +353,8 @@ public class AdminController {
 			model.addAttribute("dto",dto);
 			//댓글 가져옴
 			List<ReplyDTO> admin_replyList = rdao.selectByParent_seq(seq);
+			int totalCount = admin_replyList.size();
+			model.addAttribute("totalCount",totalCount);
 			
 			List<ReplyDTO> comments = new ArrayList<>();
 			List<ReplyDTO> replies = new ArrayList<>();
