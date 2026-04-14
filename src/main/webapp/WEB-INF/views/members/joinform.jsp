@@ -759,7 +759,7 @@ body {
 										.test($("#input-id").val())) {
 									$("#idCheck-box")
 											.html(
-													"ID는 영문 소문자, 숫자 포함 4~14자리 이내로 생성 가능합니다.")
+													"ID는 영문 소문자, 숫자 포함 6~16자리 이내로 생성 가능합니다.")
 											.css({
 												"color" : "#ff0000",
 												"display" : "block",

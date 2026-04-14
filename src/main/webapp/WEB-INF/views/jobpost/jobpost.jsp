@@ -725,7 +725,7 @@ img {
 				<div class="layer-header">
 					<h4 style="font-size: 15px; font-weight: 600;">지역 선택</h4>
 					<button type="button" id="layerClose"
-						style="font-size: 20px; color: #999; cursor: pointer;">&times;</button>
+						style="font-size: 20px; color: #999; cursor: pointer; border: none; background: none;">&times;</button>
 				</div>
 				<div class="layer-content">
 					<ul class="loc-list" id="sidoList">
