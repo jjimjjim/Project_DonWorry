@@ -225,6 +225,7 @@
             color: #666;
             line-height: 1.8;
             word-break: break-all;
+            white-space: pre-wrap; /* 줄바꿈과 공백을 보존하며 너비에 맞춰 자동 줄바꿈 */
         }
 
         .faq-item.active .faq-answer {
@@ -447,7 +448,7 @@
                 </div>
                 
                 <c:forEach var = "i" items = "${faqList }">
-                	<div class="faq-item">
+                	<div class="faq-item" id="faq-${i.seq}">
                     	<div class="faq-question"><span>${i.title }</span><i
                             class="fa-solid fa-chevron-down"></i></div>
                     	<div class="faq-answer">${i.content }</div>
@@ -559,7 +560,23 @@
         $(".faq-question").click(function () {
             $(this).parent(".faq-item").toggleClass("active");
         });
+     // 2. URL 해시 체크 (이 부분을 아래처럼 수정 추천)
+        const hash = window.location.hash;
+        if (hash && hash.startsWith("#faq-")) {
+            const $target = $(hash);
+            if ($target.length > 0) {
+                // .show() 대신 클래스를 추가해야 CSS 애니메이션이 작동합니다.
+                $target.addClass("active");
+                
+                // 필요하다면 해당 위치로 스크롤 (브라우저가 기본으로 해주지만 보정용)
+                $('html, body').animate({
+                    scrollTop: $target.offset().top - 100 // 상단바 여백 고려
+                }, 500);
+            }
+        }
     });
+    
+    
     </script>
 </body>
 

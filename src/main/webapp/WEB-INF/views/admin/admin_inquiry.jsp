@@ -575,6 +575,7 @@
                     <thead>
                         <tr>
                             <th style="width: 80px;">순서</th>
+                            <th style="width: 80px;">번호</th>
                             <th>질문 제목</th>
                             <th style="width: 100px;">노출</th>
                             <th style="width: 100px;">관리</th>
@@ -700,7 +701,7 @@ function loadAdminFaqList(page) {
             // 1. 테이블 렌더링
             let html = "";
             if (res.list.length === 0) {
-                html = '<tr><td colspan="4" style="padding:40px 0; color:#94a3b8;">등록된 FAQ가 없습니다.</td></tr>';
+                html = '<tr><td colspan="5" style="padding:40px 0; color:#94a3b8;">등록된 FAQ가 없습니다.</td></tr>';
             } else {
                 res.list.forEach(item => {
                 	// 상태값에 따른 클래스 미리 계산
@@ -710,7 +711,7 @@ function loadAdminFaqList(page) {
                     html += '<tr>';
                     // 1. 순서 수정 (입력창으로 변경)
                     html += '    <td><input type="number" class="sort-input" min="1" max="' + maxOrder + '" value="' + (item.sort_order+1)  + '" onchange="updateSort(' + item.seq + ', this.value)"></td>';
-    
+    				html += '<td>'+item.seq+'</td>'
                     //html += '    <td><input type="number" class="sort-input" min="1" value="' + item.sort_order + '" onchange="updateSort(' + item.seq + ', this.value)"></td>';
                     html += '    <td style="text-align:left; padding-left:20px;">' + item.title + '</td>';
                     // 2. 노출 여부 수정 (배지 클릭 시 토글)
