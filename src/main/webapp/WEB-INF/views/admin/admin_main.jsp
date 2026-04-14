@@ -347,12 +347,14 @@ body {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	gap: 20px;
 }
 
 .ratio-chart-box {
-	width: 240px;
-	height: 240px;
-	margin: 10px auto 20px;
+	width: 200px;
+	height: 200px;
+	margin: 0 auto;
+	position: relative;
 }
 
 .ratio-legend {
@@ -587,7 +589,7 @@ body {
 							<i class="fa-solid fa-users"></i>
 						</div>
 					</div>
-					<div class="stat-value">${totalMembers}</div>
+					<div class="stat-value">${totalMembers -1}</div>
 					<div class="stat-desc">오늘 신규 가입 ${todayJoinCount}명</div>
 				</div>
 
@@ -974,13 +976,16 @@ new Chart(document.getElementById('memberRatioChart'), {
             data: [${personalMemberCount}, ${businessMemberCount}],
             backgroundColor: ['#1677ff', '#93c5fd'],
             borderWidth: 0,
-            hoverOffset: 6
+            hoverOffset: 4
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '68%',
+        layout: {
+            padding: 10 
+        },
+        cutout: '65%',
         plugins: {
             legend: { display: false }
         }
