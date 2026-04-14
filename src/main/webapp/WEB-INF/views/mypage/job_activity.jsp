@@ -12,7 +12,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>돈워리- 구직 활동 관리</title>
+<title>돈워리 - 구직 활동 관리</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
@@ -103,31 +103,38 @@
     	
     }
 
-.resume-btn{
-	 	background-color: #f8fafc;
-        color: #475569;
+.status{
+	 	background-color: #ffffff;
+        color: #6b7280;
         border: 1px solid #dbe2ea;
         /*상우하좌  */
-        padding: 13px 15px 15px 15px;
+        padding:10px 20px;
         border-radius: 10px;
         font-size: 14px;
         font-weight: 700;
         cursor: pointer;
-        transition: all 0.2s ease;
-        margin-bottom:10px;
-        
+    	margin-right: auto;  /* [추가] 오른쪽 여백을 최대로 밀어서 왼쪽 정렬 */
         display: flex;       /* 아이콘과 글자 정렬을 위해 flex 권장 */
     	align-items: center;
-    	margin-left: auto;   /* ★ 핵심: 왼쪽 마진을 자동으로 채워 오른쪽으로 밀기 */
+    	justify-content: center; /* [추가] 가로 방향 중앙 정렬 */
+    	width:100px;
+    	height:70px;
 }
-.resume-btn:hover{
-	   background-color: #eff6ff;
-        color: #4f67e8;
-        border-color: #c7d2fe;
+.status.interview{
+	 	background-color: #eff6ff;
+        color: #2563eb;
 }
-.resume-btn:hover i{
-        color: #4f67e8 !important;
+.status.pass{
+	 	background-color: #ecfdf5;
+    	color: #059669;
+    	border: 1px solid #d1fae5;
 }
+.status.fail{
+	 	background-color: #fef2f2;
+    	color: #dc2626;
+    	border: 1px solid #fee2e2
+}
+
     .tab-menu {
         display: flex;
         background-color: #f1f3f5;
@@ -270,12 +277,7 @@
             <h5>나의 지원 현황</h5>
             <p>지원한 공고의 진행 상태를 한눈에 확인하세요</p>
         </div>
-        <a href="/mypage/resume" style="text-decoration:none;">
-		<button class="resume-btn">
-               <i class="fa-regular fa-clipboard fa-lg" style="color: rgb(98, 98, 98); margin-right:5px;"></i>
-               <span>이력서 등록</span>
-        </button>
-        </a>
+
 
         <section class="post-list">
             <div style="font-size: 14px; color: #868e96; margin-bottom: 15px; font-weight: 600; padding-left: 5px;">전체 지원 내역 (${selectApplyList.size()})</div>
@@ -292,17 +294,27 @@
             <div class="post-container">
                 <div class="post-card">
                     <div class="user-info">
-                        <div class="meta">
+                        <div class="meta">                       
                             <span class="nickname">${i.company_name}</span>
                             <span class="job-category-tag">${i.main_category_name}/${i.sub_category_name}</span>
-                            <span class="city-category-tag">${i.sido}/${i.gugun}/${i.dong}</span>
-                            <p class="time"></p>
+                            <span class="city-category-tag">${i.sido}/${i.gugun}/${i.dong}</span>                           
                         </div>
                     </div>
                     <h2 class="post-content">${i.title}</h2>
                     <div class="post-footer">
-                        <button class="apply-cancel-btn" 
-                        onclick="location.href='/jobapplys/delete?seq=${i.apply_seq}'">지원 취소</button>
+                    <c:if test="${i.status == '지원 완료'}">   
+                    <div class="status"> ${i.status}</div>  
+                    </c:if> 
+                    <c:if test="${i.status == '면접 예정'}">   
+                    <div class="status interview"> ${i.status}</div>  
+                    </c:if>  
+                    <c:if test="${i.status == '최종 합격'}">   
+                    <div class="status pass"> ${i.status}</div>  
+                    </c:if> 
+                    <c:if test="${i.status == '불합격'}">   
+                    <div class="status fail"> ${i.status}</div>  
+                    </c:if>                            
+                        <button class="apply-cancel-btn" data-seq="${i.apply_seq}">지원 취소</button>
                         <button class="apply-detail-btn"
                         onclick="location.href='/mypage/job_activity_detail?seq=${i.seq}'">상세보기</button>
                     </div>
@@ -335,6 +347,15 @@
             alert("잘못된 접근입니다.");
             location.replace("/members/toLogin"); // 기록을 남기지 않고 이동
         }
+    })
+    
+    $(".apply-cancel-btn").on("click",function(e){
+    	if(!confirm("지원을 취소하시겠습니까?")) {
+    		e.preventDefault();
+            return false;
+        }
+    	let seq = $(this).attr("data-seq");
+    	location.href="/jobapplys/delete?seq="+seq;
     })
 </script>
 </body>
