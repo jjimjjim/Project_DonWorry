@@ -591,6 +591,12 @@
             "border-color":"#2563eb",
             "cursor":"allowed"
         });
+        
+      // 전화번호의 경우 수정 편의를 위해 하이픈 제거 (정규식 일치시키기 위함)
+         if($(this).attr("name") === "phone") {
+             let cleanPhone = $(this).val().replace(/-/g, "");
+             $(this).val(cleanPhone);
+         }
 
 	})
 
