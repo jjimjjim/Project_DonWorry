@@ -392,7 +392,7 @@ img{
 					</a> <a href="/salary/calendar"> <i
 						class="fa-regular fa-calendar fa-lg"
 						style="color: rgb(203, 203, 203); margin-right: 5px;"></i> 급여 캘린더
-					</a> <a href="#"  class="active"> <i class="fa-solid fa-briefcase fa-lg"
+					</a> <a href="/jobposts/jobpost"  class="active"> <i class="fa-solid fa-briefcase fa-lg"
 						style="color: rgb(36, 99, 235); margin-right: 5px;"></i> 구인구직
 					</a> <a href="/boards/mainboard_list?page=1"> <i
 						class="fa-regular fa-message fa-lg"
