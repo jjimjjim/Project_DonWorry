@@ -372,14 +372,14 @@ body {
 					<p>전체 회원 조회, 상태 변경, 상세 정보 확인이 가능합니다.</p>
 				</div>
 				<div class="page-badge">
-					<i class="fa-solid fa-users"></i> 총 결과 ${recordTotalCount}명
+					<i class="fa-solid fa-users"></i> 총 결과 ${recordTotalCount -1}명
 				</div>
 			</div>
 
 			<section class="summary-grid">
 				<div class="summary-card">
 					<div class="summary-label">전체 회원</div>
-					<div class="summary-value">${membersCount}</div>
+					<div class="summary-value">${membersCount -1}</div>
 				</div>
 				<div class="summary-card">
 					<div class="summary-label">정지 회원</div>
@@ -422,6 +422,7 @@ body {
 					</thead>
 					<tbody>
 						<c:forEach var="member" items="${membersList}">
+						<c:if test="${member.type != '관리자' }">
 							<tr>
 <%-- 								<td>${member.gender}</td> --%>
 								<td>${member.name}</td>
@@ -451,6 +452,7 @@ body {
 										</c:otherwise>
 									</c:choose></td>
 							</tr>
+						</c:if>	
 						</c:forEach>
 					</tbody>
 				</table>

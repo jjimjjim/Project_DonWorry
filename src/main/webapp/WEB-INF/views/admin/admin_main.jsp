@@ -587,7 +587,7 @@ body {
 							<i class="fa-solid fa-users"></i>
 						</div>
 					</div>
-					<div class="stat-value">${totalMembers}</div>
+					<div class="stat-value">${totalMembers -1}</div>
 					<div class="stat-desc">오늘 신규 가입 ${todayJoinCount}명</div>
 				</div>
 
