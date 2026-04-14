@@ -44,6 +44,7 @@
     .nav-menu a { text-decoration: none; color: #666; font-size: 14px; font-weight: 500; }
     .my-page { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #666; font-size: 14px; font-weight: 500; padding: 5px 10px; cursor: pointer; }
     .nav-menu a.active { color: #2563eb; }
+    .active { color: #2563eb; }
          /*기업 버튼*/
         .now-business {
             width:60px;
@@ -362,7 +363,7 @@
                 <a href="/" class="logo"> 돈워리</a>
                 <div class="nav-menu">
                     <a href="/" >
-                        <i class="fa-solid fa-house fa-lg" style="color: rgb(36, 99, 235);"></i>
+                        <i class="fa-solid fa-house fa-lg" style="color:rgb(203, 203, 203);"></i>
                         홈
                     </a>
                     <a href="/salary/calendar">
@@ -389,8 +390,8 @@
                 </a>
             </c:if>
             <c:if test="${nickName!=null }">
-                <a class="my-page" href="/mypage/toMypage">
-                    <i class="fa-solid fa-user-gear fa-lg" style="color: rgb(197, 197, 197);"></i>
+                <a class="my-page active" href="/mypage/toMypage">
+                    <i class="fa-solid fa-user-gear fa-lg" style="color: rgb(36, 99, 235);"></i>
                     마이페이지
                 </a>
             </c:if>
