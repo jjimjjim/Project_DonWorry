@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>Insert title here</title>
+<title>관리자 - Q&A 관리</title>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 

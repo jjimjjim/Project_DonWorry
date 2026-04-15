@@ -8,7 +8,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>관리자 - 회원 게시물 관리</title>
+<title>관리자 - 회원 게시물 및 공지 관리</title>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 

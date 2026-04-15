@@ -596,19 +596,19 @@
 <div class="summary-grid">
         <div class="card">
             <a href="/members/toLogin" style="text-decoration: none; ">
-            <div class="card-title">🏪 편의점 알바</div>
-            <div class="info-item"><span class="info-label">예상 급여</span><span class="info-val blue">1,245,000원</span></div>
+            <div class="card-title"> 🏪 돈워리 편의점</div>
+            <div class="info-item"><span class="info-label">예상 급여</span><span class="info-val blue">11,245,000원</span></div>
             <div class="info-item"><span class="info-label">근무 일수</span><span class="info-val">16일</span></div>
             <div class="info-item"><span class="info-label">총 시간</span><span class="info-val">128시간</span></div>
             </a>
         </div>
-        <div class="card">     
-            <a href="members/toLogin" style="text-decoration: none; ">      
-            <div class="card-title">☕ 카페 알바</div>
-            <div class="info-item"><span class="info-label">예상 급여</span><span class="info-val blue">850,000원</span></div>
-            <div class="info-item"><span class="info-label">근무 일수</span><span class="info-val">12일</span></div>
-            <div class="info-item"><span class="info-label">총 시간</span><span class="info-val">96시간</span></div>     
-            </a>       
+         <div class="card">
+            <a href="/members/toLogin" style="text-decoration: none; ">
+            <div class="card-title"> ☕ 돈워리 카페</div>
+            <div class="info-item"><span class="info-label">예상 급여</span><span class="info-val blue">1,080,600원</span></div>
+            <div class="info-item"><span class="info-label">근무 일수</span><span class="info-val">6일</span></div>
+            <div class="info-item"><span class="info-label">총 시간</span><span class="info-val">128시간</span></div>
+            </a>
         </div>
         
 	    	<a href="/salary/calendar" > 
@@ -644,7 +644,7 @@
 	            	<span class="info-label">근무 일수</span><span class="info-val">${i.workDays}일</span>
 	            </div>
 	            <div class="info-item">
-	            	<span class="info-label">총</span><span class="info-val">${i.totalHours}시간</span>
+	            	<span class="info-label">총 시간</span><span class="info-val">${i.totalHours}시간</span>
 	            </div>                               	
         	</div>
         </a>
