@@ -131,7 +131,7 @@ body {
 /* [4] 구인구직 섹션 */
 .job-section {
 	text-align: center;
-	margin-top: 20px;
+	margin-top: 50px;
 }
 
 .job-section h2 {
