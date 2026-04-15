@@ -7,7 +7,9 @@
     response.setDateHeader("Expires", 0); // Proxies
 %>      
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>    
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>   
+<link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon">
+<link rel="icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon"> 
 <!DOCTYPE html>
 <html lang="ko">
 <head>

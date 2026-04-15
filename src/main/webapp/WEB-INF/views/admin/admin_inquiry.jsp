@@ -558,7 +558,7 @@
                             </div>
                             <div class="faq-input-item">
                                 <label>답변 내용</label>
-                                <textarea name="content" rows="3" placeholder="간결하고 명확하게 답변을 작성해 주세요." maxlength="2000"></textarea>
+                                <textarea name="content" rows="3" placeholder="간결하고 명확하게 답변을 작성해 주세요." maxlength="1000"></textarea>
                             </div>
                         </div>
                         <div class="faq-form-btns">

@@ -37,7 +37,7 @@ public class BoardsDAO {
 	            + "        m.nickname AS member_id, \r\n"
 	            + "        b.category, \r\n"
 	            + "        b.title, \r\n"
-	            + "        b.content, \r\n"
+	            //+ "        b.content, \r\n"
 	            + "        b.view_count, \r\n"
 	            + "        b.write_date,\r\n"
 	            + "        COUNT(r.seq) AS reply_count, \r\n"
@@ -48,7 +48,7 @@ public class BoardsDAO {
 	            + "    LEFT JOIN reply r ON b.seq = r.parent_seq \r\n"
 	            + "    GROUP BY \r\n"
 	            + "        b.seq, m.nickname, b.category, b.title, \r\n"
-	            + "        b.content, b.view_count, b.write_date \r\n"
+	            + "         b.view_count, b.write_date \r\n"
 	            + ") WHERE rn BETWEEN ? AND ?";
 	            
 	    // loginId가 null일 경우를 대비해 빈 문자열 처리 (로그인 안 한 유저는 북마크가 모두 0으로 나옴)
