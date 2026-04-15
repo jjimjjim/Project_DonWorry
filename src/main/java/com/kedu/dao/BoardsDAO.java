@@ -162,7 +162,7 @@ public class BoardsDAO {
 				+ "        m.nickname AS member_id, \r\n"
 				+ "        b.category, \r\n"
 				+ "        b.title, \r\n"
-				+ "        b.content, \r\n"
+				//+ "        b.content, \r\n"
 				+ "        b.view_count, \r\n"
 				+ "        b.write_date,\r\n"
 				+ "        (SELECT COUNT(*) FROM reply r WHERE r.parent_seq = b.seq) AS reply_count, \r\n"
@@ -187,7 +187,7 @@ public class BoardsDAO {
 	            + "        m.nickname AS member_id, "
 	            + "        b.category, "
 	            + "        b.title, "
-	            + "        b.content, "
+	            //+ "        b.content, "
 	            + "        b.view_count, "
 	            + "        b.write_date,"
 	            + "        COUNT(r.seq) AS reply_count, "
@@ -198,7 +198,8 @@ public class BoardsDAO {
 	            + "    LEFT JOIN reply r ON b.seq = r.parent_seq "
 	            + "    GROUP BY "
 	            + "        b.seq, m.nickname, b.category, b.title, "
-	            + "        b.content, b.view_count, b.write_date "
+	            //+ "        b.content, "
+	            + "b.view_count, b.write_date "
 	            + ") WHERE rn BETWEEN 1 AND 3"; // 상위 3개 고정
 		
 		return jdbc.query(sql, new BeanPropertyRowMapper<BoardsDTO>(BoardsDTO.class));
