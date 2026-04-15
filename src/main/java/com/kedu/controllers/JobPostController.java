@@ -62,7 +62,7 @@ public class JobPostController {
 			model.addAttribute("searchKeyword", searchKeyword);
 		} else if(selectByLocation != null && !selectByLocation.isEmpty()) {
 		    jobList = dao.selectByLocationPaged(selectByLocation, start, end, workDay, starttime, endtime);
-		    recordTotalCount = dao.getSearchTotalCount(selectByLocation, workDay, starttime, endtime);
+		    recordTotalCount = dao.getSearchTotalCountByLocation(selectByLocation, workDay, starttime, endtime);
 		    model.addAttribute("selectByLocation", selectByLocation);
 		}
 		

@@ -54,5 +54,12 @@
 		<error-code>500</error-code>
 		<location>/WEB-INF/views/error.jsp</location>
 	</error-page>
+	
+	<jsp-config>
+    <jsp-property-group>
+        <url-pattern>*.jsp</url-pattern>
+        <include-prelude>/WEB-INF/views/common/favicon.jsp</include-prelude>
+    </jsp-property-group>
+</jsp-config>
 
 </web-app>
