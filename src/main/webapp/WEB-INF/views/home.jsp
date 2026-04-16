@@ -377,9 +377,12 @@
 		    font-weight: bold;
 		    white-space: nowrap; /* 추가: 태그 안 글자 줄바꿈 방지 */
 		}
-        .status-freeboard { background-color:#cff7ef; color: #179791; } /* 초록색 */
-        .status-reviewboard{ background-color: #cfe5ff; color: #185fb0; }
-		.status-qnaboard{ background-color: #ffb2b7; color: #a91620;}
+        .status-freeboard {background-color: #f0fdf4; /* 연한 초록 */
+    color: #16a34a; } /* 초록색 */
+        .status-reviewboard{ background-color: #fdf2f8; /* 연한 분홍 */
+    color: #db2777; }
+		.status-qnaboard{  background-color: #fff7ed; /* 연한 주황 */
+    color: #ea580c;}
 
         .contents-title {
 		    font-size: 17px;

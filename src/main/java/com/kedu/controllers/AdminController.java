@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -254,6 +253,8 @@ public class AdminController {
 		BoardsDTO dto = bdao.detail(seq);
 		model.addAttribute("dto",dto);
 		model.addAttribute("currentPage",page);
+		List<FilesDTO> filesList = fdao.selectByParent_seq(seq);
+		model.addAttribute("filesList",filesList);
 		return "admin/admin_board_detail";
 	}
 	//게시물 삭제
@@ -351,6 +352,8 @@ public class AdminController {
 		public String admin_reply_detail(int seq, int page,Integer reply_seq, Model model){
 			BoardsDTO dto = bdao.detail(seq);
 			model.addAttribute("dto",dto);
+			List<FilesDTO> filesList = fdao.selectByParent_seq(seq);
+			model.addAttribute("filesList",filesList);
 			//댓글 가져옴
 			List<ReplyDTO> admin_replyList = rdao.selectByParent_seq(seq);
 			int totalCount = admin_replyList.size();
@@ -444,6 +447,9 @@ public class AdminController {
 	@RequestMapping("/qnaDetail")
 	public String qnaDetail(int seq,Model model) {
 		model.addAttribute("dto",qdao.detail(seq));
+		
+		List<FilesDTO> filesList = fdao.selectByParent_seq(seq);
+		model.addAttribute("filesList",filesList);
 
 		return "/admin/qna_detail";
 	}
